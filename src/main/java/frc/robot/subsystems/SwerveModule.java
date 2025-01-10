@@ -4,17 +4,20 @@
 
 package frc.robot.subsystems;
 
-import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.SparkRelativeEncoder;
+import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.ModuleConstants;
 import frc.robot.utils.ModuleConfig;
 
 public class SwerveModule extends SubsystemBase {
@@ -28,7 +31,13 @@ public class SwerveModule extends SubsystemBase {
     private final SparkClosedLoopController driveController;
     private final SparkClosedLoopController turnController;
 
-    private final SparkMaxConfig motorConfig;
+    private final SparkMaxConfig driveMotorConfig;
+    private final SparkMaxConfig turnMotorConfig;
+
+    private final ClosedLoopConfig driveControllerConfig;
+    private final ClosedLoopConfig turnControllerConfig;
+
+    private SwerveModuleState desiredState; 
   
   /** Creates a new SwerveModule. */
   public SwerveModule(ModuleConfig config) {
@@ -44,17 +53,57 @@ public class SwerveModule extends SubsystemBase {
     driveController = driveMotor.getClosedLoopController();
     turnController = turnMotor.getClosedLoopController();
 
-    motorConfig = new SparkMaxConfig();
+
+    desiredState = new SwerveModuleState(0.0, new Rotation2d() );
+
+    //Istablished the Motor configations with the new Spark Configs
+    driveMotorConfig = new SparkMaxConfig();
+    turnMotorConfig = new SparkMaxConfig();
+
+    driveControllerConfig = new ClosedLoopConfig();
+    turnControllerConfig = new ClosedLoopConfig();
+
+    driveMotorConfig.encoder.positionConversionFactor(ModuleConstants.kDrivingEncoderPositionFactor);
+    driveMotorConfig.encoder.velocityConversionFactor(ModuleConstants.kDrivingEncoderVelocityFactor);
+
+    turnMotorConfig.encoder.positionConversionFactor(ModuleConstants.kTurningEncoderPositionFactor);
+    turnMotorConfig.encoder.velocityConversionFactor(ModuleConstants.kTurningEncoderVelocityFactor);
+    
+    
+    //References the established constants and and tells the SparkMax what to set its PID to
+    driveControllerConfig.p(ModuleConstants.kTurningP);
+    driveControllerConfig.i(ModuleConstants.kTurningI);
+    driveControllerConfig.d(ModuleConstants.kTurningD);
+    driveControllerConfig.velocityFF(ModuleConstants.kDrivingFF);
+    driveControllerConfig.outputRange(ModuleConstants.kDrivingMinOutput, ModuleConstants.kDrivingMaxOutput);
 
     //
-
-    //driveMotor.configure()
-    driveMotor.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    turnControllerConfig.p(ModuleConstants.kTurningP);
+    turnControllerConfig.i(ModuleConstants.kTurningI);
+    turnControllerConfig.d(ModuleConstants.kTurningD);
+    turnControllerConfig.velocityFF(ModuleConstants.kTurningFF);
+    turnControllerConfig.outputRange(ModuleConstants.kTurningMinOutput, ModuleConstants.kTurningMaxOutput);
     
+    //Resets motors back to original
+    driveMotor.configure(driveMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    turnMotor.configure(turnMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+
+    //flips the drive motor 
+    driveMotorConfig.inverted(config.DRIVE_INVERSION);
+
+    // give the motors current controller configuration
+    driveMotorConfig.apply(driveControllerConfig);
+    turnMotorConfig.apply(turnControllerConfig);
+
+    driveMotorConfig.idleMode(ModuleConstants.kDrivingMotorIdleMode);
+    turnMotorConfig.idleMode(ModuleConstants.kTurningMotorIdleMode);
+
+    driveMotorConfig.smartCurrentLimit(ModuleConstants.kDrivingMotorCurrentLimit);
+    turnMotorConfig.smartCurrentLimit(ModuleConstants.kTurningMotorCurrentLimit);
     
-
-
-
+    desiredState.angle = new Rotation2d(turnEncoder.getPosition());
+    driveEncoder.setPosition(0);
   }
 
   @Override
