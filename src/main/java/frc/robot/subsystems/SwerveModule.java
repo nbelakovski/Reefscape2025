@@ -4,7 +4,8 @@
 
 package frc.robot.subsystems;
 
-import com.revrobotics.servohub.ServoHub.ResetMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkClosedLoopController;
@@ -21,7 +22,7 @@ public class SwerveModule extends SubsystemBase {
     private final SparkMax driveMotor;
     private final SparkMax turnMotor;
 
-    private final SparkRelativeEncoder driveEncoder;
+    private final RelativeEncoder driveEncoder;
     private final SparkAbsoluteEncoder turnEncoder;
     
     private final SparkClosedLoopController driveController;
@@ -32,19 +33,23 @@ public class SwerveModule extends SubsystemBase {
   /** Creates a new SwerveModule. */
   public SwerveModule(ModuleConfig config) {
 
-    motorConfig = new SparkMaxConfig();
-
     //This intitilizes the Drive and Turn motors.
     driveMotor = new SparkMax(config.DRIVE_PORT, MotorType.kBrushless);
     turnMotor = new SparkMax(config.TURN_PORT, MotorType.kBrushless);
+
+    driveEncoder = driveMotor.getEncoder();
+    turnEncoder = turnMotor.getAbsoluteEncoder();
 
     //PID Controllers 
     driveController = driveMotor.getClosedLoopController();
     turnController = turnMotor.getClosedLoopController();
 
+    motorConfig = new SparkMaxConfig();
+
     //
 
-    driveMotor.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+    //driveMotor.configure()
+    driveMotor.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     
     
 
