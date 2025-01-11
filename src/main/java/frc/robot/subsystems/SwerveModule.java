@@ -70,37 +70,37 @@ public class SwerveModule extends SubsystemBase {
     turnMotorConfig.encoder.velocityConversionFactor(ModuleConstants.kTurningEncoderVelocityFactor);
     
     
-    //References the established constants and and tells the SparkMax what to set its PID to
+    //References the established constants and and tells the Drive SparkMax what to set its PID to
     driveControllerConfig.p(ModuleConstants.kTurningP);
     driveControllerConfig.i(ModuleConstants.kTurningI);
     driveControllerConfig.d(ModuleConstants.kTurningD);
     driveControllerConfig.velocityFF(ModuleConstants.kDrivingFF);
     driveControllerConfig.outputRange(ModuleConstants.kDrivingMinOutput, ModuleConstants.kDrivingMaxOutput);
 
-    //
+    //References the established constants and and tells the Turn SparkMax what to set its PID to
     turnControllerConfig.p(ModuleConstants.kTurningP);
     turnControllerConfig.i(ModuleConstants.kTurningI);
     turnControllerConfig.d(ModuleConstants.kTurningD);
     turnControllerConfig.velocityFF(ModuleConstants.kTurningFF);
     turnControllerConfig.outputRange(ModuleConstants.kTurningMinOutput, ModuleConstants.kTurningMaxOutput);
-    
-    //Resets motors back to original
-    driveMotor.configure(driveMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    turnMotor.configure(turnMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
-
-    //flips the drive motor 
-    driveMotorConfig.inverted(config.DRIVE_INVERSION);
-
-    // give the motors current controller configuration
-    driveMotorConfig.apply(driveControllerConfig);
-    turnMotorConfig.apply(turnControllerConfig);
 
     driveMotorConfig.idleMode(ModuleConstants.kDrivingMotorIdleMode);
     turnMotorConfig.idleMode(ModuleConstants.kTurningMotorIdleMode);
 
     driveMotorConfig.smartCurrentLimit(ModuleConstants.kDrivingMotorCurrentLimit);
     turnMotorConfig.smartCurrentLimit(ModuleConstants.kTurningMotorCurrentLimit);
+
+
+    //flips the drive motor 
+    driveMotorConfig.inverted(config.DRIVE_INVERSION);
+
+    //Resets motors back to original
+    driveMotor.configure(driveMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    turnMotor.configure(turnMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+    // give the motors current controller configuration
+    driveMotorConfig.apply(driveControllerConfig);
+    turnMotorConfig.apply(turnControllerConfig);
     
     desiredState.angle = new Rotation2d(turnEncoder.getPosition());
     driveEncoder.setPosition(0);
