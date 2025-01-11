@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkAbsoluteEncoder;
+import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
@@ -15,7 +16,9 @@ import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ModuleConstants;
 import frc.robot.utils.ModuleConfig;
@@ -38,9 +41,12 @@ public class SwerveModule extends SubsystemBase {
     private final ClosedLoopConfig turnControllerConfig;
 
     private SwerveModuleState desiredState; 
+
+    public final ModuleConfig config;
   
   /** Creates a new SwerveModule. */
   public SwerveModule(ModuleConfig config) {
+    this.config = config;
 
     //This intitilizes the Drive and Turn motors.
     driveMotor = new SparkMax(config.DRIVE_PORT, MotorType.kBrushless);
@@ -105,6 +111,49 @@ public class SwerveModule extends SubsystemBase {
     desiredState.angle = new Rotation2d(turnEncoder.getPosition());
     driveEncoder.setPosition(0);
   }
+
+  public SwerveModuleState getState(){
+    return new SwerveModuleState(driveEncoder.getVelocity(),
+     new Rotation2d(turnEncoder.getPosition() - config.ANGULAR_OFFSET)); 
+  }
+
+  public SwerveModulePosition getPosition(){
+    return new SwerveModulePosition(driveEncoder.getPosition(),
+     new Rotation2d(turnEncoder.getPosition() - config.ANGULAR_OFFSET));
+  }
+
+  public double getTurnRadians(){
+    return getPosition().angle.getRadians();
+  }
+
+  public void setDesiredState(SwerveModuleState desiredState){
+    
+    SwerveModuleState correctedDesiredState = new SwerveModuleState();
+    correctedDesiredState.speedMetersPerSecond = desiredState.speedMetersPerSecond;
+    correctedDesiredState.angle = desiredState.angle.plus(Rotation2d.fromRadians(config.ANGULAR_OFFSET));
+
+
+    //Maybe come back and fix, potentially not what we want
+    correctedDesiredState.optimize(new Rotation2d(turnEncoder.getPosition()));
+
+    driveController.setReference(correctedDesiredState.speedMetersPerSecond, ControlType.kVelocity);
+    turnController.setReference(correctedDesiredState.angle.getRadians(), ControlType.kPosition);
+
+    this.desiredState = correctedDesiredState;
+     
+  }
+
+   public void resetEncoders() {
+    driveEncoder.setPosition(0);
+  }
+
+  public void updateTelemetry() {
+    SmartDashboard.putNumber(config.NAME + " Angle Degrees", getPosition().angle.getDegrees());
+    SmartDashboard.putNumber(config.NAME + " Angle Radians", getTurnRadians());
+    SmartDashboard.putNumber(config.NAME + " Drive Position", getPosition().distanceMeters);
+  }
+
+
 
   @Override
   public void periodic() {
