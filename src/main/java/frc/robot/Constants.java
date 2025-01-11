@@ -6,6 +6,12 @@ package frc.robot;
 
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.util.Units;
+import frc.robot.utils.ModuleConfig;
+import frc.robot.utils.Ports;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -18,7 +24,83 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+  public static class SwerveConstants {
+    ///(Old Robot)
+    //Sensor Offsets for the radian difference between the physical sensor orientation and the calibrated swerve direction
+    public static final double FL_SENSOR_OFFSET = 5.1247236; //from REV Hardware Client
+    public static final double FR_SENSOR_OFFSET = 4.7080523; //from REV Hardware Client
+    public static final double BR_SENSOR_OFFSET = 2.9550133; //from REV Hardware Client
+    public static final double BL_SENSOR_OFFSET = 2.8204095; //from REV Hardware Client
 
+    ///(New Robot)(Put new numbers)
+    // public static final double FL_SENSOR_OFFSET = 0.7848113; //from REV Hardware Client
+    // public static final double FR_SENSOR_OFFSET = 4.7082246; //from REV Hardware Client
+    // public static final double BR_SENSOR_OFFSET = 1.9979531; //from REV Hardware Client
+    // public static final double BL_SENSOR_OFFSET = 1.6861502; //from REV Hardware Client
+
+
+    //Angular Offsets for the radian difference between the calibrated swerve and desired forward direction
+    // public static final double FL_ANGULAR_OFFSET = -Math.PI/2; //Math.PI / 2; //-Math.PI / 2;
+    // public static final double FR_ANGULAR_OFFSET = -Math.PI/2;
+    // public static final double BR_ANGULAR_OFFSET = 3 * Math.PI/4; //Math.PI / 2;
+    // public static final double BL_ANGULAR_OFFSET = Math.PI/2; //Math.PI;
+
+    ///(New Robot)(Put new numbers)
+    //Angular Offsets for the radian difference between the calibrated swerve and desired forward direction
+    public static final double FL_ANGULAR_OFFSET = -Math.PI/2; //Math.PI / 2; //-Math.PI / 2;
+    public static final double FR_ANGULAR_OFFSET = 0;
+    public static final double BR_ANGULAR_OFFSET = -Math.PI / 2; //Math.PI / 2;
+    public static final double BL_ANGULAR_OFFSET = 0; //Math.PI;
+
+    //Constructor to hold all of the data to configure a SwerveModule
+    public static final ModuleConfig SWERVE_FL = new ModuleConfig("FL", Ports.SWERVE_DRIVE_FL, Ports.SWERVE_TURN_FL, FL_SENSOR_OFFSET, FL_ANGULAR_OFFSET, false);//2.9483314  +Math.PI /2);
+    public static final ModuleConfig SWERVE_FR = new ModuleConfig("FR", Ports.SWERVE_DRIVE_FR, Ports.SWERVE_TURN_FR, FR_SENSOR_OFFSET, FR_ANGULAR_OFFSET, false);
+    public static final ModuleConfig SWERVE_BL = new ModuleConfig("BL", Ports.SWERVE_DRIVE_BL, Ports.SWERVE_TURN_BL, BL_SENSOR_OFFSET, BL_ANGULAR_OFFSET, true); //0.6873395
+    public static final ModuleConfig SWERVE_BR = new ModuleConfig("BR", Ports.SWERVE_DRIVE_BR, Ports.SWERVE_TURN_BR, BR_SENSOR_OFFSET, BR_ANGULAR_OFFSET, true);
+
+    // Chassis configuration
+    public static final double TRACK_WIDTH = Units.inchesToMeters(25);
+
+    // Distance between centers of right and left wheels on robot
+    public static final double WHEEL_BASE = Units.inchesToMeters(25);
+
+    public static final double DISTANCE_TO_CENTER = Math.sqrt(Math.pow(WHEEL_BASE/2, 2) + Math.pow(WHEEL_BASE/2, 2));
+
+    // Diamter of the REV Swerve wheels in inches
+    public static final double WHEEL_DIAMETER = Units.inchesToMeters(3);
+    public static final double FREE_SPIN_METER = 2;
+
+
+    // Distance between front and back wheels on robot
+    public static final SwerveDriveKinematics DRIVE_KINEMATICS = new SwerveDriveKinematics(
+        new Translation2d(WHEEL_BASE / 2, TRACK_WIDTH / 2),
+        new Translation2d(WHEEL_BASE / 2, -TRACK_WIDTH / 2),
+        new Translation2d(-WHEEL_BASE / 2, TRACK_WIDTH / 2),
+        new Translation2d(-WHEEL_BASE / 2, -TRACK_WIDTH / 2));
+
+
+    //TURN PID CONSTANTS
+    //public static final PIDF TURN_PID = new PIDF(0.16, 0, 2 * Math.PI, -1, 1, true);
+    public static final double ANGLE_THRESHOLD = Units.degreesToRadians(5);
+    public static final boolean TURN_INVERSION = true;
+
+    // Driving Parameters - max speeds allowed, not capable
+    public static final double TOP_SPEED = Units.feetToMeters(2 * 4.8); //9.6
+    public static final double TOP_ANGULAR_SPEED = 2 * Math.PI;
+    public static final double GEER_RATTIOLI = 3.56;
+
+
+    //Slew stuff from Rev
+    public static final double kDirectionSlewRate = 1; // radians per second
+    public static final double kMagnitudeSlewRate = 1.4; // percent per second (1 = 100%)
+    public static final double kRotationalSlewRate = 1; // percent per second (1 = 100%)
+
+    public static final boolean kGyroReversed = false;
+
+    // public static final PIDConstants translationPID = new PIDConstants(0.05, 0, 0);
+    // public static final PIDConstants rotationPID = new PIDConstants(0.08, 0, 0);
+
+  }
 
 
 public static final class ModuleConstants {
@@ -72,5 +154,7 @@ public static final class ModuleConstants {
   public static final int kDrivingMotorCurrentLimit = 50; // amps
   public static final int kTurningMotorCurrentLimit = 40; // amps
   }
+
+
 
 }
