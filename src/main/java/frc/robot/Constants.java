@@ -72,5 +72,37 @@ public static final class ModuleConstants {
   public static final int kDrivingMotorCurrentLimit = 50; // amps
   public static final int kTurningMotorCurrentLimit = 40; // amps
   }
+  public static class MechConstants{
+
+    
+    public static final int ENCODER_TICKS = 8192; //Counts per Revolution
+
+    //climber encoders
+    // public static final double RIGHT_CLIMB_OFFSET = 0.340;
+    // public static final double LEFT_CLIMB_OFFSET = 0.30926;
+
+
+    //Climber Heights
+    //public static final double MAX_CLIMB_RIGHT = 42.0;
+    //public static final double BASE_CLIMB_RIGHT = 0.0;
+    //public static final double MAX_CLIMB_LEFT = 42.0;
+    //public static final double BASE_CLIMB_LEFT = 0.0;
+
+    //Mech Motor Speeds for Buttons
+    public static double INTAKE_SPEED = 1.0;
+    public static double TELE_INTAKE_SPEED = 1.0;
+    public static double AUTO_INTAKE_SPEED = 0.5;
+    //public static final double LAUNCHER_SPEED = 1.0;
+    //public static final double ARM_PIVOT_SPEED = 1.0;
+   // public static final double CLIMBER_SPEED = 0.3;
+
+    //Arm Angles    
+    //public static final double START_ANGLE = 94;
+    //public static final double FLOOR_ANGLE = 0.0;
+    //public static final double LAUNCH_ANGLE = 23.7;
+    //public static final double AMP_ANGLE = 106;
+    //public static final double ARM_POSITION_TOLERANCE = 1.0;
+    //public static final double ARM_OFFSET = 357.2335615;
+  }
 
 }
