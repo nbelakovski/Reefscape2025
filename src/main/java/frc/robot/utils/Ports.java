@@ -18,4 +18,7 @@ public class Ports {
 
     public static final int SWERVE_DRIVE_BL = 3;
     public static final int SWERVE_TURN_BL = 4;
+
+    public static final int CLIMB_RIGHT_MOTOR_PORT = 89;
+    public static final int CLIMB_LEFT_MOTOR_PORT = 90;
 }
