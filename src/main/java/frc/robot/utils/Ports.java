@@ -18,4 +18,6 @@ public class Ports {
 
     public static final int SWERVE_DRIVE_BL = 3;
     public static final int SWERVE_TURN_BL = 4;
+
+    public static final int ELEVATOR_MOTOR_PORT = 80;
 }
