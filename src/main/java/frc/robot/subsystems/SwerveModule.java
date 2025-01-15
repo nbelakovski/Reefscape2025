@@ -14,16 +14,16 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ModuleConstants;
 import frc.robot.utils.ModuleConfig;
 
-public class SwerveModule extends SubsystemBase {
+public class SwerveModule {
 
     private final SparkMax driveMotor;
     private final SparkMax turnMotor;
@@ -69,6 +69,8 @@ public class SwerveModule extends SubsystemBase {
     driveControllerConfig = new ClosedLoopConfig();
     turnControllerConfig = new ClosedLoopConfig();
 
+    
+
     driveMotorConfig.encoder.positionConversionFactor(ModuleConstants.kDrivingEncoderPositionFactor);
     driveMotorConfig.encoder.velocityConversionFactor(ModuleConstants.kDrivingEncoderVelocityFactor);
 
@@ -95,6 +97,9 @@ public class SwerveModule extends SubsystemBase {
 
     driveMotorConfig.smartCurrentLimit(ModuleConstants.kDrivingMotorCurrentLimit);
     turnMotorConfig.smartCurrentLimit(ModuleConstants.kTurningMotorCurrentLimit);
+
+    driveControllerConfig.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+    turnControllerConfig.feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
 
 
     //flips the drive motor 
@@ -139,7 +144,7 @@ public class SwerveModule extends SubsystemBase {
     driveController.setReference(correctedDesiredState.speedMetersPerSecond, ControlType.kVelocity);
     turnController.setReference(correctedDesiredState.angle.getRadians(), ControlType.kPosition);
 
-    this.desiredState = correctedDesiredState;
+    this.desiredState = desiredState;
      
   }
 
@@ -154,9 +159,4 @@ public class SwerveModule extends SubsystemBase {
   }
 
 
-
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-  }
 }
