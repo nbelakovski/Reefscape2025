@@ -8,6 +8,7 @@ import frc.robot.Constants;
 
 
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.ClosedLoopConfig;
@@ -22,13 +23,20 @@ import edu.wpi.first.wpilibj.SerialPort;
 public class Elevator extends SubsystemBase {
   /** Creates a new Elevator. */
   private SparkMax elevatorMotor;
-  private SparkMaxConfig motorConfig;
+  private SparkMax elevatorDownMotor;
+  private RelativeEncoder encoder;
+  private SparkMaxConfig topMotorConfig;
+  private SparkMaxConfig downMotorConfig;
   private static Elevator instance;
 
 
   private Elevator() {
     elevatorMotor = new SparkMax(Ports.ELEVATOR_MOTOR_PORT, MotorType.kBrushless);
-    motorConfig = new SparkMaxConfig();
+    elevatorDownMotor = new SparkMax(Ports.ELEVATOR_MOTOR_DOWN_PORT, MotorType.kBrushless);
+    topMotorConfig = new SparkMaxConfig();
+    downMotorConfig = new SparkMaxConfig();
+    encoder = elevatorMotor.getEncoder();
+    
   }
 
   public static Elevator getInstance() {
@@ -38,8 +46,36 @@ public class Elevator extends SubsystemBase {
     return instance;
   }
 
+  public double getPosition() {
+    return encoder.getPosition();
+  }
+
+  public void elevate(){
+    elevatorMotor.set(0.6);
+  }
+  
+  public void descend(){
+    elevatorDownMotor.set(-0.6);
+  }
+  
+  public void stop(){
+    elevatorMotor.set(0);
+    elevatorDownMotor.set(0);
+  }
+
+  public void resetPosition(double pos){
+    encoder.setPosition(pos);
+  }
+
+  public void resetPosition(){
+    encoder.setPosition(0);
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("elevator position", getPosition());
   }
 }
+
+//jb ms

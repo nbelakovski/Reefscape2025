@@ -20,4 +20,5 @@ public class Ports {
     public static final int SWERVE_TURN_BL = 4;
 
     public static final int ELEVATOR_MOTOR_PORT = 80;
+    public static final int ELEVATOR_MOTOR_DOWN_PORT = 81;
 }
