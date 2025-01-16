@@ -19,33 +19,33 @@ import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.SerialPort;
 
-public class Intake extends SubsystemBase {
+public class CoralIntake extends SubsystemBase {
   /** Creates a new Intake. */
-  private SparkMax intakeMotor;
+  private SparkMax CoralIntakeMotor;
   private SparkMaxConfig motorConfig;
-  private static Intake instance;
+  private static CoralIntake instance;
   private Timer timer;
   
 
-  private Intake() {
-    intakeMotor = new SparkMax(Ports.INTAKE_MOTOR_PORT, MotorType.kBrushless);
+  private CoralIntake() {
+    CoralIntakeMotor = new SparkMax(Ports.INTAKE_MOTOR_PORT, MotorType.kBrushless);
     motorConfig = new SparkMaxConfig();
   }
-  public static Intake getInstance(){
+  public static CoralIntake getInstance(){
     if(instance == null) {
-      instance = new Intake();
+      instance = new CoralIntake();
     }
     return instance;
   }
   //
   public void eat(){
-    intakeMotor.set(-MechConstants.INTAKE_SPEED);
+    CoralIntakeMotor.set(-MechConstants.INTAKE_SPEED);
   }
   public void spit(){
-    intakeMotor.set(MechConstants.INTAKE_SPEED);
+    CoralIntakeMotor.set(MechConstants.INTAKE_SPEED);
   }
   public void stop(){
-    intakeMotor.set(0);
+    CoralIntakeMotor.set(0);
   }
 
   public void changeSpeed(double newSpeed){
