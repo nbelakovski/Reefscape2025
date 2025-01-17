@@ -15,6 +15,7 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -71,39 +72,78 @@ public class SwerveModule {
 
     
 
-    driveMotorConfig.encoder.positionConversionFactor(ModuleConstants.kDrivingEncoderPositionFactor);
-    driveMotorConfig.encoder.velocityConversionFactor(ModuleConstants.kDrivingEncoderVelocityFactor);
+    // driveMotorConfig.encoder.positionConversionFactor(ModuleConstants.kDrivingEncoderPositionFactor);
+    // driveMotorConfig.encoder.velocityConversionFactor(ModuleConstants.kDrivingEncoderVelocityFactor);
 
-    turnMotorConfig.encoder.positionConversionFactor(ModuleConstants.kTurningEncoderPositionFactor);
-    turnMotorConfig.encoder.velocityConversionFactor(ModuleConstants.kTurningEncoderVelocityFactor);
+    // turnMotorConfig.encoder.positionConversionFactor(ModuleConstants.kTurningEncoderPositionFactor);
+    // turnMotorConfig.encoder.velocityConversionFactor(ModuleConstants.kTurningEncoderVelocityFactor);
     
     
-    //References the established constants and and tells the Drive SparkMax what to set its PID to
-    driveControllerConfig.p(ModuleConstants.kTurningP);
-    driveControllerConfig.i(ModuleConstants.kTurningI);
-    driveControllerConfig.d(ModuleConstants.kTurningD);
-    driveControllerConfig.velocityFF(ModuleConstants.kDrivingFF);
-    driveControllerConfig.outputRange(ModuleConstants.kDrivingMinOutput, ModuleConstants.kDrivingMaxOutput);
+    // //References the established constants and and tells the Drive SparkMax what to set its PID to
+    // driveControllerConfig.p(ModuleConstants.kTurningP);
+    // driveControllerConfig.i(ModuleConstants.kTurningI);
+    // driveControllerConfig.d(ModuleConstants.kTurningD);
+    // driveControllerConfig.velocityFF(ModuleConstants.kDrivingFF);
+    // driveControllerConfig.outputRange(ModuleConstants.kDrivingMinOutput, ModuleConstants.kDrivingMaxOutput);
 
-    //References the established constants and and tells the Turn SparkMax what to set its PID to
-    turnControllerConfig.p(ModuleConstants.kTurningP);
-    turnControllerConfig.i(ModuleConstants.kTurningI);
-    turnControllerConfig.d(ModuleConstants.kTurningD);
-    turnControllerConfig.velocityFF(ModuleConstants.kTurningFF);
-    turnControllerConfig.outputRange(ModuleConstants.kTurningMinOutput, ModuleConstants.kTurningMaxOutput);
+    // //References the established constants and and tells the Turn SparkMax what to set its PID to
+    // turnControllerConfig.p(ModuleConstants.kTurningP);
+    // turnControllerConfig.i(ModuleConstants.kTurningI);
+    // turnControllerConfig.d(ModuleConstants.kTurningD);
+    // turnControllerConfig.velocityFF(ModuleConstants.kTurningFF);
+    // turnControllerConfig.outputRange(ModuleConstants.kTurningMinOutput, ModuleConstants.kTurningMaxOutput);
 
-    driveMotorConfig.idleMode(ModuleConstants.kDrivingMotorIdleMode);
-    turnMotorConfig.idleMode(ModuleConstants.kTurningMotorIdleMode);
+    // driveMotorConfig.idleMode(ModuleConstants.kDrivingMotorIdleMode);
+    // turnMotorConfig.idleMode(ModuleConstants.kTurningMotorIdleMode);
 
-    driveMotorConfig.smartCurrentLimit(ModuleConstants.kDrivingMotorCurrentLimit);
-    turnMotorConfig.smartCurrentLimit(ModuleConstants.kTurningMotorCurrentLimit);
+    // driveMotorConfig.smartCurrentLimit(ModuleConstants.kDrivingMotorCurrentLimit);
+    // turnMotorConfig.smartCurrentLimit(ModuleConstants.kTurningMotorCurrentLimit);
 
-    driveControllerConfig.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-    turnControllerConfig.feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
+    // driveControllerConfig.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+    // turnControllerConfig.feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
 
 
-    //flips the drive motor 
-    driveMotorConfig.inverted(config.DRIVE_INVERSION);
+    // //flips the drive motor 
+    // driveMotorConfig.inverted(config.DRIVE_INVERSION);
+
+    double drivingFactor = ModuleConstants.kWheelDiameterMeters * Math.PI
+            / ModuleConstants.kDrivingMotorReduction;
+    double turningFactor = 2 * Math.PI;
+    double drivingVelocityFeedForward = 1 / ModuleConstants.kDriveWheelFreeSpeedRps;
+
+    driveMotorConfig
+            .idleMode(IdleMode.kBrake)
+            .smartCurrentLimit(50);
+    driveMotorConfig.encoder
+            .positionConversionFactor(drivingFactor) // meters
+            .velocityConversionFactor(drivingFactor / 60.0); // meters per second
+    driveMotorConfig.closedLoop
+            .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+            // These are example gains you may need to them for your own robot!
+            .pid(0.04, 0, 0)
+            .velocityFF(drivingVelocityFeedForward)
+            .outputRange(-1, 1);
+
+    turnMotorConfig
+            .idleMode(IdleMode.kBrake)
+            .smartCurrentLimit(20);
+    turnMotorConfig.absoluteEncoder
+            // Invert the turning encoder, since the output shaft rotates in the opposite
+            // direction of the steering motor in the MAXSwerve Module.
+            .inverted(true)
+            .positionConversionFactor(turningFactor) // radians
+            .velocityConversionFactor(turningFactor / 60.0); // radians per second
+    turnMotorConfig.closedLoop
+            .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
+            // These are example gains you may need to them for your own robot!
+            .pid(1, 0, 0)
+            .outputRange(-1, 1)
+            // Enable PID wrap around for the turning motor. This will allow the PID
+            // controller to go through 0 to get to the setpoint i.e. going from 350 degrees
+            // to 10 degrees will go through 0 rather than the other direction which is a
+            // longer route.
+            .positionWrappingEnabled(true)
+            .positionWrappingInputRange(0, turningFactor);
 
     //Resets motors back to original
     driveMotor.configure(driveMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);

@@ -50,7 +50,7 @@ public final class Constants {
     public static final double FL_ANGULAR_OFFSET = -Math.PI/2; //Math.PI / 2; //-Math.PI / 2;
     public static final double FR_ANGULAR_OFFSET = 0;
     public static final double BR_ANGULAR_OFFSET = -Math.PI / 2; //Math.PI / 2;
-    public static final double BL_ANGULAR_OFFSET = 0; //Math.PI;
+    public static final double BL_ANGULAR_OFFSET = -Math.PI / 4; //Math.PI;
 
     //Constructor to hold all of the data to configure a SwerveModule
     public static final ModuleConfig SWERVE_FL = new ModuleConfig("FL", Ports.SWERVE_DRIVE_FL, Ports.SWERVE_TURN_FL, FL_SENSOR_OFFSET, FL_ANGULAR_OFFSET, false);//2.9483314  +Math.PI /2);
