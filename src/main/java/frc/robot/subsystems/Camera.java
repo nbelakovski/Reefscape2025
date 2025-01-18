@@ -57,6 +57,9 @@ public class Camera extends SubsystemBase {
   public double getZ(){
     return cam.getZ();
   }
+  public boolean hasTarget() {
+    return cam.hasTarget();
+  }
 
 
   @Override
