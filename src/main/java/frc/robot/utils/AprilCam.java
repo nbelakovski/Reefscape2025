@@ -114,12 +114,11 @@ public class AprilCam {
     
     //method that gets the ID of the "best" target, generally not used by our robot
     public String getAllTargets(){
-        MultiTargetPNPResult target = result.getMultiTagResult();
 
-        return target.fiducialIDsUsed.toString();
+        Optional<MultiTargetPNPResult> target = result.getMultiTagResult();
+
+        return target.get().fiducialIDsUsed.toString();
     }
-
-
 
     public double getX(){
         PhotonTrackedTarget target = result.getBestTarget();
