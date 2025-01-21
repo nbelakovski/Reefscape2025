@@ -65,5 +65,12 @@ public class Camera extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    //cam.update();
+    SmartDashboard.putNumber("X", getX());
+    SmartDashboard.putNumber("Y", getY());
+    SmartDashboard.putNumber("Z", getZ());
+    for (int i = 0; i < cam.getTargets().size(); i++) {
+      SmartDashboard.putString("id" + i, cam.getTargets().get(i).toString());
+    }
   }
 }

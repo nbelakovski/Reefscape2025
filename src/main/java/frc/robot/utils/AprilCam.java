@@ -59,8 +59,8 @@ public class AprilCam {
       }
 
       public void update() {
-        this.result = camera.getLatestResult();
-    }
+        this.result = camera.getAllUnreadResults().get(0);
+      }
 
     public Optional<EstimatedRobotPose> getEstimatedGlobalPose() {
 
