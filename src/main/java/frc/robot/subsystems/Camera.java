@@ -12,21 +12,21 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 
-public class CamFront extends SubsystemBase {
+public class Camera extends SubsystemBase {
 
   private AprilCam cam;
-  private static CamFront instance;
+  private static Camera instance;
 
   // Constructor
-  private CamFront() {
+  private Camera() {
     this.cam = new AprilCam(VisionConstants.FRONT_CAM_NAME);
     cam.update();
   }
 
   // Singleton Constructor
-  public static CamFront getInstance(){
+  public static Camera getInstance(){
     if(instance == null){
-      instance = new CamFront();
+      instance = new Camera();
     }
       return instance;
   }
