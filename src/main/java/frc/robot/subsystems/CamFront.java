@@ -12,50 +12,51 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 
-public class Camera extends SubsystemBase {
-  /** Creates a new Camera. */
+public class CamFront extends SubsystemBase {
+
   private AprilCam cam;
-  private static Camera instance;
+  private static CamFront instance;
 
-
-  public Camera() {
-    this.cam = new AprilCam(VisionConstants.APRIL_CAM_NAME);
+  // Constructor
+  private CamFront() {
+    this.cam = new AprilCam(VisionConstants.FRONT_CAM_NAME);
     cam.update();
   }
 
-  public static Camera getInstance(){
+  // Singleton Constructor
+  public static CamFront getInstance(){
     if(instance == null){
-      instance = new Camera();
+      instance = new CamFront();
     }
       return instance;
   }
   
-  public AprilCam getCam() {
-    return cam;
-  }
+  // public AprilCam getCam() {
+  //   return cam;
+  // }
 
   public PhotonTrackedTarget getDesiredTarget(int target) {
     return cam.getDesiredTarget(target);
   }
 
-  public double getDesiredX(PhotonTrackedTarget target) {
-    return cam.getDesiredX(target);
+  public double getXDesired(PhotonTrackedTarget target) {
+    return cam.getXDesired(target);
   }
 
   public double getX(){
-    return cam.getX();
+    return cam.getXBest();
   }
 
-  public double getDesiredY(PhotonTrackedTarget target) {
-    return cam.getDesiredY(target);
+  public double getYDesired(PhotonTrackedTarget target) {
+    return cam.getYDesired(target);
   }
 
   public double getY(){
-    return cam.getY();
+    return cam.getYBest();
   }
 
   public double getZ(){
-    return cam.getZ();
+    return cam.getZBest();
   }
   public boolean hasTarget() {
     return cam.hasTarget();
@@ -65,7 +66,9 @@ public class Camera extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    //cam.update();
+    
+    cam.update();
+
     SmartDashboard.putNumber("X", getX());
     SmartDashboard.putNumber("Y", getY());
     SmartDashboard.putNumber("Z", getZ());

@@ -16,12 +16,13 @@ import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.MultiTargetPNPResult;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
-
+import org.photonvision.targeting.TargetCorner;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -33,67 +34,60 @@ public class AprilCam {
 
     private PhotonCamera camera;
     private PhotonPipelineResult result;
-    private PhotonTrackedTarget desiredTarget;
 
+
+
+    private PhotonTrackedTarget desiredTarget;
     private AprilTagFieldLayout fieldLayout;
     private Transform3d camOffset;
     private PhotonPoseEstimator photonPoseEstimator;
-    private static AprilCam instance;
+    //private static AprilCam instance;
     
     
-  
-     public AprilCam(String name, Translation3d position, Rotation3d angle){
+    // Constructor 1
+    public AprilCam(String name, Translation3d position, Rotation3d angle){
         this.camera = new PhotonCamera(name);
      }
 
-     //simple constructor
-     public AprilCam(String name) {
+     // Constructor 2: simple version
+    public AprilCam(String name) {
         this(name,new Translation3d(), new Rotation3d());
     }
 
-     public static AprilCam getInstance() {
-        if (instance == null) {
-          instance = new AprilCam(VisionConstants.APRIL_CAM_NAME);
-        }
-        return instance;
-      }
+    // //Singleton not needed if we want multiple Camera objects!
+    // public static AprilCam getInstance() {
+    //     if (instance == null) {
+    //       instance = new AprilCam(VisionConstants.FRONT_CAM_NAME);
+    //     }
+    //     return instance;
+    //   }
 
-      public void update() {
-        this.result = camera.getAllUnreadResults().get(0);
-      }
-
-    public Optional<EstimatedRobotPose> getEstimatedGlobalPose() {
-
-        return photonPoseEstimator.update(result);
+    // Updates the camera with the latest results (Needs to be called periodically!)
+    public void update() {
+        //var result = camera.getLatestResult();  // Query the latest result from PhotonVision //photonvision code  
+        // this.result = camera.getAllUnreadResults().get(0); //old code
+        this.result = camera.getLatestResult();
     }
 
-    public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
 
-        // only matters for CLOSEST_TO_REFERENCE_POSE strategy
-        photonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
+    // --------------------- GETTING TARGETS ------------------------------- //
 
-        return photonPoseEstimator.update(result);
-    }
-
+    // Checks if the latest result has any targets
     public boolean hasTarget() {
         return result.hasTargets();
     }
 
-    public boolean hasDesiredTarget(int desiredTargetID) {
-        ///use the getDesiredTarget method to see if it returns null (not correct target) or not
-        if (getDesiredTarget(desiredTargetID)!= null)
-        {
-            return true;
-        }
-        return false;
-    }
-
-    //method to get all the AprilTag targets the camera can see
+    //Gets all the AprilTag targets the camera can currently see
     public List<PhotonTrackedTarget> getTargets(){
         return result.getTargets();
     }
 
-    //method that returns a PhotonTrackedTarget object for the desired target
+    // Gets the current "best" target
+    public PhotonTrackedTarget getBestTarget(){
+        return result.getBestTarget();
+    }
+
+    // Gets a target object for a specific AprilTag
     public PhotonTrackedTarget getDesiredTarget(int desiredTargetID){
 
         //look at each target in the arraylist of targets
@@ -104,62 +98,134 @@ public class AprilCam {
             {
                 return t;
             }
-            
         }
-
         //return null if you can't find the desiredTarget
         return null;
     }
 
+    // Checks if a desired AprilTag is visible
+    public boolean hasDesiredTarget(int desiredTargetID) {
+        ///use the getDesiredTarget method to see if it returns null (not correct target) or not
+        if (getDesiredTarget(desiredTargetID)!= null)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    // --------------------- GETTING DATA FROM A TARGET ------------------------------- //
+    // https://docs.photonvision.org/en/v2025.1.1/docs/programming/photonlib/getting-target-data.html#getting-data-from-a-target
+    // double yaw = target.getYaw();
+    // double pitch = target.getPitch();
+    // double area = target.getArea();
+    // double skew = target.getSkew(); //not available for AprilTags
+    // Transform2d pose = target.getCameraToTarget();
+    // List<TargetCorner> corners = target.getCorners();
+    // int targetID = target.getFiducialId();
+    // double poseAmbiguity = target.getPoseAmbiguity();
+    // Transform3d bestCameraToTarget = target.getBestCameraToTarget();
+    // Transform3d alternateCameraToTarget = target.getAlternateCameraToTarget();
+
+    // Gets the Transform3d object of a specific AprilTag object
+    private Transform3d getTargetTransform(PhotonTrackedTarget target){
+        if(target == null) {
+            return null;
+        }
+        return target.getBestCameraToTarget();
+    }
+
+    // Gets the X value of a desired target
+    public double getXDesired(PhotonTrackedTarget target){
+        if(target == null) { return Float.NaN; }
+        return getTargetTransform(target).getX();
+    }
+
+    // Gets the X value of the "Best" target
+    public double getXBest(){
+        return getXDesired( result.getBestTarget() );
+    }
+    
+    // Gets the Y value of a desired target
+    public double getYDesired(PhotonTrackedTarget target){
+        if(target == null) { return Float.NaN; }
+        return getTargetTransform(target).getY();
+    }
+
+    // Gets the Y value of the "Best" target
+    public double getYBest(){
+        return getYDesired( result.getBestTarget() );
+    }
+
+    // Gets the Z value of a desired target
+    public double getZDesired(PhotonTrackedTarget target){
+        if(target == null) { return Float.NaN; }
+        return getTargetTransform(target).getZ();
+    }
+
+    // Gets the Z value of the "Best" target
+    public double getZBest(){
+        return getZDesired( result.getBestTarget() );
+    }
+
+
+    // --------------------- POSE ESTIMATION ------------------------------- //
+
+    // Check out this page: https://docs.photonvision.org/en/latest/docs/examples/poseest.html
+    // Here is the example Vision class from PhotonVision: https://github.com/PhotonVision/photonvision/blob/main/photonlib-java-examples/poseest/src/main/java/frc/robot/Vision.java
+ 
+    // Note: Line 68 
+    // Gets the AprilTag Locations:
+    // visionSim.addAprilTags(kTagLayout);
+
+
+    // Note: Lines 64-73
+    // During periodic execution, we read back camera results. If we see AprilTags in the image, we calculate the camera-measured pose of the robot and pass it to the Drivetrain.
+
+    // // Correct pose estimate with vision measurements
+    // var visionEst = vision.getEstimatedGlobalPose();
+    // visionEst.ifPresent(
+    //         est -> {
+    //             // Change our trust in the measurement based on the tags we can see
+    //             var estStdDevs = vision.getEstimationStdDevs();
+
+    //             drivetrain.addVisionMeasurement(
+    //                     est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
+    //         });
+
+
+
+
+    //OLD CODE 
+    // public Optional<EstimatedRobotPose> getEstimatedGlobalPose() {
+
+    //     return photonPoseEstimator.update(result);
+    // }
+
+    // public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
+
+    //     // only matters for CLOSEST_TO_REFERENCE_POSE strategy
+    //     photonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
+
+    //     return photonPoseEstimator.update(result);
+    // }
+
+
+
+
+
+
+
+
+
     
     //method that gets the ID of the "best" target, generally not used by our robot
-    public String getAllTargets(){
+    // public String getAllTargets(){
 
-        Optional<MultiTargetPNPResult> target = result.getMultiTagResult();
+    //     Optional<MultiTargetPNPResult> target = result.getMultiTagResult();
 
-        return target.get().fiducialIDsUsed.toString();
-    }
+    //     return target.get().fiducialIDsUsed.toString();
+    // }
 
-    public double getX(){
-        PhotonTrackedTarget target = result.getBestTarget();
-        if(target == null) {
-            return Float.NaN;
-        }
-        Transform3d tea = target.getBestCameraToTarget();   
-        return tea.getX();
-    }
-    
-    public double getDesiredX(PhotonTrackedTarget target){
-        if(target == null) {
-            return Float.NaN;
-        }
-        Transform3d tea = target.getBestCameraToTarget();   
-        return tea.getX();
-    }
-
-    public double getY(){
-        PhotonTrackedTarget target = result.getBestTarget();
-        if(target == null) {
-            return Float.NaN;
-        }
-        Transform3d tea = target.getBestCameraToTarget();   
-        return tea.getY();
-    }
-
-    public double getDesiredY(PhotonTrackedTarget target){
-        if(target == null) {
-            return Float.NaN;
-        }
-        Transform3d tea = target.getBestCameraToTarget();   
-        return tea.getY();
-    }
-    public double getZ(){
-        PhotonTrackedTarget target = result.getBestTarget();
-        if(target == null) {
-            return 500.0;
-        }
-        Transform3d tea = target.getBestCameraToTarget();   
-        return tea.getZ();
-    }
+   
 
 }
