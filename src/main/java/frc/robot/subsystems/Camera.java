@@ -6,8 +6,20 @@ package frc.robot.subsystems;
 
 import frc.robot.Constants.VisionConstants;
 import frc.robot.utils.AprilCam;
+
+import java.util.Optional;
+
+import org.photonvision.EstimatedRobotPose;
+import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonTrackedTarget;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
@@ -16,10 +28,21 @@ public class Camera extends SubsystemBase {
 
   private AprilCam cam;
   private static Camera instance;
+  // The field from AprilTagFields will be different depending on the game.
+  AprilTagFieldLayout aprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
+
+  //Forward Camera
+  // cam = new PhotonCamera("testCamera");
+  Transform3d robotToCam;
+  // Construct PhotonPoseEstimator
+  PhotonPoseEstimator photonPoseEstimator;
 
   // Constructor
   private Camera() {
     this.cam = new AprilCam(VisionConstants.FRONT_CAM_NAME);
+    // this.robotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0,0,0)); //Cam mounted facing forward, half a meter forward of center, half a meter up from center.
+    // this.photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, robotToCam);
+
     cam.update();
   }
 
@@ -61,11 +84,24 @@ public class Camera extends SubsystemBase {
   public boolean hasTarget() {
     return cam.hasTarget();
   }
-
+  
+  
+    
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    // Correct pose estimate with vision measurements
+    var visionEst = cam.getEstimatedGlobalPose();
+    visionEst.ifPresent(
+            est -> {
+                // Change our trust in the measurement based on the tags we can see
+                var estStdDevs = cam.getEstimationStdDevs();
+
+                drivetrain.addVisionMeasurement(
+                        est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
+            });
+
     
     //cam.update();
     SmartDashboard.putNumber("X", getX());
