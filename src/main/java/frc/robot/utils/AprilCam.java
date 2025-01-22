@@ -25,8 +25,10 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 /** Add your docs here. */
@@ -64,13 +66,23 @@ public class AprilCam {
 
     // Updates the camera with the latest results (Needs to be called periodically!)
     public void update() {
+        result = new PhotonPipelineResult();
+        SmartDashboard.putBoolean("photon result", camera.getAllUnreadResults().isEmpty());
+        SmartDashboard.putNumber("photon result size", camera.getAllUnreadResults().size());
+
+        //SmartDashboard.putString("pipeline", camera.getAllUnreadResults().get(0).toString());
+    
+        // if(camera.getAllUnreadResults().size() != 0) {
+        //     SmartDashboard.putBoolean("is run", true);
+        //     //this.result = camera.getAllUnreadResults().get(0);
+        // }
         //var result = camera.getLatestResult();  // Query the latest result from PhotonVision //photonvision code  
-        // this.result = camera.getAllUnreadResults().get(0); //old code
-        this.result = camera.getLatestResult();
+        //this.result = camera.getAllUnreadResults().get(0); //old code
+        //this.result = camera.getLatestResult();
     }
 
 
-    // --------------------- GETTING TARGETS ------------------------------- //
+    // --------------------- GETTING TARGETS -------------------)------------ //
 
     // Checks if the latest result has any targets
     public boolean hasTarget() {

@@ -178,7 +178,7 @@ public static final class ModuleConstants {
     // public static final double DEGREES_Y_INTERCEPT = -2.0;
 
     //Camera Name
-    public static final String FRONT_CAM_NAME = "FrontCam"; //"Arducam_OV9782_USB_Camera";
+    public static final String FRONT_CAM_NAME = "Arducam_OV9782_USB_Camera"; //"Arducam_OV9782_USB_Camera";
 
   }
 

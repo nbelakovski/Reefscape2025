@@ -67,8 +67,7 @@ public class CamFront extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     
-    cam.update();
-
+    //cam.update();
     SmartDashboard.putNumber("X", getX());
     SmartDashboard.putNumber("Y", getY());
     SmartDashboard.putNumber("Z", getZ());
