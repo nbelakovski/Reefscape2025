@@ -5,10 +5,12 @@
 package frc.robot.subsystems;
 import frc.robot.utils.Ports;
 import frc.robot.Constants;
-
+import frc.robot.Constants.ElevatorConstants;
 
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.ClosedLoopConfig;
@@ -22,20 +24,26 @@ import edu.wpi.first.wpilibj.SerialPort;
 
 public class Elevator extends SubsystemBase {
   /** Creates a new Elevator. */
-  private SparkMax elevatorMotor;
-  private SparkMax elevatorDownMotor;
+  private SparkMax elevatorLeftMotor;
+  private SparkMax elevatorRightMotor;
   private RelativeEncoder encoder;
-  private SparkMaxConfig topMotorConfig;
-  private SparkMaxConfig downMotorConfig;
+  private SparkMaxConfig leftMotorConfig;
+  private SparkMaxConfig rightMotorConfig;
   private static Elevator instance;
 
 
   private Elevator() {
-    elevatorMotor = new SparkMax(Ports.ELEVATOR_MOTOR_PORT, MotorType.kBrushless);
-    elevatorDownMotor = new SparkMax(Ports.ELEVATOR_MOTOR_DOWN_PORT, MotorType.kBrushless);
-    topMotorConfig = new SparkMaxConfig();
-    downMotorConfig = new SparkMaxConfig();
-    encoder = elevatorMotor.getEncoder();
+    elevatorLeftMotor = new SparkMax(Ports.ELEVATOR_LEFT_MOTOR_PORT, MotorType.kBrushless);
+    elevatorRightMotor = new SparkMax(Ports.ELEVATOR_RIGHT_MOTOR_PORT, MotorType.kBrushless);
+    leftMotorConfig = new SparkMaxConfig();
+    rightMotorConfig = new SparkMaxConfig();
+    encoder = elevatorLeftMotor.getEncoder();
+
+    rightMotorConfig.inverted(ElevatorConstants.RIGHT_ELEVATOR_INVERTED);
+    //leftMotorConfig.encoder.inverted();
+    elevatorRightMotor.configure(rightMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    elevatorLeftMotor.configure(leftMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
     
   }
 
@@ -51,16 +59,16 @@ public class Elevator extends SubsystemBase {
   }
 
   public void elevate(){
-    elevatorMotor.set(0.6);
+    elevatorLeftMotor.set(0.6);
   }
   
   public void descend(){
-    elevatorDownMotor.set(-0.6);
+    elevatorRightMotor.set(-0.6);
   }
   
   public void stop(){
-    elevatorMotor.set(0);
-    elevatorDownMotor.set(0);
+    elevatorLeftMotor.set(0);
+    elevatorRightMotor.set(0);
   }
 
   public void resetPosition(double pos){

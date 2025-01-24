@@ -158,5 +158,25 @@ public static final class ModuleConstants {
   }
 
 
+  public static class ElevatorConstants {
+    
+    public static final double ELEVATOR_MIN = 0;
+    public static final double ELEVATOR_MAX = 34;
+
+    public static final double ELEVATOR_L1 = 10;
+    public static final double ELEVATOR_L2 = 20;
+    public static final double ELEVATOR_L3 = 30;
+
+    public static final double ELEVATOR_PROCESSOR = ELEVATOR_MIN;
+    public static final double ELEVATOR_ALGAE_L2 = 15;
+    public static final double ELEVATOR_ALGAE_L3 = 25;
+
+    public static final boolean RIGHT_ELEVATOR_INVERTED = false;
+    
+
+  }
+
+
+
 
 }
