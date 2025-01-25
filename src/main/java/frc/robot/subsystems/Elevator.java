@@ -59,13 +59,29 @@ public class Elevator extends SubsystemBase {
   }
 
   public void elevate(){
-    elevatorLeftMotor.set(0.6);
+
+    if (encoder.getPosition() >= ElevatorConstants.ELEVATOR_MAX) {
+      elevatorLeftMotor.set(0.0);
+    }
+
+    else {
+      elevatorLeftMotor.set(0.6);
+    }
   }
   
   public void descend(){
-    elevatorRightMotor.set(-0.6);
+
+    if (encoder.getPosition() <= ElevatorConstants.ELEVATOR_MIN) {
+      elevatorLeftMotor.set(0.0);
+    }
+
+    else {
+      elevatorRightMotor.set(-0.6);
+    }
   }
   
+
+
   public void stop(){
     elevatorLeftMotor.set(0);
     elevatorRightMotor.set(0);
