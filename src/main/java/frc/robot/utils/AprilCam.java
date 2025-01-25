@@ -46,13 +46,11 @@ public class AprilCam {
     private PhotonPipelineResult result;
 
     private PhotonTrackedTarget desiredTarget;
-    private AprilTagFieldLayout fieldLayout;
-    private Transform3d camOffset;
     private PhotonPoseEstimator photonPoseEstimator;
 
     //private static AprilCam instance;
-    Transform3d robotToCam;
-    AprilTagFieldLayout aprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
+    Transform3d camOofset;
+    AprilTagFieldLayout aprilTagFieldLayout;
 
     // Simulation
     private PhotonCameraSim cameraSim;
@@ -64,8 +62,10 @@ public class AprilCam {
     // Constructor 1
     public AprilCam(String name, Translation3d position, Rotation3d angle){
         this.camera = new PhotonCamera(name);
-        this.robotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0,0,0)); //Cam mounted facing forward, half a meter forward of center, half a meter up from center.
-        this.photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, robotToCam);
+         //Cam mounted facing forward, half a meter forward of center, half a meter up from center.
+        this.camOofset = new Transform3d(new Translation3d(0.3683, 0.0, 0.0), new Rotation3d(0,0,0));
+        aprilTagFieldLayout = AprilTagFields.k2025Reefscape.loadAprilTagLayoutField();
+        this.photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, camOofset);
 
      }
 
@@ -83,8 +83,8 @@ public class AprilCam {
     //   }
 
     // Updates the camera with the latest results (Needs to be called periodically!)
-    public void update() {
-        result = new PhotonPipelineResult();
+    // public void update() {
+    //     result = new PhotonPipelineResult();
         // SmartDashboard.putBoolean("photon result", camera.getAllUnreadResults().isEmpty());
         // SmartDashboard.putNumber("photon result size", camera.getAllUnreadResults().size());
         //SmartDashboard.putString("pipeline", camera.getAllUnreadResults().get(0).toString());
@@ -95,52 +95,52 @@ public class AprilCam {
         // }
         //var result = camera.getLatestResult();  // Query the latest result from PhotonVision //photonvision code  
         //this.result = camera.getAllUnreadResults().get(0); //old code
-        this.result = camera.getLatestResult();
-    }
+        //this.result = camera.getLatestResult();
+    //}
 
 
     // --------------------- GETTING TARGETS -------------------)------------ //
 
     // Checks if the latest result has any targets
-    public boolean hasTarget() {
-        return result.hasTargets();
-    }
+    // public boolean hasTarget() {
+    //     return result.hasTargets();
+    // }
 
     //Gets all the AprilTag targets the camera can currently see
-    public List<PhotonTrackedTarget> getTargets(){
-        return result.getTargets();
-    }
+    // public List<PhotonTrackedTarget> getTargets(){
+    //     return result.getTargets();
+    // }
 
     // Gets the current "best" target
-    public PhotonTrackedTarget getBestTarget(){
-        return result.getBestTarget();
-    }
+    // public PhotonTrackedTarget getBestTarget(){
+    //     return result.getBestTarget();
+    // }
 
     // Gets a target object for a specific AprilTag
-    public PhotonTrackedTarget getDesiredTarget(int desiredTargetID){
+    // public PhotonTrackedTarget getDesiredTarget(int desiredTargetID){
 
-        //look at each target in the arraylist of targets
-        for (PhotonTrackedTarget t: getTargets())
-        {
-            //look for the target with the desired ID
-            if (t.getFiducialId() == desiredTargetID)
-            {
-                return t;
-            }
-        }
-        //return null if you can't find the desiredTarget
-        return null;
-    }
+    //     //look at each target in the arraylist of targets
+    //     for (PhotonTrackedTarget t: getTargets())
+    //     {
+    //         //look for the target with the desired ID
+    //         if (t.getFiducialId() == desiredTargetID)
+    //         {
+    //             return t;
+    //         }
+    //     }
+    //     //return null if you can't find the desiredTarget
+    //     return null;
+    // }
 
     // Checks if a desired AprilTag is visible
-    public boolean hasDesiredTarget(int desiredTargetID) {
-        ///use the getDesiredTarget method to see if it returns null (not correct target) or not
-        if (getDesiredTarget(desiredTargetID)!= null)
-        {
-            return true;
-        }
-        return false;
-    }
+    // public boolean hasDesiredTarget(int desiredTargetID) {
+    //     ///use the getDesiredTarget method to see if it returns null (not correct target) or not
+    //     if (getDesiredTarget(desiredTargetID)!= null)
+    //     {
+    //         return true;
+    //     }
+    //     return false;
+    // }
 
     // --------------------- GETTING DATA FROM A TARGET ------------------------------- //
     // https://docs.photonvision.org/en/v2025.1.1/docs/programming/photonlib/getting-target-data.html#getting-data-from-a-target
@@ -163,38 +163,38 @@ public class AprilCam {
         return target.getBestCameraToTarget();
     }
 
-    // Gets the X value of a desired target
-    public double getXDesired(PhotonTrackedTarget target){
-        if(target == null) { return Float.NaN; }
-        return getTargetTransform(target).getX();
-    }
+    // // Gets the X value of a desired target
+    // public double getXDesired(PhotonTrackedTarget target){
+    //     if(target == null) { return Float.NaN; }
+    //     return getTargetTransform(target).getX();
+    // }
 
-    // Gets the X value of the "Best" target
-    public double getXBest(){
-        return getXDesired( result.getBestTarget() );
-    }
+    // // Gets the X value of the "Best" target
+    // public double getXBest(){
+    //     return getXDesired( result.getBestTarget() );
+    // }
     
-    // Gets the Y value of a desired target
-    public double getYDesired(PhotonTrackedTarget target){
-        if(target == null) { return Float.NaN; }
-        return getTargetTransform(target).getY();
-    }
+    // // Gets the Y value of a desired target
+    // public double getYDesired(PhotonTrackedTarget target){
+    //     if(target == null) { return Float.NaN; }
+    //     return getTargetTransform(target).getY();
+    // }
 
-    // Gets the Y value of the "Best" target
-    public double getYBest(){
-        return getYDesired( result.getBestTarget() );
-    }
+    // // Gets the Y value of the "Best" target
+    // public double getYBest(){
+    //     return getYDesired( result.getBestTarget() );
+    // }
 
-    // Gets the Z value of a desired target
-    public double getZDesired(PhotonTrackedTarget target){
-        if(target == null) { return Float.NaN; }
-        return getTargetTransform(target).getZ();
-    }
+    // // Gets the Z value of a desired target
+    // public double getZDesired(PhotonTrackedTarget target){
+    //     if(target == null) { return Float.NaN; }
+    //     return getTargetTransform(target).getZ();
+    // }
 
-    // Gets the Z value of the "Best" target
-    public double getZBest(){
-        return getZDesired( result.getBestTarget() );
-    }
+    // // Gets the Z value of the "Best" target
+    // public double getZBest(){
+    //     return getZDesired( result.getBestTarget() );
+    // }
 
 
     // --------------------- POSE ESTIMATION ------------------------------- //
@@ -261,16 +261,6 @@ public class AprilCam {
             visionEst = photonPoseEstimator.update(change);
             updateEstimationStdDevs(visionEst, change.getTargets());
 
-            if (Robot.isSimulation()) {
-                visionEst.ifPresentOrElse(
-                        est ->
-                                getSimDebugField()
-                                        .getObject("VisionEstimation")
-                                        .setPose(est.estimatedPose.toPose2d()),
-                        () -> {
-                            getSimDebugField().getObject("VisionEstimation").setPoses();
-                        });
-            }
         }
         return visionEst;
     }

@@ -46,7 +46,7 @@ public class Camera extends SubsystemBase {
     // this.robotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0,0,0)); //Cam mounted facing forward, half a meter forward of center, half a meter up from center.
     // this.photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, robotToCam);
 
-    cam.update();
+    //cam.update();
   }
 
   // Singleton Constructor
@@ -61,32 +61,32 @@ public class Camera extends SubsystemBase {
   //   return cam;
   // }
 
-  public PhotonTrackedTarget getDesiredTarget(int target) {
-    return cam.getDesiredTarget(target);
-  }
+  // public PhotonTrackedTarget getDesiredTarget(int target) {
+  //   return cam.getDesiredTarget(target);
+  // }
 
-  public double getXDesired(PhotonTrackedTarget target) {
-    return cam.getXDesired(target);
-  }
+  // public double getXDesired(PhotonTrackedTarget target) {
+  //   return cam.getXDesired(target);
+  // }
 
-  public double getX(){
-    return cam.getXBest();
-  }
+  // public double getX(){
+  //   return cam.getXBest();
+  // }
 
-  public double getYDesired(PhotonTrackedTarget target) {
-    return cam.getYDesired(target);
-  }
+  // public double getYDesired(PhotonTrackedTarget target) {
+  //   return cam.getYDesired(target);
+  // }
 
-  public double getY(){
-    return cam.getYBest();
-  }
+  // public double getY(){
+  //   return cam.getYBest();
+  // }
 
-  public double getZ(){
-    return cam.getZBest();
-  }
-  public boolean hasTarget() {
-    return cam.hasTarget();
-  }
+  // public double getZ(){
+  //   return cam.getZBest();
+  // }
+  // public boolean hasTarget() {
+  //   return cam.hasTarget();
+  // }
   
   
     
@@ -107,11 +107,19 @@ public class Camera extends SubsystemBase {
 
     
     //cam.update();
-    SmartDashboard.putNumber("X", getX());
-    SmartDashboard.putNumber("Y", getY());
-    SmartDashboard.putNumber("Z", getZ());
-    for (int i = 0; i < cam.getTargets().size(); i++) {
-      SmartDashboard.putString("id" + i, cam.getTargets().get(i).toString());
-    }
+    // SmartDashboard.putNumber("X", getX());
+    // SmartDashboard.putNumber("Y", getY());
+    // SmartDashboard.putNumber("Z", getZ());
+    // for (int i = 0; i < cam.getTargets().size(); i++) {
+    //   SmartDashboard.putString("id" + i, cam.getTargets().get(i).toString());
+    // }
+
+    SmartDashboard.putNumber("pose X", cam.getEstimatedGlobalPose().get().estimatedPose.getX());
+    SmartDashboard.putNumber("pose Y", cam.getEstimatedGlobalPose().get().estimatedPose.getY());
+    SmartDashboard.putNumber("pose X", cam.getEstimatedGlobalPose().get().estimatedPose.getRotation().getAngle());
+    SmartDashboard.putNumber("tag 1 pose x", aprilTagFieldLayout.getTagPose(1).get().getX());
+    SmartDashboard.putNumber("tag 1 pose y", aprilTagFieldLayout.getTagPose(1).get().getY());
+   
+    
   }
 }
