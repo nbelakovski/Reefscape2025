@@ -81,7 +81,6 @@ public class Elevator extends SubsystemBase {
   }
   
 
-
   public void stop(){
     elevatorLeftMotor.set(0);
     elevatorRightMotor.set(0);
