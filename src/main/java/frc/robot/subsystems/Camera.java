@@ -27,7 +27,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Camera extends SubsystemBase {
 
-  private AprilCamDep cam;
+  private AprilCam cam;
   private static Camera instance;
   // The field from AprilTagFields will be different depending on the game.
   AprilTagFieldLayout aprilTagFieldLayout = AprilTagFields.k2025Reefscape.loadAprilTagLayoutField();
@@ -43,7 +43,7 @@ public class Camera extends SubsystemBase {
 
   // Constructor
   private Camera() {
-    this.cam = new AprilCamDep(VisionConstants.FRONT_CAM_NAME);
+    this.cam = new AprilCam(VisionConstants.FRONT_CAM_NAME);
     // this.robotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0,0,0)); //Cam mounted facing forward, half a meter forward of center, half a meter up from center.
     // this.photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, robotToCam);
 
@@ -66,28 +66,28 @@ public class Camera extends SubsystemBase {
   //   return cam.getDesiredTarget(target);
   // }
 
-  public double getXDesired(PhotonTrackedTarget target) {
-    return cam.getXDesired(target);
-  }
+  // public double getXDesired(PhotonTrackedTarget target) {
+  //   return cam.getXDesired(target);
+  // }
 
-  public double getX(){
-    return cam.getXBest();
-  }
+  // public double getX(){
+  //   return cam.getXBest();
+  // }
 
-  public double getYDesired(PhotonTrackedTarget target) {
-    return cam.getYDesired(target);
-  }
+  // public double getYDesired(PhotonTrackedTarget target) {
+  //   return cam.getYDesired(target);
+  // }
 
-  public double getY(){
-    return cam.getYBest();
-  }
+  // public double getY(){
+  //   return cam.getYBest();
+  // }
 
-  public double getZ(){
-    return cam.getZBest();
-  }
-  public boolean hasTarget() {
-    return cam.hasTarget();
-  }
+  // public double getZ(){
+  //   return cam.getZBest();
+  // }
+  // public boolean hasTarget() {
+  //   return cam.hasTarget();
+  // }
   
   
     
@@ -110,12 +110,12 @@ public class Camera extends SubsystemBase {
                         est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
             });
 
-    SmartDashboard.putNumber("X", getX());
-    SmartDashboard.putNumber("Y", getY());
-    SmartDashboard.putNumber("Z", getZ());
-    for (int i = 0; i < cam.getTargets().size(); i++) {
-      SmartDashboard.putString("id" + i, cam.getTargets().get(i).toString());
-    }
+    // SmartDashboard.putNumber("X", getX());
+    // SmartDashboard.putNumber("Y", getY());
+    // SmartDashboard.putNumber("Z", getZ());
+    // for (int i = 0; i < cam.getTargets().size(); i++) {
+    //   SmartDashboard.putString("id" + i, cam.getTargets().get(i).toString());
+    // }
 
     if(visionEst.isPresent()) {
       SmartDashboard.putNumber("pose X", visionEst.get().estimatedPose.getX());
