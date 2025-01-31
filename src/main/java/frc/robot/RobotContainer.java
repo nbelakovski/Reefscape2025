@@ -70,9 +70,9 @@ public class RobotContainer {
     new JoystickButton(operatorController,Button.kY.value).whileTrue(new ElevatorElevate());
     new JoystickButton(operatorController,Button.kA.value).whileTrue(new ElevatorDescend());
 
-    // Set Elevator Position on Driver on DPad
-    new DPad(driverController,Button.kX.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L2));
-    new DPad(driverController,Button.kB.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L3));
+    // Set Elevator Position for Driver on DPad
+    new DPad(driverController,90).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L2));
+    new DPad(driverController,0).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L3));
   }
 
   /**
