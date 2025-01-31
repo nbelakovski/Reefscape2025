@@ -59,12 +59,6 @@ private double rotSpeed = 0.0;
 
 private final SwerveDrivePoseEstimator poseEstimator;
 
-
-
-
-
-
-
   /** Creates a new Drivetrain. */
   private Drivetrain() {
 
@@ -89,6 +83,7 @@ private final SwerveDrivePoseEstimator poseEstimator;
     );
 
     fieldCentric = true;
+    
 
     var stateStdDevs = VecBuilder.fill(0.1, 0.1, 0.1);
     var visionStdDevs = VecBuilder.fill(1, 1, 1);
@@ -101,6 +96,13 @@ private final SwerveDrivePoseEstimator poseEstimator;
       stateStdDevs,
       visionStdDevs);
 
+  }
+
+  public static Drivetrain getInstance() {
+    if (instance == null) {
+      instance = new Drivetrain();
+    }
+    return instance;
   }
 
   public static Drivetrain getInstance() {
@@ -422,9 +424,6 @@ private final SwerveDrivePoseEstimator poseEstimator;
     SmartDashboard.putNumber("xspeed", xSpeed);
     SmartDashboard.putNumber("yspeed", ySpeed);
     SmartDashboard.putNumber("rotspeed", rotSpeed);
-    
-
-
     //SmartDashboard.putData("Odometry Field", field);
   }
 

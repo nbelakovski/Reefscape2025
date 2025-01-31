@@ -33,10 +33,10 @@ public final class Constants {
   public static class SwerveConstants {
     ///(Old Robot)
     //Sensor Offsets for the radian difference between the physical sensor orientation and the calibrated swerve direction
-    public static final double FL_SENSOR_OFFSET = 5.1247236; //from REV Hardware Client
-    public static final double FR_SENSOR_OFFSET = 4.7080523; //from REV Hardware Client
-    public static final double BR_SENSOR_OFFSET = 2.9550133; //from REV Hardware Client
-    public static final double BL_SENSOR_OFFSET = 2.8204095; //from REV Hardware Client
+    public static final double FL_SENSOR_OFFSET = 0.8946441; //from REV Hardware Client
+    public static final double FR_SENSOR_OFFSET = 0.3716664; //from REV Hardware Client
+    public static final double BR_SENSOR_OFFSET = 0.2515946; //from REV Hardware Client
+    public static final double BL_SENSOR_OFFSET = 0.3813912; //from REV Hardware Client
 
     ///(New Robot)(Put new numbers)
     // public static final double FL_SENSOR_OFFSET = 0.7848113; //from REV Hardware Client
@@ -54,9 +54,9 @@ public final class Constants {
     ///(New Robot)(Put new numbers)
     //Angular Offsets for the radian difference between the calibrated swerve and desired forward direction
     public static final double FL_ANGULAR_OFFSET = -Math.PI/2; //Math.PI / 2; //-Math.PI / 2;
-    public static final double FR_ANGULAR_OFFSET = 0;
-    public static final double BR_ANGULAR_OFFSET = -Math.PI / 2; //Math.PI / 2;
-    public static final double BL_ANGULAR_OFFSET = 0; //Math.PI;
+    public static final double FR_ANGULAR_OFFSET = 2 * Math.PI/3;
+    public static final double BR_ANGULAR_OFFSET = Math.PI/2; //Math.PI / 2;
+    public static final double BL_ANGULAR_OFFSET = 5 * Math.PI/3; //Math.PI;
 
     //Constructor to hold all of the data to configure a SwerveModule
     public static final ModuleConfig SWERVE_FL = new ModuleConfig("FL", Ports.SWERVE_DRIVE_FL, Ports.SWERVE_TURN_FL, FL_SENSOR_OFFSET, FL_ANGULAR_OFFSET, false);//2.9483314  +Math.PI /2);
@@ -65,10 +65,10 @@ public final class Constants {
     public static final ModuleConfig SWERVE_BR = new ModuleConfig("BR", Ports.SWERVE_DRIVE_BR, Ports.SWERVE_TURN_BR, BR_SENSOR_OFFSET, BR_ANGULAR_OFFSET, true);
 
     // Chassis configuration
-    public static final double TRACK_WIDTH = Units.inchesToMeters(25);
+    public static final double TRACK_WIDTH = Units.inchesToMeters(26);
 
     // Distance between centers of right and left wheels on robot
-    public static final double WHEEL_BASE = Units.inchesToMeters(25);
+    public static final double WHEEL_BASE = Units.inchesToMeters(26);
 
     public static final double DISTANCE_TO_CENTER = Math.sqrt(Math.pow(WHEEL_BASE/2, 2) + Math.pow(WHEEL_BASE/2, 2));
 
@@ -96,10 +96,10 @@ public final class Constants {
     public static final double GEER_RATTIOLI = 3.56;
 
 
-    //Slew stuff from Rev
-    public static final double kDirectionSlewRate = 1; // radians per second
-    public static final double kMagnitudeSlewRate = 1.4; // percent per second (1 = 100%)
-    public static final double kRotationalSlewRate = 1; // percent per second (1 = 100%)
+    // //Slew stuff from Rev
+    // public static final double kDirectionSlewRate = 1; // radians per second
+    // public static final double kMagnitudeSlewRate = 1.4; // percent per second (1 = 100%)
+    // public static final double kRotationalSlewRate = 1; // percent per second (1 = 100%)
 
     public static final boolean kGyroReversed = false;
 
