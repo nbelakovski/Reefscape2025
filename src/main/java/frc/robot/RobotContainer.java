@@ -12,6 +12,7 @@ import frc.robot.commands.ElevatorElevate;
 import frc.robot.commands.ElevatorSetPosition;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.utils.DPad;
 import frc.robot.utils.Ports;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -69,9 +70,9 @@ public class RobotContainer {
     new JoystickButton(operatorController,Button.kY.value).whileTrue(new ElevatorElevate());
     new JoystickButton(operatorController,Button.kA.value).whileTrue(new ElevatorDescend());
 
-    // Set Elevator Position on Driver buttons because
-    new JoystickButton(driverController,Button.kX.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L2));
-    new JoystickButton(driverController,Button.kB.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L3));
+    // Set Elevator Position on Driver on DPad
+    new DPad(driverController,Button.kX.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L2));
+    new DPad(driverController,Button.kB.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L3));
   }
 
   /**
