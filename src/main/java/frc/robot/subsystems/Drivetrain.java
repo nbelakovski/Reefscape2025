@@ -105,13 +105,6 @@ private final SwerveDrivePoseEstimator poseEstimator;
     return instance;
   }
 
-  public static Drivetrain getInstance() {
-    if (instance == null) {
-      instance = new Drivetrain();
-    }
-    return instance;
-  }
-
   public void drive() {
     move(this.xSpeed, this.ySpeed, this.rotSpeed, this.fieldCentric);
   }

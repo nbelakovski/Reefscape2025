@@ -43,7 +43,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class AprilCam {
 
     private PhotonCamera camera;
-    private PhotonPipelineResult result;
+    private List<PhotonPipelineResult> results;
 
     private PhotonTrackedTarget desiredTarget;
     private PhotonPoseEstimator photonPoseEstimator;
@@ -90,6 +90,7 @@ public class AprilCam {
     
         // if(camera.getAllUnreadResults().size() != 0) {
         //     SmartDashboard.putBoolean("is run", true);
+
         //     //this.result = camera.getAllUnreadResults().get(0);
         // }
         //var result = camera.getLatestResult();  // Query the latest result from PhotonVision //photonvision code  
@@ -97,6 +98,9 @@ public class AprilCam {
         //this.result = camera.getLatestResult();
     //}
 
+    public void update() {
+        this.results = camera.getAllUnreadResults();
+    }
 
     // --------------------- GETTING TARGETS -------------------)------------ //
 
@@ -170,7 +174,7 @@ public class AprilCam {
 
     // // Gets the X value of the "Best" target
     // public double getXBest(){
-    //     return getXDesired( result.getBestTarget() );
+    //     return getXDesired( results.getBestTarget() );
     // }
     
     // // Gets the Y value of a desired target
@@ -181,7 +185,7 @@ public class AprilCam {
 
     // // Gets the Y value of the "Best" target
     // public double getYBest(){
-    //     return getYDesired( result.getBestTarget() );
+    //     return getYDesired( results.getBestTarget() );
     // }
 
     // // Gets the Z value of a desired target
@@ -192,7 +196,7 @@ public class AprilCam {
 
     // // Gets the Z value of the "Best" target
     // public double getZBest(){
-    //     return getZDesired( result.getBestTarget() );
+    //     return getZDesired( results.getBestTarget() );
     // }
 
 
@@ -254,9 +258,12 @@ public class AprilCam {
      */
 
     //https://github.com/PhotonVision/photonvision/blob/main/photonlib-java-examples/poseest/src/main/java/frc/robot/Vision.java 
-    public Optional<EstimatedRobotPose> getEstimatedGlobalPose() {
+    public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstPose) {
         Optional<EstimatedRobotPose> visionEst = Optional.empty();
-        for (var change : camera.getAllUnreadResults()) {
+
+        //photonPoseEstimator.setReferencePose(prevEstPose);
+
+        for (var change : this.results) {
             visionEst = photonPoseEstimator.update(change);
             updateEstimationStdDevs(visionEst, change.getTargets());
 
