@@ -32,6 +32,7 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
   private static final XboxController operatorController = new XboxController(Ports.OPERATOR_CONTROLLER);
+  private static final XboxController driverController = new XboxController(Ports.DRIVER_CONTROLLER);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -67,8 +68,10 @@ public class RobotContainer {
 
     new JoystickButton(operatorController,Button.kY.value).whileTrue(new ElevatorElevate());
     new JoystickButton(operatorController,Button.kA.value).whileTrue(new ElevatorDescend());
-    new JoystickButton(operatorController,Button.kX.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L2));
-    new JoystickButton(operatorController,Button.kB.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L3));
+
+    // Set Elevator Position on Driver buttons because
+    new JoystickButton(driverController,Button.kX.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L2));
+    new JoystickButton(driverController,Button.kB.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L3));
   }
 
   /**
