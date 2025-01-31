@@ -18,6 +18,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.SerialPort;
@@ -30,6 +31,7 @@ public class Elevator extends SubsystemBase {
   private SparkMaxConfig leftMotorConfig;
   private SparkMaxConfig rightMotorConfig;
   private static Elevator instance;
+  private PIDController controller;
 
 
   private Elevator() {
@@ -38,6 +40,9 @@ public class Elevator extends SubsystemBase {
     leftMotorConfig = new SparkMaxConfig();
     rightMotorConfig = new SparkMaxConfig();
     encoder = elevatorLeftMotor.getEncoder();
+
+    controller = new PIDController(1, 0, 0);
+
 
     rightMotorConfig.inverted(ElevatorConstants.RIGHT_ELEVATOR_INVERTED);
     //leftMotorConfig.encoder.inverted();
@@ -58,25 +63,38 @@ public class Elevator extends SubsystemBase {
     return encoder.getPosition();
   }
 
-  public void elevate(){
+  public void elevate(double speed){
 
     if (encoder.getPosition() >= ElevatorConstants.ELEVATOR_MAX) {
       elevatorLeftMotor.set(0.0);
     }
 
     else {
-      elevatorLeftMotor.set(0.6);
+      elevatorLeftMotor.set(speed);
     }
   }
   
-  public void descend(){
+  public void descend(double speed){
 
     if (encoder.getPosition() <= ElevatorConstants.ELEVATOR_MIN) {
       elevatorLeftMotor.set(0.0);
     }
 
     else {
-      elevatorRightMotor.set(-0.6);
+      elevatorRightMotor.set(-speed);
+    }
+  }
+
+  public void move(double speed){
+
+    if(speed >0){
+      elevate(speed);
+    }
+    else if(speed <0){
+      descend(speed);
+    }
+    else{
+      stop();
     }
   }
   
@@ -92,6 +110,10 @@ public class Elevator extends SubsystemBase {
 
   public void resetPosition(){
     encoder.setPosition(0);
+  }
+
+  public PIDController getController(){
+    return controller;
   }
 
   @Override
