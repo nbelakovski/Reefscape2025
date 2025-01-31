@@ -7,6 +7,9 @@ package frc.robot.subsystems;
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -15,6 +18,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -52,17 +57,11 @@ private double xSpeed = 0.0;
 private double ySpeed = 0.0;
 private double rotSpeed = 0.0;
 
-
-
-
-
-
+private final SwerveDrivePoseEstimator poseEstimator;
 
   /** Creates a new Drivetrain. */
   private Drivetrain() {
 
-
-    
     this.modules = new SwerveModule[4];
     modules[0] = frontL;
     modules[1] = frontR;
@@ -86,6 +85,24 @@ private double rotSpeed = 0.0;
     fieldCentric = true;
     
 
+    var stateStdDevs = VecBuilder.fill(0.1, 0.1, 0.1);
+    var visionStdDevs = VecBuilder.fill(1, 1, 1);
+
+    this.poseEstimator =  new SwerveDrivePoseEstimator(
+      SwerveConstants.DRIVE_KINEMATICS,
+      getHeading(),
+      getSwerveModulePos(),
+      new Pose2d(),
+      stateStdDevs,
+      visionStdDevs);
+
+  }
+
+  public static Drivetrain getInstance() {
+    if (instance == null) {
+      instance = new Drivetrain();
+    }
+    return instance;
   }
 
   public static Drivetrain getInstance() {
@@ -381,6 +398,18 @@ private double rotSpeed = 0.0;
     return driveOdometry.getPoseMeters();
   }
 
+/* See {@link SwerveDrivePoseEstimator#addVisionMeasurement(Pose2d, double)}. */
+  public void addVisionMeasurement(Pose2d visionMeasurement, double timestampSeconds) {
+    poseEstimator.addVisionMeasurement(visionMeasurement, timestampSeconds);
+}
+
+/* See {@link SwerveDrivePoseEstimator#addVisionMeasurement(Pose2d, double, Matrix)}. */
+    public void addVisionMeasurement(
+            Pose2d visionMeasurement, double timestampSeconds, Matrix<N3, N1> stdDevs) {
+        poseEstimator.addVisionMeasurement(visionMeasurement, timestampSeconds, stdDevs);
+    }
+
+
  public void updateTelemetry() {
     for(int i = 0; i < modules.length; i++) {
       modules[i].updateTelemetry();
@@ -395,8 +424,6 @@ private double rotSpeed = 0.0;
     SmartDashboard.putNumber("xspeed", xSpeed);
     SmartDashboard.putNumber("yspeed", ySpeed);
     SmartDashboard.putNumber("rotspeed", rotSpeed);
-
-
     //SmartDashboard.putData("Odometry Field", field);
   }
 
