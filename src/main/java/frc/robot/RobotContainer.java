@@ -4,10 +4,12 @@
 
 package frc.robot;
 
+import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ElevatorDescend;
 import frc.robot.commands.ElevatorElevate;
+import frc.robot.commands.ElevatorSetPosition;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.utils.Ports;
@@ -65,6 +67,8 @@ public class RobotContainer {
 
     new JoystickButton(operatorController,Button.kY.value).whileTrue(new ElevatorElevate());
     new JoystickButton(operatorController,Button.kA.value).whileTrue(new ElevatorDescend());
+    new JoystickButton(operatorController,Button.kX.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L2));
+    new JoystickButton(operatorController,Button.kB.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L3));
   }
 
   /**
