@@ -21,6 +21,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.util.WPIUtilJNI;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.SwerveConstants;
@@ -59,6 +60,8 @@ private double rotSpeed = 0.0;
 
 private final SwerveDrivePoseEstimator poseEstimator;
 
+private final Field2d field;
+
   /** Creates a new Drivetrain. */
   private Drivetrain() {
 
@@ -69,6 +72,7 @@ private final SwerveDrivePoseEstimator poseEstimator;
     modules[3] = backR;
 
     this.navX = new AHRS(NavXComType.kMXP_SPI);
+    field = new Field2d();
     
     //assign the NavX to be our sensor for rotation
     //*****no worky figure out why*******
@@ -365,6 +369,8 @@ private final SwerveDrivePoseEstimator poseEstimator;
         getHeading(),
         getSwerveModulePos(),
         newPose);
+
+    poseEstimator.resetPosition(getHeading(), getSwerveModulePos(), newPose);
   }
 
   public void updateOdometry() {
@@ -372,6 +378,7 @@ private final SwerveDrivePoseEstimator poseEstimator;
         getHeading(),
         getSwerveModulePos()
     );
+    poseEstimator.update(getHeading(), getSwerveModulePos());
   }
 
   // public Field2d getField() {
@@ -388,7 +395,8 @@ private final SwerveDrivePoseEstimator poseEstimator;
    * @return The pose.
    */
   public Pose2d getPose() {
-    return driveOdometry.getPoseMeters();
+    //return driveOdometry.getPoseMeters();
+    return poseEstimator.getEstimatedPosition();
   }
 
 /* See {@link SwerveDrivePoseEstimator#addVisionMeasurement(Pose2d, double)}. */
@@ -417,7 +425,9 @@ private final SwerveDrivePoseEstimator poseEstimator;
     SmartDashboard.putNumber("xspeed", xSpeed);
     SmartDashboard.putNumber("yspeed", ySpeed);
     SmartDashboard.putNumber("rotspeed", rotSpeed);
-    //SmartDashboard.putData("Odometry Field", field);
+
+    field.setRobotPose(getPose());
+    SmartDashboard.putData("Odometry Field", field);
   }
 
 
@@ -437,5 +447,6 @@ private final SwerveDrivePoseEstimator poseEstimator;
     updateOdometry();
     updateTelemetry();
     drive();
+    //poseEstimator.update(getHeading(), getSwerveModulePos());
   }
 }
