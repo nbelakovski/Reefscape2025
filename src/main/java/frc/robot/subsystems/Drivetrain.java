@@ -5,7 +5,11 @@
 package frc.robot.subsystems;
 
 import com.studica.frc.AHRS;
+import com.studica.frc.AHRS.NavXComType;
 
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -14,13 +18,16 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.util.WPIUtilJNI;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.SwerveConstants;
 
 public class Drivetrain extends SubsystemBase {
+
+private static Drivetrain instance;
 
 private final SwerveModule[] modules;
 private final SwerveDriveKinematics driveKinematics;
@@ -41,8 +48,8 @@ private double m_currentRotation = 0.0;
 private double m_currentTranslationDir = 0.0;
 private double m_currentTranslationMag = 0.0;
 
-private SlewRateLimiter m_magLimiter = new SlewRateLimiter(SwerveConstants.kMagnitudeSlewRate);
-private SlewRateLimiter m_rotLimiter = new SlewRateLimiter(SwerveConstants.kRotationalSlewRate);
+// private SlewRateLimiter m_magLimiter = new SlewRateLimiter(SwerveConstants.kMagnitudeSlewRate);
+// private SlewRateLimiter m_rotLimiter = new SlewRateLimiter(SwerveConstants.kRotationalSlewRate);
 private double m_prevTime = WPIUtilJNI.now() * 1e-6;
 
 //Fields that control 3 dimensions of drive motion
@@ -50,23 +57,18 @@ private double xSpeed = 0.0;
 private double ySpeed = 0.0;
 private double rotSpeed = 0.0;
 
-
-
-
-
-
+private final SwerveDrivePoseEstimator poseEstimator;
 
   /** Creates a new Drivetrain. */
-  public Drivetrain() {
+  private Drivetrain() {
 
-
-    
     this.modules = new SwerveModule[4];
     modules[0] = frontL;
     modules[1] = frontR;
     modules[2] = backL;
     modules[3] = backR;
 
+    this.navX = new AHRS(NavXComType.kMXP_SPI);
     
     //assign the NavX to be our sensor for rotation
     //*****no worky figure out why*******
@@ -74,10 +76,33 @@ private double rotSpeed = 0.0;
 
     this.driveKinematics = SwerveConstants.DRIVE_KINEMATICS;
 
-    this.driveOdometry = new SwerveDriveOdometry(SwerveConstants.DRIVE_KINEMATICS, getHeading(), getSwerveModulePos());
+    this.driveOdometry = new SwerveDriveOdometry(
+      SwerveConstants.DRIVE_KINEMATICS, 
+      getHeading(), 
+      getSwerveModulePos()
+    );
 
     fieldCentric = true;
+    
 
+    var stateStdDevs = VecBuilder.fill(0.1, 0.1, 0.1);
+    var visionStdDevs = VecBuilder.fill(1, 1, 1);
+
+    this.poseEstimator =  new SwerveDrivePoseEstimator(
+      SwerveConstants.DRIVE_KINEMATICS,
+      getHeading(),
+      getSwerveModulePos(),
+      new Pose2d(),
+      stateStdDevs,
+      visionStdDevs);
+
+  }
+
+  public static Drivetrain getInstance() {
+    if (instance == null) {
+      instance = new Drivetrain();
+    }
+    return instance;
   }
 
   public void drive() {
@@ -366,6 +391,18 @@ private double rotSpeed = 0.0;
     return driveOdometry.getPoseMeters();
   }
 
+/* See {@link SwerveDrivePoseEstimator#addVisionMeasurement(Pose2d, double)}. */
+  public void addVisionMeasurement(Pose2d visionMeasurement, double timestampSeconds) {
+    poseEstimator.addVisionMeasurement(visionMeasurement, timestampSeconds);
+}
+
+/* See {@link SwerveDrivePoseEstimator#addVisionMeasurement(Pose2d, double, Matrix)}. */
+    public void addVisionMeasurement(
+            Pose2d visionMeasurement, double timestampSeconds, Matrix<N3, N1> stdDevs) {
+        poseEstimator.addVisionMeasurement(visionMeasurement, timestampSeconds, stdDevs);
+    }
+
+
  public void updateTelemetry() {
     for(int i = 0; i < modules.length; i++) {
       modules[i].updateTelemetry();
@@ -376,6 +413,10 @@ private double rotSpeed = 0.0;
     SmartDashboard.putNumber("xOdometry", getPose().getX());
     SmartDashboard.putNumber("yOdometry", getPose().getY());
     SmartDashboard.putNumber("rotOdometry", getPose().getRotation().getDegrees());
+
+    SmartDashboard.putNumber("xspeed", xSpeed);
+    SmartDashboard.putNumber("yspeed", ySpeed);
+    SmartDashboard.putNumber("rotspeed", rotSpeed);
     //SmartDashboard.putData("Odometry Field", field);
   }
 
@@ -393,5 +434,8 @@ private double rotSpeed = 0.0;
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    updateOdometry();
+    updateTelemetry();
+    drive();
   }
 }
