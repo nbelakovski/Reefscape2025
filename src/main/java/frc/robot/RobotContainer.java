@@ -4,6 +4,12 @@
 
 package frc.robot;
 
+import frc.robot.Constants.ElevatorConstants;
+import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.ElevatorDescend;
+import frc.robot.commands.ElevatorElevate;
+import frc.robot.commands.ElevatorSetPosition;
+import frc.robot.utils.DPad;
 import frc.robot.commands.*;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -12,6 +18,7 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
@@ -21,7 +28,6 @@ import frc.robot.commands.SwerveDrive;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.utils.Ports;
 
-
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -29,6 +35,7 @@ import frc.robot.utils.Ports;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
+
 
   private static final XboxController driverController = new XboxController(Ports.DRIVER_CONTROLLER);
   private static final XboxController operatorController = new XboxController(Ports.OPERATOR_CONTROLLER);
@@ -65,13 +72,19 @@ public class RobotContainer {
     new Trigger(m_exampleSubsystem::exampleCondition)
       .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+
+    // Elevator Elevate + Elevator Descend 🐘🐘🐘
+
+    new JoystickButton(operatorController,Button.kY.value).whileTrue(new ElevatorElevate());
+    new JoystickButton(operatorController,Button.kA.value).whileTrue(new ElevatorDescend());
+
+    // Set Elevator Position for Driver on DPad
+    new DPad(driverController,90).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L2));
+    new DPad(driverController,0).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L3));
   
   // Makes button Y/A Algae Intake/Outake
-  new JoystickButton(operatorController, Button.kY.value).whileTrue(new AlgaeIn());
-  new JoystickButton(operatorController, Button.kA.value).whileTrue(new AlgaeOut());
+  // new JoystickButton(operatorController, Button.kY.value).whileTrue(new AlgaeIn());
+  // new JoystickButton(operatorController, Button.kA.value).whileTrue(new AlgaeOut());
 
   }
 

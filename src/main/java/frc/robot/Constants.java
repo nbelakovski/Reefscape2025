@@ -30,6 +30,7 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+ 
   public static class SwerveConstants {
     ///(Old Robot)
     //Sensor Offsets for the radian difference between the physical sensor orientation and the calibrated swerve direction
@@ -159,6 +160,27 @@ public static final class ModuleConstants {
 
   public static final int kDrivingMotorCurrentLimit = 50; // amps
   public static final int kTurningMotorCurrentLimit = 40; // amps
+
+
+  }
+
+
+  public static class ElevatorConstants {
+    
+    public static final double ELEVATOR_MIN = 0;
+    public static final double ELEVATOR_MAX = 34;
+
+    public static final double ELEVATOR_L1 = 10;
+    public static final double ELEVATOR_L2 = 20;
+    public static final double ELEVATOR_L3 = 30;
+
+    public static final double ELEVATOR_PROCESSOR = ELEVATOR_MIN;
+    public static final double ELEVATOR_ALGAE_L2 = 15;
+    public static final double ELEVATOR_ALGAE_L3 = 25;
+
+    public static final boolean RIGHT_ELEVATOR_INVERTED = false;
+    
+
   }
   public static class MechConstants{
 
@@ -227,6 +249,7 @@ public static final class ModuleConstants {
     public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
 
   }
+
 
 
 
