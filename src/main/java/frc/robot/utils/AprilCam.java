@@ -47,6 +47,7 @@ public class AprilCam {
 
     private PhotonTrackedTarget desiredTarget;
     private PhotonPoseEstimator photonPoseEstimator;
+    private List<PhotonTrackedTarget> targets;
 
     //private static AprilCam instance;
     Transform3d camOofset;
@@ -110,9 +111,21 @@ public class AprilCam {
     // }
 
     //Gets all the AprilTag targets the camera can currently see
-    // public List<PhotonTrackedTarget> getTargets(){
-    //     return result.getTargets();
-    // }
+    public List<PhotonTrackedTarget> getTargets(){
+        return targets;
+    }
+
+    public int getClosestID() {
+        int closestID = -1;
+        double distance = 100;
+        for(PhotonTrackedTarget t: targets) {
+            if(getTargetTransform(t).getX() < distance) {
+                distance = getTargetTransform(t).getX();
+                closestID = t.fiducialId;
+            }
+        }
+        return closestID;
+    }
 
     // Gets the current "best" target
     // public PhotonTrackedTarget getBestTarget(){
@@ -266,6 +279,8 @@ public class AprilCam {
         for (var change : this.results) {
             visionEst = photonPoseEstimator.update(change);
             updateEstimationStdDevs(visionEst, change.getTargets());
+            targets = change.getTargets();
+            
 
         }
         return visionEst;
