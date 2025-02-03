@@ -24,6 +24,6 @@ public class Ports {
   
     public static final int INTAKE_MOTOR_PORT = 9;
   
-    public static final int ELEVATOR_LEFT_MOTOR_PORT = 80;
-    public static final int ELEVATOR_RIGHT_MOTOR_PORT = 81;
+    public static final int ELEVATOR_LEFT_MOTOR_PORT = 10;
+    public static final int ELEVATOR_RIGHT_MOTOR_PORT = 9;
 }

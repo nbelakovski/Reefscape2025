@@ -69,10 +69,6 @@ public class RobotContainer {
     
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
-    new Trigger(m_exampleSubsystem::exampleCondition)
-      .onTrue(new ExampleCommand(m_exampleSubsystem));
-
-
     // Elevator Elevate + Elevator Descend 🐘🐘🐘
 
     new JoystickButton(operatorController,Button.kY.value).whileTrue(new ElevatorElevate());
@@ -88,7 +84,7 @@ public class RobotContainer {
 
   }
 
-  }
+  
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
