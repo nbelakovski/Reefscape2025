@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import java.util.function.Supplier;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Camera;
 import frc.robot.subsystems.Drivetrain;
@@ -42,7 +43,7 @@ public class DriveToPeg extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    while(drivetrain.getPose().getX() < cam.getXDesired(cam.getDesiredTarget(tagID))) {
+    while(drivetrain.getPose().getX() < cam.getTagPose(1).get().getX()) {
       drivetrain.setXSpeed(xSpeed);
     }
   }
