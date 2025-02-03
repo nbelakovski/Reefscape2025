@@ -26,4 +26,6 @@ public class Ports {
   
     public static final int ELEVATOR_LEFT_MOTOR_PORT = 80;
     public static final int ELEVATOR_RIGHT_MOTOR_PORT = 81;
+
+    public static final int BLINKIN_PORT = 24; //placeholder number
 }
