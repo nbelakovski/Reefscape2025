@@ -62,13 +62,13 @@ public class Camera extends SubsystemBase {
   //   return cam;
   // }
 
-  // public PhotonTrackedTarget getDesiredTarget(int target) {
-  //   return cam.getDesiredTarget(target);
-  // }
+  public PhotonTrackedTarget getDesiredTarget(int target) {
+    return cam.getDesiredTarget(target);
+  }
 
-  // public double getXDesired(PhotonTrackedTarget target) {
-  //   return cam.getXDesired(target);
-  // }
+  public double getXDesired(PhotonTrackedTarget target) {
+    return cam.getXDesired(target);
+  }
 
   // public double getX(){
   //   return cam.getXBest();
@@ -89,7 +89,9 @@ public class Camera extends SubsystemBase {
   //   return cam.hasTarget();
   // }
   
-  
+  public int getClosestID(){
+    return cam.getClosestID();
+  }
     
 
   @Override
@@ -130,6 +132,7 @@ public class Camera extends SubsystemBase {
     
     SmartDashboard.putNumber("tag 1 pose x", aprilTagFieldLayout.getTagPose(1).get().getX());
     SmartDashboard.putNumber("tag 1 pose y", aprilTagFieldLayout.getTagPose(1).get().getY());
+    SmartDashboard.putNumber("closest ID", getClosestID());
    
     
   }

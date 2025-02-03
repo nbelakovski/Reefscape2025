@@ -136,20 +136,20 @@ public class AprilCam {
     // }
 
     // Gets a target object for a specific AprilTag
-    // public PhotonTrackedTarget getDesiredTarget(int desiredTargetID){
+    public PhotonTrackedTarget getDesiredTarget(int desiredTargetID){
 
-    //     //look at each target in the arraylist of targets
-    //     for (PhotonTrackedTarget t: getTargets())
-    //     {
-    //         //look for the target with the desired ID
-    //         if (t.getFiducialId() == desiredTargetID)
-    //         {
-    //             return t;
-    //         }
-    //     }
-    //     //return null if you can't find the desiredTarget
-    //     return null;
-    // }
+        //look at each target in the arraylist of targets
+        for (PhotonTrackedTarget t: getTargets())
+        {
+            //look for the target with the desired ID
+            if (t.getFiducialId() == desiredTargetID)
+            {
+                return t;
+            }
+        }
+        //return null if you can't find the desiredTarget
+        return null;
+    }
 
     // Checks if a desired AprilTag is visible
     // public boolean hasDesiredTarget(int desiredTargetID) {
@@ -183,10 +183,10 @@ public class AprilCam {
     }
 
     // // Gets the X value of a desired target
-    // public double getXDesired(PhotonTrackedTarget target){
-    //     if(target == null) { return Float.NaN; }
-    //     return getTargetTransform(target).getX();
-    // }
+    public double getXDesired(PhotonTrackedTarget target){
+        if(target == null) { return Float.NaN; }
+        return getTargetTransform(target).getX();
+    }
 
     // // Gets the X value of the "Best" target
     // public double getXBest(){

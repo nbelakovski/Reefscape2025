@@ -16,9 +16,9 @@ public class DriveToPeg extends Command {
   Drivetrain drivetrain;
   Camera cam;
   int tagID;
-  private Supplier<Double> xSpeed;
-  private Supplier<Double> ySpeed;
-  private Supplier<Double> rotSpeed;
+  private double xSpeed;
+  private double ySpeed;
+  private double rotSpeed;
 
 
   /** Creates a new DriveToPeg. */
@@ -26,20 +26,26 @@ public class DriveToPeg extends Command {
     drivetrain = Drivetrain.getInstance();
     cam = Camera.getInstance();
     this.tagID = tagID;
-    this.xSpeed = xSpeed;
-    this.ySpeed = ySpeed;
-    this.rotSpeed = rotSpeed;
+    this.xSpeed = 0.7;
+    this.ySpeed = 0.7;
+    this.rotSpeed = 0.7;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drivetrain);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    drivetrain.stopDrive();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    while(drivetrain.getPose().getX() < cam.getXDesired(cam.getDesiredTarget(tagID))) {
+      drivetrain.setXSpeed(xSpeed);
+    }
+  }
 
   // Called once the command ends or is interrupted.
   @Override
