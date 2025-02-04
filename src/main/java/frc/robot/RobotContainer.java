@@ -4,35 +4,24 @@
 
 package frc.robot;
 
-import frc.robot.Constants.ElevatorConstants;
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.ElevatorDescend;
-import frc.robot.commands.ElevatorElevate;
-import frc.robot.commands.ElevatorSetPosition;
-import frc.robot.utils.DPad;
-import frc.robot.commands.*;
-import frc.robot.Constants.OperatorConstants;
-
-import frc.robot.subsystems.ExampleSubsystem;
-
-import com.apple.laf.AquaButtonCheckBoxUI;
-
-import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.Camera;
+import frc.robot.Constants.ElevatorConstants;
+import frc.robot.commands.CoralIn;
+import frc.robot.commands.CoralOut;
+import frc.robot.commands.ElevatorDescend;
+import frc.robot.commands.ElevatorElevate;
+import frc.robot.commands.ElevatorSetPosition;
 import frc.robot.commands.SwerveDrive;
+import frc.robot.subsystems.Camera;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.utils.DPad;
 import frc.robot.utils.Ports;
 
 /**
@@ -55,7 +44,7 @@ private SendableChooser<Command> autoChooser = new SendableChooser<>();
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
-
+    SmartDashboard.putData("Auto Chooser", autoChooser);
 
     // autoChooser = AutoBuilder.buildAutoChooser();
     // SmartDashboard.putData("AutoChooser", autoChooser);
@@ -84,8 +73,6 @@ private SendableChooser<Command> autoChooser = new SendableChooser<>();
     
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
-    new Trigger(m_exampleSubsystem::exampleCondition)
-      .onTrue(new ExampleCommand(m_exampleSubsystem));
 
 
     // Elevator Elevate + Elevator Descend 🐘🐘🐘
@@ -105,13 +92,14 @@ private SendableChooser<Command> autoChooser = new SendableChooser<>();
 
   public void autoChooserInit() {
 
-    autoChooser.addOption("DrivePID", new DrivePID(1, 0, 0));
-    autoChooser.addOption("Second", getAutonomousCommand());
+    autoChooser.setDefaultOption("CoralIn", new CoralIn());
+
+    autoChooser.addOption("CoralIn", new CoralIn());
+    autoChooser.addOption("CoralOut", new CoralOut());
 
 
   }
 
-}
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *

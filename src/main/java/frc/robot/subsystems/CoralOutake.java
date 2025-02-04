@@ -11,8 +11,10 @@ import frc.robot.Constants.MechConstants;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkFlexConfig;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -22,15 +24,15 @@ import edu.wpi.first.wpilibj.SerialPort;
 
 public class CoralOutake extends SubsystemBase {
   /** Creates a new Intake. */
-  private SparkFlex CoralOutakeMotor;
-  private SparkFlexConfig motorConfig;
+  private SparkMax CoralOutakeMotor;
+  private SparkMaxConfig motorConfig;
   private static CoralOutake instance;
   private Timer timer;
   
 
   private CoralOutake() {
-    CoralOutakeMotor = new SparkFlex(Ports.INTAKE_MOTOR_PORT, MotorType.kBrushless);
-    motorConfig = new SparkFlexConfig();
+    CoralOutakeMotor = new SparkMax(10, MotorType.kBrushless);
+    motorConfig = new SparkMaxConfig();
   }
   public static CoralOutake getInstance(){
     if(instance == null) {
