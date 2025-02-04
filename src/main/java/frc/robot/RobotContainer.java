@@ -74,6 +74,7 @@ public class RobotContainer {
 
 
     // Elevator Elevate + Elevator Descend 🐘🐘🐘
+    //Operator commands
 
     new JoystickButton(operatorController,Button.kY.value).whileTrue(new ElevatorElevate());
     new JoystickButton(operatorController,Button.kA.value).whileTrue(new ElevatorDescend());

@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.SerialPort;
 
@@ -32,6 +33,8 @@ public class Elevator extends SubsystemBase {
   private SparkMaxConfig rightMotorConfig;
   private static Elevator instance;
   private PIDController controller;
+  private DigitalInput topLimitSwitch;
+  private DigitalInput bottomLimitSwitch;
 
 
   private Elevator() {
@@ -40,6 +43,8 @@ public class Elevator extends SubsystemBase {
     leftMotorConfig = new SparkMaxConfig();
     rightMotorConfig = new SparkMaxConfig();
     encoder = elevatorLeftMotor.getEncoder();
+    topLimitSwitch = new DigitalInput(1);
+    bottomLimitSwitch = new DigitalInput(1);
 
     controller = new PIDController(1, 0, 0);
 
@@ -65,7 +70,7 @@ public class Elevator extends SubsystemBase {
 
   public void elevate(double speed){
 
-    if (encoder.getPosition() >= ElevatorConstants.ELEVATOR_MAX) {
+    if (encoder.getPosition() >= ElevatorConstants.ELEVATOR_MAX || topLimitSwitch.get()) {
       elevatorRightMotor.set(speed);
       elevatorLeftMotor.set(-speed);
     }
@@ -78,7 +83,7 @@ public class Elevator extends SubsystemBase {
   
   public void descend(double speed){
 
-    if (encoder.getPosition() <= ElevatorConstants.ELEVATOR_MIN) {
+    if (encoder.getPosition() <= ElevatorConstants.ELEVATOR_MIN || bottomLimitSwitch.get()) {
       elevatorLeftMotor.set(speed);
       elevatorRightMotor.set(-speed);
     }
