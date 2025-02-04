@@ -66,22 +66,26 @@ public class Elevator extends SubsystemBase {
   public void elevate(double speed){
 
     if (encoder.getPosition() >= ElevatorConstants.ELEVATOR_MAX) {
-      elevatorLeftMotor.set(0.0);
+      elevatorRightMotor.set(speed);
+      elevatorLeftMotor.set(-speed);
     }
 
     else {
       elevatorLeftMotor.set(speed);
+      elevatorRightMotor.set(-speed);
     }
   }
   
   public void descend(double speed){
 
     if (encoder.getPosition() <= ElevatorConstants.ELEVATOR_MIN) {
-      elevatorLeftMotor.set(0.0);
+      elevatorLeftMotor.set(speed);
+      elevatorRightMotor.set(-speed);
     }
 
     else {
-      elevatorRightMotor.set(-speed);
+      elevatorRightMotor.set(speed);
+      elevatorLeftMotor.set(-speed);
     }
   }
 

@@ -168,7 +168,7 @@ public static final class ModuleConstants {
   public static class ElevatorConstants {
     
     public static final double ELEVATOR_MIN = 0;
-    public static final double ELEVATOR_MAX = 34;
+    public static final double ELEVATOR_MAX = 60;
 
     public static final double ELEVATOR_L1 = 10;
     public static final double ELEVATOR_L2 = 20;

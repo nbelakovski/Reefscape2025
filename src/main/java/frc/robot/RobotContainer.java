@@ -69,8 +69,8 @@ public class RobotContainer {
     
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
-    new Trigger(m_exampleSubsystem::exampleCondition)
-      .onTrue(new ExampleCommand(m_exampleSubsystem));
+    /* new Trigger(m_exampleSubsystem::exampleCondition)
+      .onTrue(new ExampleCommand(m_exampleSubsystem)); */
 
 
     // Elevator Elevate + Elevator Descend 🐘🐘🐘
@@ -88,7 +88,7 @@ public class RobotContainer {
 
   }
 
-  }
+  
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
