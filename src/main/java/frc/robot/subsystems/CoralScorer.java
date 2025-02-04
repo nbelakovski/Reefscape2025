@@ -20,33 +20,33 @@ import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.SerialPort;
 
-public class CoralOutake extends SubsystemBase {
+public class CoralScorer extends SubsystemBase {
   /** Creates a new Intake. */
-  private SparkFlex CoralOutakeMotor;
+  private SparkFlex CoralScorerMotor;
   private SparkFlexConfig motorConfig;
-  private static CoralOutake instance;
+  private static CoralScorer instance;
   private Timer timer;
   
 
-  private CoralOutake() {
-    CoralOutakeMotor = new SparkFlex(Ports.INTAKE_MOTOR_PORT, MotorType.kBrushless);
+  private CoralScorer() {
+    CoralScorerMotor = new SparkFlex(Ports.INTAKE_MOTOR_PORT, MotorType.kBrushless);
     motorConfig = new SparkFlexConfig();
   }
-  public static CoralOutake getInstance(){
+  public static CoralScorer getInstance(){
     if(instance == null) {
-      instance = new CoralOutake();
+      instance = new CoralScorer();
     }
     return instance;
   }
   //
-  public void in(){
-    CoralOutakeMotor.set(-MechConstants.INTAKE_SPEED);
+  public void forward(){
+    CoralScorerMotor.set(MechConstants.INTAKE_SPEED);
   }
-  public void out(){
-    CoralOutakeMotor.set(MechConstants.INTAKE_SPEED);
+  public void backward(){
+    CoralScorerMotor.set(-MechConstants.INTAKE_SPEED);
   }
   public void stop(){
-    CoralOutakeMotor.set(0);
+    CoralScorerMotor.set(0);
   }
 
   public void changeSpeed(double newSpeed){

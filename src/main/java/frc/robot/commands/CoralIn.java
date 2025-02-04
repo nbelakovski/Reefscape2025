@@ -7,16 +7,19 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.CoralIntake;
+import frc.robot.subsystems.CoralScorer;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class CoralIn extends Command {
 
   private CoralIntake coralIntake;
+  private CoralScorer coralScorer;
   /** Creates a new CoralIn. */
   public CoralIn() {
     coralIntake = CoralIntake.getInstance();
+    coralScorer = CoralScorer.getInstance();
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(coralIntake);
+    addRequirements(coralIntake, coralScorer);
   }
 
   // Called when the command is initially scheduled.

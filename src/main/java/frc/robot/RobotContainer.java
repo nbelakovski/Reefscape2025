@@ -71,6 +71,7 @@ public class RobotContainer {
     // Elevator Elevate + Elevator Descend 🐘🐘🐘
 
     //Operator commands
+    // Link for joystick doc: https://docs.google.com/presentation/d/1cis5OrQfkU9m38LwgAMIfmPpJAZxnIC-KnAzi0JsRao/edit#slide=id.g18d2b75b637cb431_3
     Elevator.getInstance().setDefaultCommand(new ElevatorJoystick(
       () -> -operatorController.getRawAxis(1)
     ));

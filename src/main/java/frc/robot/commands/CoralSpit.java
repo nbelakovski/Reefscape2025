@@ -6,35 +6,35 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.CoralOutake;
+import frc.robot.subsystems.CoralScorer;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class CoralOut extends Command {
+public class CoralSpit extends Command {
 
-  private CoralOutake coralOutake;
+  private CoralScorer CoralScorer;
   /** Creates a new CoralOut. */
-  public CoralOut() {
-    coralOutake = CoralOutake.getInstance();
+  public CoralSpit() {
+    CoralScorer = CoralScorer.getInstance();
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(coralOutake);
+    addRequirements(CoralScorer);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    coralOutake.stop();
+    CoralScorer.stop();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    coralOutake.out();
+    CoralScorer.forward();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    coralOutake.stop();
+    CoralScorer.stop();
   }
 
   // Returns true when the command should end.
