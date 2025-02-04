@@ -12,9 +12,16 @@ import frc.robot.commands.ElevatorSetPosition;
 import frc.robot.utils.DPad;
 import frc.robot.commands.*;
 import frc.robot.Constants.OperatorConstants;
+
 import frc.robot.subsystems.ExampleSubsystem;
+
+import com.apple.laf.AquaButtonCheckBoxUI;
+
+import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -43,10 +50,18 @@ public class RobotContainer {
   Drivetrain drivetrain = Drivetrain.getInstance();
   Camera cam = Camera.getInstance();
 
+private SendableChooser<Command> autoChooser = new SendableChooser<>();
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
+
+
+    // autoChooser = AutoBuilder.buildAutoChooser();
+    // SmartDashboard.putData("AutoChooser", autoChooser);
     // Configure the trigger bindings
     configureBindings();
+    autoChooserInit();
   }
 
   /**
@@ -88,7 +103,15 @@ public class RobotContainer {
 
   }
 
+  public void autoChooserInit() {
+
+    autoChooser.addOption("DrivePID", new DrivePID(1, 0, 0));
+    autoChooser.addOption("Second", getAutonomousCommand());
+
+
   }
+
+}
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
@@ -96,6 +119,11 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return null;
+    return autoChooser.getSelected();
   }
+
+
+
 }
+
+
