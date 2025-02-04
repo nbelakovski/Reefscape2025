@@ -44,7 +44,7 @@ public class Elevator extends SubsystemBase {
     rightMotorConfig = new SparkMaxConfig();
     encoder = elevatorLeftMotor.getEncoder();
     topLimitSwitch = new DigitalInput(1);
-    bottomLimitSwitch = new DigitalInput(1);
+    bottomLimitSwitch = new DigitalInput(2);
 
     controller = new PIDController(1, 0, 0);
 
@@ -97,7 +97,7 @@ public class Elevator extends SubsystemBase {
   public void move(double speed){
 
     if(speed >0){
-      elevate(speed);
+      elevate(-speed);
     }
     else if(speed <0){
       descend(speed);
