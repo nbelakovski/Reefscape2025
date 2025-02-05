@@ -31,7 +31,7 @@ public class DriveToPeg extends Command {
     this.ySpeed = 0.7;
     this.rotSpeed = 0.7;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(drivetrain);
+    addRequirements(drivetrain, cam);
   }
 
   // Called when the command is initially scheduled.
@@ -43,7 +43,7 @@ public class DriveToPeg extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    while(drivetrain.getPose().getX() < cam.getTagPose(1).get().getX()) {
+    if(drivetrain.getPose().getX() < 17){
       drivetrain.setXSpeed(xSpeed);
     }
   }
