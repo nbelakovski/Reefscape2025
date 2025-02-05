@@ -26,4 +26,6 @@ public class Ports {
   
     public static final int ELEVATOR_LEFT_MOTOR_PORT = 10;
     public static final int ELEVATOR_RIGHT_MOTOR_PORT = 9;
+
+    public static final int ANALOG_CORAL_PORT = 3;
 }

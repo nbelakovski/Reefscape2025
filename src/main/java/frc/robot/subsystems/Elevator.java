@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.SerialPort;
 
+
 public class Elevator extends SubsystemBase {
   /** Creates a new Elevator. */
   private SparkMax elevatorLeftMotor;
@@ -37,6 +38,7 @@ public class Elevator extends SubsystemBase {
   private DigitalInput bottomLimitSwitch;
 
 
+
   private Elevator() {
     elevatorLeftMotor = new SparkMax(Ports.ELEVATOR_LEFT_MOTOR_PORT, MotorType.kBrushless);
     elevatorRightMotor = new SparkMax(Ports.ELEVATOR_RIGHT_MOTOR_PORT, MotorType.kBrushless);
@@ -47,6 +49,8 @@ public class Elevator extends SubsystemBase {
     bottomLimitSwitch = new DigitalInput(2);
 
     controller = new PIDController(1, 0, 0);
+
+    
 
 
     rightMotorConfig.inverted(ElevatorConstants.RIGHT_ELEVATOR_INVERTED);
