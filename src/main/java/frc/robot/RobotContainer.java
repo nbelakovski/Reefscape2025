@@ -22,6 +22,7 @@ import frc.robot.subsystems.Camera;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.utils.Ports;
+import frc.robot.utils.TriggerButton;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -72,16 +73,33 @@ public class RobotContainer {
 
     //Operator commands
     // Link for joystick doc: https://docs.google.com/presentation/d/1cis5OrQfkU9m38LwgAMIfmPpJAZxnIC-KnAzi0JsRao/edit#slide=id.g18d2b75b637cb431_3
+
+    //Manual Elevator on Operator Joystick
     Elevator.getInstance().setDefaultCommand(new ElevatorJoystick(
       () -> -operatorController.getRawAxis(1)
     ));
 
-    new JoystickButton(operatorController,Button.kY.value).whileTrue(new ElevatorElevate());
-    new JoystickButton(operatorController,Button.kA.value).whileTrue(new ElevatorDescend());
+    // Set Elevator Positions for Operator on Joystick Buttons
+    new JoystickButton(operatorController,Button.kY.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_ALGAE_L3));
+    new JoystickButton(operatorController,Button.kX.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_ALGAE_L2));
+    new JoystickButton(operatorController,Button.kA.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_PROCESSOR));
 
-    // Set Elevator Position for Driver on DPad
-    new DPad(driverController,90).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L2));
-    new DPad(driverController,0).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L3));
+    //Bumper buttons
+    new JoystickButton(operatorController, Button.kLeftBumper.value).whileTrue(new AlgaeIn());
+    new JoystickButton(operatorController, Button.kRightBumper.value).whileTrue(new AlgaeOut());
+    
+    
+
+    // Set Elevator Position for Operator on DPad
+    new DPad(operatorController,180).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L1));
+    new DPad(operatorController,90).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L2));
+    new DPad(operatorController,0).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L3));
+    new DPad(operatorController,270).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L4));
+
+    //Trigger buttons for operator
+    new TriggerButton(operatorController, 2).whileTrue(new CoralIn());
+    new TriggerButton(operatorController, 3).whileTrue(new CoralSpit());
+    
   
   // Makes button Y/A Algae Intake/Outake
   // new JoystickButton(operatorController, Button.kY.value).whileTrue(new AlgaeIn());
