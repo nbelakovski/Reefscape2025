@@ -37,6 +37,8 @@ public class Elevator extends SubsystemBase {
   private DigitalInput topLimitSwitch;
   private DigitalInput bottomLimitSwitch;
 
+  
+
 
 
   private Elevator() {
@@ -47,6 +49,7 @@ public class Elevator extends SubsystemBase {
     encoder = elevatorLeftMotor.getEncoder();
     topLimitSwitch = new DigitalInput(1);
     bottomLimitSwitch = new DigitalInput(2);
+    
 
     controller = new PIDController(1, 0, 0);
 
@@ -115,6 +118,16 @@ public class Elevator extends SubsystemBase {
   public void stop(){
     elevatorLeftMotor.set(0);
     elevatorRightMotor.set(0);
+  }
+
+  public void coralGapStop(){
+    if(CoralIntake.getInstance().checkGap()){
+      elevatorLeftMotor.set(0);
+      elevatorRightMotor.set(0);
+    }
+    else{
+
+    }
   }
 
   public void resetPosition(double pos){

@@ -26,6 +26,9 @@ public class CoralScorer extends SubsystemBase {
   private SparkFlexConfig motorConfig;
   private static CoralScorer instance;
   private Timer timer;
+  private boolean coralInScorer = false;
+  private AnalogInput scorerSensor;
+  private double distance;
   
 
   private CoralScorer() {
@@ -53,8 +56,26 @@ public class CoralScorer extends SubsystemBase {
     MechConstants.INTAKE_SPEED = newSpeed;
   }
 
+  public boolean checkScorer(){
+    if(getDistance() > 1000){
+      coralInScorer = true;
+    }
+    else{
+      coralInScorer = false;
+    }
+    return coralInScorer;
+  }
+
+  public double getDistance(){
+    distance = scorerSensor.getValue();
+    return distance;
+  }
+
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putBoolean("Coral in Scorer", checkScorer());
+    SmartDashboard.putNumber("anolog distance", getDistance());
   }
 }
