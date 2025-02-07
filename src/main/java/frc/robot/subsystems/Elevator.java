@@ -121,7 +121,7 @@ public class Elevator extends SubsystemBase {
   }
 
   public void coralGapStop(){
-    if(CoralIntake.getInstance().checkGap()){
+    if(CoralIntake.getInstance().isGapBlocked()){
       elevatorLeftMotor.set(0);
       elevatorRightMotor.set(0);
     }

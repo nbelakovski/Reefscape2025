@@ -56,7 +56,7 @@ public class CoralScorer extends SubsystemBase {
     MechConstants.INTAKE_SPEED = newSpeed;
   }
 
-  public boolean checkScorer(){
+  public boolean hasCoral(){
     if(getDistance() > 1000){
       coralInScorer = true;
     }
@@ -75,7 +75,7 @@ public class CoralScorer extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putBoolean("Coral in Scorer", checkScorer());
+    SmartDashboard.putBoolean("Coral in Scorer", hasCoral());
     SmartDashboard.putNumber("anolog distance", getDistance());
   }
 }

@@ -61,7 +61,7 @@ public class CoralIntake extends SubsystemBase {
     MechConstants.INTAKE_SPEED = newSpeed;
   }
 
-  public boolean checkGap(){
+  public boolean isGapBlocked(){
 
     if(getDistance() >2000){
       coralInGap = true;
@@ -81,7 +81,7 @@ public class CoralIntake extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putBoolean("Coral in Gap", checkGap());
+    SmartDashboard.putBoolean("Coral in Gap", isGapBlocked());
     SmartDashboard.putNumber("anolog distance", getDistance());
   }
 }

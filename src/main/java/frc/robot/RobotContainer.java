@@ -8,6 +8,13 @@ import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.utils.DPad;
 import frc.robot.commands.*;
+import frc.robot.commands.basic.AlgaeIn;
+import frc.robot.commands.basic.AlgaeOut;
+import frc.robot.commands.basic.CoralSpit;
+import frc.robot.commands.basic.ElevatorJoystick;
+import frc.robot.commands.closed.ElevatorSetPosition;
+import frc.robot.commands.complex.CoralInSafe;
+import frc.robot.commands.complex.SwerveDrive;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj.XboxController;
@@ -97,7 +104,7 @@ public class RobotContainer {
     new DPad(operatorController,270).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L4));
 
     //Trigger buttons for operator
-    new TriggerButton(operatorController, 2).whileTrue(new CoralIn());
+    new TriggerButton(operatorController, 2).whileTrue(new CoralInSafe());
     new TriggerButton(operatorController, 3).whileTrue(new CoralSpit());
     
   
