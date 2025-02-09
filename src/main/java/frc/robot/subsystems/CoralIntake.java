@@ -35,10 +35,10 @@ public class CoralIntake extends SubsystemBase {
   
 
   private CoralIntake() {
-    CoralIntakeMotor = new SparkMax(Ports.INTAKE_MOTOR_PORT, MotorType.kBrushless);
+    CoralIntakeMotor = new SparkMax(Ports.LEFT_INTAKE_MOTOR_PORT, MotorType.kBrushless);
     motorConfig = new SparkMaxConfig();
     
-    gapSensor = new AnalogInput(Ports.ANALOG_CORAL_PORT);
+    gapSensor = new AnalogInput(Ports.ANALOG_GAP_SENSOR_PORT);
   }
   public static CoralIntake getInstance(){
     if(instance == null) {

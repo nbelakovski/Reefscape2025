@@ -23,7 +23,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 
 public class AlgaeHandler extends SubsystemBase {
   /** Creates a new Intake. */
-  private SparkMax intakeMotor;
+  private SparkMax tongueMotor;
   private SparkMaxConfig motorConfig;
   private static AlgaeHandler instance;
   private Timer timer;
@@ -32,10 +32,10 @@ public class AlgaeHandler extends SubsystemBase {
   
 
   private AlgaeHandler() {
-    intakeMotor = new SparkMax(Ports.INTAKE_MOTOR_PORT, MotorType.kBrushless);
+    tongueMotor = new SparkMax(Ports.ALGAE_TONGUE_MOTOR_PORT, MotorType.kBrushless);
     motorConfig = new SparkMaxConfig();
 
-    touchSensor = new DigitalInput(Ports.DIGITAL_CORALHANDLER_PORT);
+    touchSensor = new DigitalInput(Ports.DIGITAL_ALGAEHANDLER_PORT);
   }
   public static AlgaeHandler getInstance(){
     if(instance == null) {
@@ -45,13 +45,13 @@ public class AlgaeHandler extends SubsystemBase {
   }
   //
   public void out(){
-    intakeMotor.set(-MechConstants.INTAKE_SPEED);
+    tongueMotor.set(-MechConstants.INTAKE_SPEED);
   }
   public void in(){
-    intakeMotor.set(MechConstants.INTAKE_SPEED);
+    tongueMotor.set(MechConstants.INTAKE_SPEED);
   }
   public void stop(){
-    intakeMotor.set(0);
+    tongueMotor.set(0);
   }
 
   public void changeSpeed(double newSpeed){
