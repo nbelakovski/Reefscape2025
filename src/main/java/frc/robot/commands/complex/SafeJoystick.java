@@ -1,6 +1,8 @@
 package frc.robot.commands.complex;
 
 import java.util.function.Supplier;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.CoralIntake;
 import frc.robot.subsystems.Elevator;
@@ -33,7 +35,7 @@ public class SafeJoystick extends Command {
       elevator.stop();
     }
     else{
-      elevator.move(speed.get());
+      elevator.move(MathUtil.applyDeadband(speed.get(), 0.2));
     }   
   }
 

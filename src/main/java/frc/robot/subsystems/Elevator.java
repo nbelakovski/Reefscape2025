@@ -15,6 +15,7 @@ import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -57,6 +58,9 @@ public class Elevator extends SubsystemBase {
 
 
     rightMotorConfig.inverted(ElevatorConstants.RIGHT_ELEVATOR_INVERTED);
+
+    rightMotorConfig.idleMode(IdleMode.kBrake);
+    leftMotorConfig.idleMode(IdleMode.kBrake);
     //leftMotorConfig.encoder.inverted();
     elevatorRightMotor.configure(rightMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     elevatorLeftMotor.configure(leftMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);

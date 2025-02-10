@@ -7,7 +7,7 @@ package frc.robot;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.utils.DPad;
-import frc.robot.commands.*;
+//import frc.robot.commands.*;
 import frc.robot.commands.basic.AlgaeIn;
 import frc.robot.commands.basic.AlgaeOut;
 import frc.robot.commands.basic.CoralSpit;
@@ -83,7 +83,7 @@ public class RobotContainer {
 
     //Manual Elevator on Operator Joystick
     Elevator.getInstance().setDefaultCommand(new ElevatorJoystick(
-      () -> -operatorController.getRawAxis(1)
+      () -> operatorController.getRawAxis(1)
     ));
 
     // Set Elevator Positions for Operator on Joystick Buttons
