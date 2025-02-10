@@ -13,6 +13,7 @@ import frc.robot.utils.DPad;
 import frc.robot.commands.*;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.LEDStrip;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -36,6 +37,9 @@ import frc.robot.utils.Ports;
  */
 public class RobotContainer {
 
+  private LEDStrip led;
+  
+
 
   private static final XboxController driverController = new XboxController(Ports.DRIVER_CONTROLLER);
   private static final XboxController operatorController = new XboxController(Ports.OPERATOR_CONTROLLER);
@@ -47,6 +51,8 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+
+    led = new LEDStrip();
   }
 
   /**
@@ -69,8 +75,8 @@ public class RobotContainer {
     
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
-    new Trigger(m_exampleSubsystem::exampleCondition)
-      .onTrue(new ExampleCommand(m_exampleSubsystem));
+    // new Trigger(m_exampleSubsystem::exampleCondition)
+    //   .onTrue(new ExampleCommand(m_exampleSubsystem));
 
 
     // Elevator Elevate + Elevator Descend 🐘🐘🐘
@@ -88,7 +94,6 @@ public class RobotContainer {
 
   }
 
-  }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
@@ -99,3 +104,4 @@ public class RobotContainer {
     return null;
   }
 }
+
