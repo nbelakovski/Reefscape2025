@@ -43,8 +43,10 @@ public class DriveToPeg extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(drivetrain.getPose().getX() < 17){
-      drivetrain.setXSpeed(xSpeed);
+    if(drivetrain.getPose().getX() < cam.getTagPose(1).get().getX()){
+      drivetrain.setDrive(xSpeed, 0.0, 0.0);
+    } else{
+      drivetrain.stopDrive();
     }
   }
 
