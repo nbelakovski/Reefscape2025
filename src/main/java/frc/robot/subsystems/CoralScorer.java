@@ -8,14 +8,12 @@ import frc.robot.utils.Ports;
 import frc.robot.Constants;
 import frc.robot.Constants.MechConstants;
 
-import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.ClosedLoopConfig;
-import com.revrobotics.spark.config.SparkFlexConfig;
-import com.revrobotics.spark.config.SparkMaxConfig;
 
+import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.AnalogInput;
@@ -34,11 +32,8 @@ public class CoralScorer extends SubsystemBase {
   
 
   private CoralScorer() {
-    CoralScorerMotor = new SparkMax(Ports.CORAL_SCORER_PORT, MotorType.kBrushless);
+    CoralScorerMotor = new SparkMax(Ports.CORALSCORER_MOTOR_PORT, MotorType.kBrushless);
     motorConfig = new SparkMaxConfig();
-
-    scorerSensor = new AnalogInput(Ports.DIGITAL_CORALHANDLER_PORT);
-    
   }
   public static CoralScorer getInstance(){
     if(instance == null) {

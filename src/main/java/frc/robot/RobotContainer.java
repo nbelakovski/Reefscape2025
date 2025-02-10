@@ -7,7 +7,11 @@ package frc.robot;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.utils.DPad;
-//import frc.robot.commands.*;
+import frc.robot.commands.auto.*;
+import frc.robot.commands.basic.*;
+import frc.robot.commands.closed.*;
+import frc.robot.commands.complex.*;
+
 import frc.robot.commands.basic.AlgaeIn;
 import frc.robot.commands.basic.AlgaeOut;
 import frc.robot.commands.basic.CoralSpit;
@@ -76,7 +80,7 @@ public class RobotContainer {
       .onTrue(new ExampleCommand(m_exampleSubsystem)); */
 
 
-    // Elevator Elevate + Elevator Descend 🐘🐘🐘
+    // Elevator Elevate + Elevator Descend
 
     //Operator commands
     // Link for joystick doc: https://docs.google.com/presentation/d/1cis5OrQfkU9m38LwgAMIfmPpJAZxnIC-KnAzi0JsRao/edit#slide=id.g18d2b75b637cb431_3
