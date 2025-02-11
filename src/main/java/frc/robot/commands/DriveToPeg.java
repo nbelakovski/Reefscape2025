@@ -20,7 +20,7 @@ public class DriveToPeg extends Command {
   private double xSpeed;
   private double ySpeed;
   private double rotSpeed;
-
+  private double tagX;
 
   /** Creates a new DriveToPeg. */
   public DriveToPeg(int tagID) {
@@ -30,6 +30,8 @@ public class DriveToPeg extends Command {
     this.xSpeed = 0.7;
     this.ySpeed = 0.7;
     this.rotSpeed = 0.7;
+
+    tagX = cam.getTagPose(1).get().getX();
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drivetrain, cam);
   }
@@ -43,20 +45,23 @@ public class DriveToPeg extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(drivetrain.getPose().getX() < cam.getTagPose(1).get().getX()){
+    if(drivetrain.getPose().getX() < tagX - 0.2){
       drivetrain.setDrive(xSpeed, 0.0, 0.0);
-    } else{
+    } 
+    else{
       drivetrain.stopDrive();
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    drivetrain.stopDrive();
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return drivetrain.getPose().getX() >= cam.getTagPose(1).get().getX() - 0.2;
   }
 }
