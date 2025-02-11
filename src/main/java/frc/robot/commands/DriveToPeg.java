@@ -4,9 +4,6 @@
 
 package frc.robot.commands;
 
-import java.util.function.Supplier;
-
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Camera;
 import frc.robot.subsystems.Drivetrain;
@@ -21,17 +18,19 @@ public class DriveToPeg extends Command {
   private double ySpeed;
   private double rotSpeed;
   private double tagX;
+  private double tagY;
 
   /** Creates a new DriveToPeg. */
   public DriveToPeg(int tagID) {
     drivetrain = Drivetrain.getInstance();
     cam = Camera.getInstance();
     this.tagID = tagID;
-    this.xSpeed = 0.7;
-    this.ySpeed = 0.7;
+    this.xSpeed = 0.4;
+    this.ySpeed = -0.3;
     this.rotSpeed = 0.7;
 
-    tagX = cam.getTagPose(1).get().getX();
+    tagX = cam.getTagPose(10).get().getX() -0.7;
+    tagY = cam.getTagPose(10).get().getY();
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drivetrain, cam);
   }
@@ -45,10 +44,11 @@ public class DriveToPeg extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(drivetrain.getPose().getX() < tagX - 0.2){
+    if(drivetrain.getPose().getY() > tagY && drivetrain.getPose().getX() < tagX){
+      drivetrain.setDrive(xSpeed, ySpeed, 0.0);
+    } else if ((drivetrain.getPose().getY() <= tagY + 0.2 || drivetrain.getPose().getY() >= tagY - 0.2) && drivetrain.getPose().getX() < tagX) {
       drivetrain.setDrive(xSpeed, 0.0, 0.0);
-    } 
-    else{
+    } else {
       drivetrain.stopDrive();
     }
   }
@@ -62,6 +62,6 @@ public class DriveToPeg extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return drivetrain.getPose().getX() >= cam.getTagPose(1).get().getX() - 0.2;
+    return drivetrain.getPose().getY() <= cam.getTagPose(10).get().getY() && drivetrain.getPose().getX() >= cam.getTagPose(10).get().getX() -0.7 ;
   }
 }
