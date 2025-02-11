@@ -71,8 +71,8 @@ public class Camera extends SubsystemBase {
     return cam.getXDesired(target);
   }
 
-  public  Optional<Pose3d> getTagPose(int tagID){
-    return aprilTagFieldLayout.getTagPose(tagID);
+  public  Pose3d getTagPose(int tagID){
+    return aprilTagFieldLayout.getTagPose(tagID).get();
   }
 
   // public double getX(){

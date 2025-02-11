@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.DriveToPeg;
+import frc.robot.commands.DriveToPegPID;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.Camera;
 import frc.robot.commands.SwerveDrive;
@@ -72,6 +73,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return new DriveToPeg(15);
+    return new DriveToPegPID(10);
+
   }
 }

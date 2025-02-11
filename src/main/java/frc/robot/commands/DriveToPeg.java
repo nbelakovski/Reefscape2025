@@ -29,8 +29,8 @@ public class DriveToPeg extends Command {
     this.ySpeed = -0.3;
     this.rotSpeed = 0.7;
 
-    tagX = cam.getTagPose(10).get().getX() -0.7;
-    tagY = cam.getTagPose(10).get().getY();
+    tagX = cam.getTagPose(10).getX() -0.7;
+    tagY = cam.getTagPose(10).getY();
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drivetrain, cam);
   }
@@ -62,6 +62,6 @@ public class DriveToPeg extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return drivetrain.getPose().getY() <= cam.getTagPose(10).get().getY() && drivetrain.getPose().getX() >= cam.getTagPose(10).get().getX() -0.7 ;
+    return drivetrain.getPose().getY() <= cam.getTagPose(10).getY() && drivetrain.getPose().getX() >= cam.getTagPose(10).getX() -0.7 ;
   }
 }
