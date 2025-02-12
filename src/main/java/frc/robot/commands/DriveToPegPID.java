@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Camera;
 import frc.robot.subsystems.Drivetrain;
@@ -34,18 +35,18 @@ public class DriveToPegPID extends Command {
     drivetrain = Drivetrain.getInstance(); 
     cam = Camera.getInstance();
 
-    setpointX = cam.getTagPose(tagID).getX() - 0.2;
+    setpointX = cam.getTagPose(tagID).getX() - 0.3;
     setpointY = cam.getTagPose(tagID).getY();
 
-    controllerX = new PIDController(1.0, 0.0, 0.0);
+    controllerX = new PIDController(0.9, 0.0, 0.0);
     startDistanceX = drivetrain.getPose().getX();
     controllerX.setSetpoint(setpointX);
-    controllerX.setTolerance(0.1);
+    controllerX.setTolerance(0.05);
 
     controllerY = new PIDController(0.7, 0.0, 0.0);
     startDistanceY = drivetrain.getPose().getY();
     controllerY.setSetpoint(setpointY);
-    controllerY.setTolerance(0.1);
+    controllerY.setTolerance(0.05);
 
     
     // Use addRequirements() here to declare subsystem dependencies.
@@ -71,6 +72,11 @@ public class DriveToPegPID extends Command {
     double ySpeed = controllerY.calculate(currentDistanceY);
 
     drivetrain.setDrive(xSpeed, ySpeed, 0.0);
+
+    SmartDashboard.putNumber("xSpeed", xSpeed);
+    SmartDashboard.putNumber("ySpeed", ySpeed);
+    SmartDashboard.putNumber("SetpointX", setpointX);
+    SmartDashboard.putNumber("SetpointY", setpointY);
   }
 
   // Called once the command ends or is interrupted.

@@ -73,7 +73,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return new DriveToPegPID(10);
+    return new DriveToPegPID(cam.getClosestID());
 
   }
 }
