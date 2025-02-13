@@ -48,10 +48,10 @@ public class CoralIntake extends SubsystemBase {
   }
   //
   public void eat(){
-    CoralIntakeMotor.set(-MechConstants.INTAKE_SPEED);
+    CoralIntakeMotor.set(MechConstants.INTAKE_SPEED);
   }
   public void spit(){
-    CoralIntakeMotor.set(MechConstants.INTAKE_SPEED);
+    CoralIntakeMotor.set(-MechConstants.INTAKE_SPEED);
   }
   public void stop(){
     CoralIntakeMotor.set(0);
