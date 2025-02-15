@@ -1,6 +1,8 @@
 package frc.robot.commands.basic;
 
 import java.util.function.Supplier;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Elevator;
 
@@ -27,7 +29,7 @@ public class ElevatorJoystick extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    elevator.move(speed.get());
+    elevator.move(MathUtil.applyDeadband(speed.get(), 0.1));
   }
 
   // Called once the command ends or is interrupted.

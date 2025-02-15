@@ -6,8 +6,9 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.utils.Ports;
+
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import frc.robot.Ports;
 
 
 
@@ -21,8 +22,8 @@ public class Climber extends SubsystemBase {
     private static Climber instance;
 
     private Climber() {
-        this.rightMotor = new SparkMax(frc.robot.utils.Ports.CLIMB_RIGHT_MOTOR_PORT, MotorType.kBrushless);
-        this.leftMotor = new SparkMax(frc.robot.utils.Ports.CLIMB_LEFT_MOTOR_PORT, MotorType.kBrushless);
+        this.rightMotor = new SparkMax(Ports.RIGHT_CLIMBER_MOTOR_PORT, MotorType.kBrushless);
+        this.leftMotor = new SparkMax(Ports.LEFT_CLIMBER_MOTOR_PORT, MotorType.kBrushless);
         
         rightEncoder = rightMotor.getEncoder();
         leftEncoder = leftMotor.getEncoder();

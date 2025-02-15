@@ -43,8 +43,8 @@ public class Ports {
 
 
     //DIGITAL I/O PORTS
-    public static final int DIGITAL_TOP_LIMIT_PORT = 0;
-    public static final int DIGITAL_BOTTOM_LIMIT_PORT = 1;
+    public static final int DIGITAL_TOP_LIMIT_PORT = 1;
+    public static final int DIGITAL_BOTTOM_LIMIT_PORT = 0;
     public static final int DIGITAL_ALGAEHANDLER_PORT = 9;
 
 

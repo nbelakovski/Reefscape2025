@@ -48,8 +48,8 @@ public class Elevator extends SubsystemBase {
     leftMotorConfig = new SparkMaxConfig();
     rightMotorConfig = new SparkMaxConfig();
     encoder = elevatorLeftMotor.getEncoder();
-    topLimitSwitch = new DigitalInput(1);
-    bottomLimitSwitch = new DigitalInput(2);
+    topLimitSwitch = new DigitalInput(Ports.DIGITAL_TOP_LIMIT_PORT);
+    bottomLimitSwitch = new DigitalInput(Ports.DIGITAL_BOTTOM_LIMIT_PORT);
     
 
     controller = new PIDController(1, 0, 0);
@@ -110,10 +110,10 @@ public class Elevator extends SubsystemBase {
   public void move(double speed){
 
     if(speed >0){
-      elevate(-speed);
+      elevate(speed);
     }
     else if(speed <0){
-      descend(speed);
+      descend(-speed);
     }
     else{
       stop();
@@ -136,6 +136,14 @@ public class Elevator extends SubsystemBase {
     }
   }
 
+  public boolean getTopLimit() {
+    return topLimitSwitch.get();
+  }
+
+  public boolean getBotLimit() {
+    return bottomLimitSwitch.get();
+  }
+
   public void resetPosition(double pos){
     encoder.setPosition(pos);
   }
@@ -152,6 +160,8 @@ public class Elevator extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("elevator position", getPosition());
+    SmartDashboard.putBoolean("Top Limit", getTopLimit());
+    SmartDashboard.putBoolean("Bottom Limit", getBotLimit());
   }
 }
 
