@@ -417,6 +417,7 @@ private final Field2d field;
     }
 
     SmartDashboard.putNumber("Robot Angle", getHeading().getDegrees());
+    SmartDashboard.putNumber("Compass Heading", navX.getCompassHeading());
 
     SmartDashboard.putNumber("xOdometry", getPose().getX());
     SmartDashboard.putNumber("yOdometry", getPose().getY());

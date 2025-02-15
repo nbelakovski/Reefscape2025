@@ -4,9 +4,29 @@
 
 package frc.robot;
 
+import frc.robot.Constants.ElevatorConstants;
+import frc.robot.Constants.OperatorConstants;
+import frc.robot.utils.DPad;
+import frc.robot.commands.auto.*;
+import frc.robot.commands.basic.*;
+import frc.robot.commands.closed.*;
+import frc.robot.commands.complex.*;
+
+import frc.robot.commands.basic.AlgaeIn;
+import frc.robot.commands.basic.AlgaeOut;
+import frc.robot.commands.basic.CoralSpit;
+import frc.robot.commands.basic.ElevatorJoystick;
+import frc.robot.commands.closed.ElevatorSetPosition;
+import frc.robot.commands.complex.CoralInSafe;
+import frc.robot.commands.complex.SwerveDrive;
+import frc.robot.Constants.OperatorConstants;
+import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
@@ -14,10 +34,10 @@ import frc.robot.commands.DriveToPeg;
 import frc.robot.commands.DriveToPegPID;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.Camera;
-import frc.robot.commands.SwerveDrive;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.Elevator;
 import frc.robot.utils.Ports;
+import frc.robot.utils.TriggerButton;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -27,12 +47,11 @@ import frc.robot.utils.Ports;
  */
 public class RobotContainer {
 
+
   private static final XboxController driverController = new XboxController(Ports.DRIVER_CONTROLLER);
   private static final XboxController operatorController = new XboxController(Ports.OPERATOR_CONTROLLER);
 
-  // The robot's subsystems and commands are defined here...
   Drivetrain drivetrain = Drivetrain.getInstance();
-
   Camera cam = Camera.getInstance();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -58,14 +77,48 @@ public class RobotContainer {
       () -> -driverController.getRawAxis(4),
       () -> driverController.getAButton()
     ));
-    
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-  
+ 
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
+
+    // Elevator Elevate + Elevator Descend
+
+    //Operator commands
+    // Link for joystick doc: https://docs.google.com/presentation/d/1cis5OrQfkU9m38LwgAMIfmPpJAZxnIC-KnAzi0JsRao/edit#slide=id.g18d2b75b637cb431_3
+
+    //Manual Elevator on Operator Joystick
+    Elevator.getInstance().setDefaultCommand(new ElevatorJoystick(
+      () -> operatorController.getRawAxis(1)
+    ));
+
+    // Set Elevator Positions for Operator on Joystick Buttons
+    new JoystickButton(operatorController,Button.kY.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_ALGAE_L3));
+    new JoystickButton(operatorController,Button.kX.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_ALGAE_L2));
+    new JoystickButton(operatorController,Button.kA.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_PROCESSOR));
+
+    //Bumper buttons
+    new JoystickButton(operatorController, Button.kLeftBumper.value).whileTrue(new AlgaeIn());
+    new JoystickButton(operatorController, Button.kRightBumper.value).whileTrue(new AlgaeOut());
+    
+    
+
+    // Set Elevator Position for Operator on DPad
+    new DPad(operatorController,180).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L1));
+    new DPad(operatorController,90).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L2));
+    new DPad(operatorController,0).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L3));
+    new DPad(operatorController,270).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L4));
+
+    //Trigger buttons for operator
+    new TriggerButton(operatorController, 2).whileTrue(new CoralInSafe());
+    new TriggerButton(operatorController, 3).whileTrue(new CoralSpit());
+    
+  
+  // Makes button Y/A Algae Intake/Outake
+  // new JoystickButton(operatorController, Button.kY.value).whileTrue(new AlgaeIn());
+  // new JoystickButton(operatorController, Button.kA.value).whileTrue(new AlgaeOut());
+
   }
 
+  
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *

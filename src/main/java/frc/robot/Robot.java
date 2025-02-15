@@ -62,6 +62,7 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.schedule();
     }
     Drivetrain.getInstance().resetIMU();
+
   }
 
   /** This function is called periodically during autonomous. */
