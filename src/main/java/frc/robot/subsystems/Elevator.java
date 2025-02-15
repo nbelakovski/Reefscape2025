@@ -86,10 +86,11 @@ public class Elevator extends SubsystemBase {
       elevatorLeftMotor.set(-speed);
     }
 
-    else {
+     else {
       elevatorLeftMotor.set(speed);
       elevatorRightMotor.set(-speed);
-    }
+     }
+
   }
   
   public void descend(double speed){
@@ -103,6 +104,7 @@ public class Elevator extends SubsystemBase {
       elevatorRightMotor.set(speed);
       elevatorLeftMotor.set(-speed);
     }
+    
   }
 
   public void move(double speed){
