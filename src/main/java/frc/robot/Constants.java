@@ -6,8 +6,14 @@ package frc.robot;
 
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import frc.robot.utils.ModuleConfig;
 import frc.robot.utils.Ports;
@@ -24,13 +30,14 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+ 
   public static class SwerveConstants {
     ///(Old Robot)
     //Sensor Offsets for the radian difference between the physical sensor orientation and the calibrated swerve direction
-    public static final double FL_SENSOR_OFFSET = 5.1247236; //from REV Hardware Client
-    public static final double FR_SENSOR_OFFSET = 4.7080523; //from REV Hardware Client
-    public static final double BR_SENSOR_OFFSET = 2.9550133; //from REV Hardware Client
-    public static final double BL_SENSOR_OFFSET = 2.8204095; //from REV Hardware Client
+    public static final double FL_SENSOR_OFFSET = 0.8946441; //from REV Hardware Client
+    public static final double FR_SENSOR_OFFSET = 0.3716664; //from REV Hardware Client
+    public static final double BR_SENSOR_OFFSET = 0.2515946; //from REV Hardware Client
+    public static final double BL_SENSOR_OFFSET = 0.3813912; //from REV Hardware Client
 
     ///(New Robot)(Put new numbers)
     // public static final double FL_SENSOR_OFFSET = 0.7848113; //from REV Hardware Client
@@ -48,9 +55,9 @@ public final class Constants {
     ///(New Robot)(Put new numbers)
     //Angular Offsets for the radian difference between the calibrated swerve and desired forward direction
     public static final double FL_ANGULAR_OFFSET = -Math.PI/2; //Math.PI / 2; //-Math.PI / 2;
-    public static final double FR_ANGULAR_OFFSET = 0;
-    public static final double BR_ANGULAR_OFFSET = -Math.PI / 2; //Math.PI / 2;
-    public static final double BL_ANGULAR_OFFSET = 0; //Math.PI;
+    public static final double FR_ANGULAR_OFFSET = 2 * Math.PI/3;
+    public static final double BR_ANGULAR_OFFSET = Math.PI/2; //Math.PI / 2;
+    public static final double BL_ANGULAR_OFFSET = 5 * Math.PI/3; //Math.PI;
 
     //Constructor to hold all of the data to configure a SwerveModule
     public static final ModuleConfig SWERVE_FL = new ModuleConfig("FL", Ports.SWERVE_DRIVE_FL, Ports.SWERVE_TURN_FL, FL_SENSOR_OFFSET, FL_ANGULAR_OFFSET, false);//2.9483314  +Math.PI /2);
@@ -59,10 +66,10 @@ public final class Constants {
     public static final ModuleConfig SWERVE_BR = new ModuleConfig("BR", Ports.SWERVE_DRIVE_BR, Ports.SWERVE_TURN_BR, BR_SENSOR_OFFSET, BR_ANGULAR_OFFSET, true);
 
     // Chassis configuration
-    public static final double TRACK_WIDTH = Units.inchesToMeters(25);
+    public static final double TRACK_WIDTH = Units.inchesToMeters(26);
 
     // Distance between centers of right and left wheels on robot
-    public static final double WHEEL_BASE = Units.inchesToMeters(25);
+    public static final double WHEEL_BASE = Units.inchesToMeters(26);
 
     public static final double DISTANCE_TO_CENTER = Math.sqrt(Math.pow(WHEEL_BASE/2, 2) + Math.pow(WHEEL_BASE/2, 2));
 
@@ -90,10 +97,10 @@ public final class Constants {
     public static final double GEER_RATTIOLI = 3.56;
 
 
-    //Slew stuff from Rev
-    public static final double kDirectionSlewRate = 1; // radians per second
-    public static final double kMagnitudeSlewRate = 1.4; // percent per second (1 = 100%)
-    public static final double kRotationalSlewRate = 1; // percent per second (1 = 100%)
+    // //Slew stuff from Rev
+    // public static final double kDirectionSlewRate = 1; // radians per second
+    // public static final double kMagnitudeSlewRate = 1.4; // percent per second (1 = 100%)
+    // public static final double kRotationalSlewRate = 1; // percent per second (1 = 100%)
 
     public static final boolean kGyroReversed = false;
 
@@ -153,7 +160,96 @@ public static final class ModuleConstants {
 
   public static final int kDrivingMotorCurrentLimit = 50; // amps
   public static final int kTurningMotorCurrentLimit = 40; // amps
+
+
   }
+
+
+  public static class ElevatorConstants {
+    
+    public static final double ELEVATOR_MIN = 0;
+    public static final double ELEVATOR_MAX = 34;
+
+    public static final double ELEVATOR_L1 = 10;
+    public static final double ELEVATOR_L2 = 20;
+    public static final double ELEVATOR_L3 = 30;
+
+    public static final double ELEVATOR_PROCESSOR = ELEVATOR_MIN;
+    public static final double ELEVATOR_ALGAE_L2 = 15;
+    public static final double ELEVATOR_ALGAE_L3 = 25;
+
+    public static final boolean RIGHT_ELEVATOR_INVERTED = false;
+    
+
+  }
+  public static class MechConstants{
+
+    
+    public static final int ENCODER_TICKS = 8192; //Counts per Revolution
+
+    //climber encoders
+    // public static final double RIGHT_CLIMB_OFFSET = 0.340;
+    // public static final double LEFT_CLIMB_OFFSET = 0.30926;
+
+
+    //Climber Heights
+    //public static final double MAX_CLIMB_RIGHT = 42.0;
+    //public static final double BASE_CLIMB_RIGHT = 0.0;
+    //public static final double MAX_CLIMB_LEFT = 42.0;
+    //public static final double BASE_CLIMB_LEFT = 0.0;
+
+    //Mech Motor Speeds for Buttons
+    public static double INTAKE_SPEED = 1.0;
+    public static double TELE_INTAKE_SPEED = 1.0;
+    public static double AUTO_INTAKE_SPEED = 0.5;
+    //public static final double LAUNCHER_SPEED = 1.0;
+    //public static final double ARM_PIVOT_SPEED = 1.0;
+   // public static final double CLIMBER_SPEED = 0.3;
+
+    //Arm Angles    
+    //public static final double START_ANGLE = 94;
+    //public static final double FLOOR_ANGLE = 0.0;
+    //public static final double LAUNCH_ANGLE = 23.7;
+    //public static final double AMP_ANGLE = 106;
+    //public static final double ARM_POSITION_TOLERANCE = 1.0;
+    //public static final double ARM_OFFSET = 357.2335615;
+  }
+
+  public static class VisionConstants{
+
+    // //GreenZone boundaries
+    // public static final double GREENZONE_MAX_X = 4.0; 
+    // public static final double GREENZONE_MIN_X = 0.8;
+    // public static final double GREENZONE_MAX_Y = 0.3;
+    // public static final double GREENZONE_MIN_Y = -0.3;
+    // public static final double GREENZONE_MAX_ANGLE = 15.0;
+
+    // //GoodLaunch boundaries
+    // public static final double LAUNCH_ANGLE_TOLERANCE = 2.0;
+    // public static final double AMP_ANGLE_TOLERANCE = 5.0;
+    
+    // //Good Launch 2nd Order Equation Co-efficients
+    // public static final double kC = -11;
+    // public static final double kB = 27.5;
+    // public static final double kA = -3.06;    
+    
+    // //Distance to Angle Constants
+    // public static final double DEGREES_PER_METER_SLOPE = 10.0;
+    // public static final double DEGREES_Y_INTERCEPT = -2.0;
+
+    //Camera Name
+    public static final String FRONT_CAM_NAME = "Arducam_OV9782_USB_Camera"; //"Arducam_OV9782_USB_Camera";
+
+    // The layout of the AprilTags on the field
+    public static final AprilTagFieldLayout kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
+
+    // The standard deviations of our vision estimated poses, which affect correction rate
+    // (Fake values. Experiment and determine estimation noise on an actual robot.)
+    public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
+    public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
+
+  }
+
 
 
 
