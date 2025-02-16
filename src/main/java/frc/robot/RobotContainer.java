@@ -21,6 +21,7 @@ import frc.robot.commands.complex.CoralInSafe;
 import frc.robot.commands.complex.SwerveDrive;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.LEDStrip;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -46,6 +47,9 @@ import frc.robot.utils.TriggerButton;
  */
 public class RobotContainer {
 
+  private LEDStrip led;
+  
+
 
   private static final XboxController driverController = new XboxController(Ports.DRIVER_CONTROLLER);
   private static final XboxController operatorController = new XboxController(Ports.OPERATOR_CONTROLLER);
@@ -58,6 +62,8 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+
+    led = new LEDStrip();
   }
 
   /**
@@ -78,7 +84,6 @@ public class RobotContainer {
       () -> driverController.getAButton()
     ));
  
-
 
     // Driver Commands
     new JoystickButton(driverController,Button.kB.value).whileTrue(new DriveToPegPID(cam.getClosestID(), "RIGHT"));
@@ -118,9 +123,7 @@ public class RobotContainer {
     new TriggerButton(operatorController, 2).whileTrue(new CoralInSafe());
     new TriggerButton(operatorController, 3).whileTrue(new CoralSpit());
 
-  }
-
-  
+ 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
@@ -132,4 +135,5 @@ public class RobotContainer {
     return new DriveToPegPID(cam.getClosestID(), "RIGHT");
 
   }
+
 }
