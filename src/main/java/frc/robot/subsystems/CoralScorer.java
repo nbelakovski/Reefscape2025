@@ -34,6 +34,7 @@ public class CoralScorer extends SubsystemBase {
   private CoralScorer() {
     CoralScorerMotor = new SparkMax(Ports.CORALSCORER_MOTOR_PORT, MotorType.kBrushless);
     motorConfig = new SparkMaxConfig();
+    scorerSensor = new AnalogInput(Ports.ANALOG_CORAL_SENSOR_PORT);
   }
   public static CoralScorer getInstance(){
     if(instance == null) {
@@ -57,7 +58,7 @@ public class CoralScorer extends SubsystemBase {
   }
 
   public boolean hasCoral(){
-    if(getDistance() > 1000){
+    if(getDistance() > 2000){
       coralInScorer = true;
     }
     else{
@@ -76,6 +77,6 @@ public class CoralScorer extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putBoolean("Coral in Scorer", hasCoral());
-    SmartDashboard.putNumber("anolog distance", getDistance());
+    SmartDashboard.putNumber("coral anolog distance", getDistance());
   }
 }
