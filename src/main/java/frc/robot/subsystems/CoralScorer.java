@@ -35,7 +35,6 @@ public class CoralScorer extends SubsystemBase {
     CoralScorerMotor = new SparkMax(Ports.CORALSCORER_MOTOR_PORT, MotorType.kBrushless);
     scorerSensor = new AnalogInput(Ports.ANALOG_CORAL_SENSOR_PORT);
     motorConfig = new SparkMaxConfig();
-    scorerSensor = new AnalogInput(Ports.ANALOG_CORAL_SENSOR_PORT);
   }
   public static CoralScorer getInstance(){
     if(instance == null) {

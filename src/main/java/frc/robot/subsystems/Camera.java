@@ -33,6 +33,8 @@ public class Camera extends SubsystemBase {
   // The field from AprilTagFields will be different depending on the game.
   AprilTagFieldLayout aprilTagFieldLayout = AprilTagFields.k2025Reefscape.loadAprilTagLayoutField();
 
+  public int closestID;
+
   //Forward Camera
   // cam = new PhotonCamera("testCamera");
   Transform3d robotToCam;
@@ -123,6 +125,7 @@ public class Camera extends SubsystemBase {
     for (int i = 0; i < cam.getTargets().size(); i++) {
       SmartDashboard.putString("id" + i, cam.getTargets().get(i).toString());
     }
+    closestID = getClosestID();
 
     if(visionEst.isPresent()) {
       SmartDashboard.putNumber("pose X", visionEst.get().estimatedPose.getX());
@@ -137,7 +140,8 @@ public class Camera extends SubsystemBase {
     
     SmartDashboard.putNumber("tag 10 pose x", aprilTagFieldLayout.getTagPose(10).get().getX());
     SmartDashboard.putNumber("tag 10 pose y", aprilTagFieldLayout.getTagPose(10).get().getY());
-    SmartDashboard.putNumber("closest ID", getClosestID());
+    SmartDashboard.putNumber("closest ID", closestID);
+    
    
     
   }
