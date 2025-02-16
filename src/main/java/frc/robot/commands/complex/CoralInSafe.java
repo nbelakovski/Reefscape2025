@@ -40,7 +40,7 @@ public class CoralInSafe extends Command {
     }
     else{
       coralIntake.eat();
-      coralScorer.forward();
+      coralScorer.spitSlow();
     }
     
   }
