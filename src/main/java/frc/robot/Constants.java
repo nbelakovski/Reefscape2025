@@ -200,7 +200,8 @@ public static final class ModuleConstants {
     //public static final double BASE_CLIMB_LEFT = 0.0;
 
     //Mech Motor Speeds for Buttons
-    public static double INTAKE_SPEED = 1.0;
+    public static double INTAKE_SPEED = 0.3;
+    public static double SCORE_SPEED = 1.0;
     public static double TELE_INTAKE_SPEED = 1.0;
     public static double AUTO_INTAKE_SPEED = 0.5;
     //public static final double LAUNCHER_SPEED = 1.0;

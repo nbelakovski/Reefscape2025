@@ -14,7 +14,7 @@ import frc.robot.commands.complex.*;
 
 import frc.robot.commands.basic.AlgaeIn;
 import frc.robot.commands.basic.AlgaeOut;
-import frc.robot.commands.basic.CoralSpit;
+import frc.robot.commands.basic.CoralScore;
 import frc.robot.commands.basic.ElevatorJoystick;
 import frc.robot.commands.closed.ElevatorSetPosition;
 import frc.robot.commands.complex.CoralInSafe;
@@ -91,12 +91,12 @@ public class RobotContainer {
     ));
 
     // Set Elevator Position for Operator on DPad
-    // new DPad(operatorController,180).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L1));
-    // new DPad(operatorController,90).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L2));
-    // new DPad(operatorController,0).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L3));
-    // new DPad(operatorController,270).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L4));
+    new DPad(operatorController,180).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L1));
+    new DPad(operatorController,270).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L2));
+    new DPad(operatorController,0).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L3));
+    new DPad(operatorController,90).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L4));
 
-    new JoystickButton(operatorController,Button.kY.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L1));
+ //   new JoystickButton(operatorController,Button.kY.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L1));
     // Set Elevator Positions for Operator on Joystick Buttons
     // new JoystickButton(operatorController,Button.kY.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_ALGAE_L3));
     // new JoystickButton(operatorController,Button.kX.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_ALGAE_L2));
@@ -104,14 +104,16 @@ public class RobotContainer {
 
     new JoystickButton(operatorController, Button.kA.value).whileTrue(new SafeElevate());
     new JoystickButton(operatorController, Button.kB.value).whileTrue(new SafeDescend());
+    new JoystickButton(operatorController, Button.kX.value).whileTrue(new CoralScore());
+    new JoystickButton(operatorController, Button.kY.value).whileTrue(new CoralInSafe());
 
     //Bumper buttons
     new JoystickButton(operatorController, Button.kLeftBumper.value).whileTrue(new AlgaeIn());
     new JoystickButton(operatorController, Button.kRightBumper.value).whileTrue(new AlgaeOut());
 
     //Trigger buttons for operator
-    new TriggerButton(operatorController, 2).whileTrue(new CoralInSafe());
-    new TriggerButton(operatorController, 3).whileTrue(new CoralSpit());
+   // new TriggerButton(operatorController, 2).whileTrue(new CoralInSafe());
+    //new TriggerButton(operatorController, 3).whileTrue(new FastCoralSpit());
 
   }
 

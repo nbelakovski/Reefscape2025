@@ -43,9 +43,14 @@ public class CoralScorer extends SubsystemBase {
     return instance;
   }
   //
-  public void forward(){
+  public void spitSlow(){
     CoralScorerMotor.set(-MechConstants.INTAKE_SPEED);
   }
+
+  public void spitFast(){
+    CoralScorerMotor.set(-MechConstants.SCORE_SPEED);
+  }
+  
   public void backward(){
     CoralScorerMotor.set(MechConstants.INTAKE_SPEED);
   }
