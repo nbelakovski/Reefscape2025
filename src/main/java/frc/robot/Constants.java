@@ -47,17 +47,18 @@ public final class Constants {
 
     //(Old Robot)
     //Angular Offsets for the radian difference between the calibrated swerve and desired forward direction
-    // public static final double FL_ANGULAR_OFFSET = -Math.PI/2; //Math.PI / 2; //-Math.PI / 2;
-    // public static final double FR_ANGULAR_OFFSET = 2 * Math.PI/3;
-    // public static final double BR_ANGULAR_OFFSET = Math.PI/2; //Math.PI / 2;
-    // public static final double BL_ANGULAR_OFFSET = 5 * Math.PI/3; //Math.PI;
+    public static final double FL_ANGULAR_OFFSET = 7 * Math.PI / 6; //Math.PI / 2; //-Math.PI / 2;
+    public static final double FR_ANGULAR_OFFSET = 2*Math.PI/3;
+    public static final double BR_ANGULAR_OFFSET = 11*Math.PI/6; //Math.PI / 2;
+    public static final double BL_ANGULAR_OFFSET = 5*Math.PI/3; //Math.PI;
 
     ///(New Robot)(Put new numbers)
     //Angular Offsets for the radian difference between the calibrated swerve and desired forward direction
-    public static final double FL_ANGULAR_OFFSET = 3 * Math.PI/2; //Math.PI / 2; //-Math.PI / 2;
-    public static final double FR_ANGULAR_OFFSET = 0;
-    public static final double BR_ANGULAR_OFFSET = Math.PI / 2; //Math.PI / 2;
-    public static final double BL_ANGULAR_OFFSET = Math.PI; //Math.PI;
+    //public static final double FL_ANGULAR_OFFSET = 3 * Math.PI/2; //Math.PI / 2; //-Math.PI / 2;
+    //public static final double FR_ANGULAR_OFFSET = 0;
+    //public static final double BR_ANGULAR_OFFSET = Math.PI / 2; //Math.PI / 2;
+    //public static final double BL_ANGULAR_OFFSET = Math.PI; //Math.PI;
+
 
     //Constructor to hold all of the data to configure a SwerveModule
     public static final ModuleConfig SWERVE_FL = new ModuleConfig("FL", Ports.SWERVE_DRIVE_FL, Ports.SWERVE_TURN_FL, FL_SENSOR_OFFSET, FL_ANGULAR_OFFSET, false);//2.9483314  +Math.PI /2);
@@ -167,8 +168,8 @@ public static final class ModuleConstants {
 
   public static class ElevatorConstants {
     
-    public static final double ELEVATOR_MIN = 0;
-    public static final double ELEVATOR_MAX = 60;
+    public static final double ELEVATOR_MIN = -0.5;
+    public static final double ELEVATOR_MAX = 80;
 
     public static final double ELEVATOR_L1 = 10;
     public static final double ELEVATOR_L2 = 20;

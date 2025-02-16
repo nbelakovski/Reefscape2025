@@ -29,8 +29,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
-// import frc.robot.commands.DriveToPeg;
-// import frc.robot.commands.DriveToPegPID;
+import frc.robot.commands.DriveToPeg;
+import frc.robot.commands.DriveToPegPID;
 import frc.robot.subsystems.AlgaeHandler;
 import frc.robot.subsystems.Camera;
 import frc.robot.subsystems.Drivetrain;
@@ -80,8 +80,10 @@ public class RobotContainer {
  
 
 
-    // Elevator Elevate + Elevator Descend
-
+    // Driver Commands
+    new JoystickButton(driverController,Button.kB.value).whileTrue(new DriveToPegPID(cam.getClosestID(), "RIGHT"));
+    new JoystickButton(driverController,Button.kX.value).whileTrue(new DriveToPegPID(cam.getClosestID(), "LEFT"));
+    new JoystickButton(driverController,Button.kY.value).whileTrue(new DriveToPegPID(cam.getClosestID(), "STRAIGHT"));
     //Operator commands
     // Link for joystick doc: https://docs.google.com/presentation/d/1cis5OrQfkU9m38LwgAMIfmPpJAZxnIC-KnAzi0JsRao/edit#slide=id.g18d2b75b637cb431_3
 
@@ -107,13 +109,14 @@ public class RobotContainer {
     new JoystickButton(operatorController, Button.kX.value).whileTrue(new CoralScore());
     new JoystickButton(operatorController, Button.kY.value).whileTrue(new CoralInSafe());
 
+
     //Bumper buttons
     new JoystickButton(operatorController, Button.kLeftBumper.value).whileTrue(new AlgaeIn());
     new JoystickButton(operatorController, Button.kRightBumper.value).whileTrue(new AlgaeOut());
 
     //Trigger buttons for operator
-   // new TriggerButton(operatorController, 2).whileTrue(new CoralInSafe());
-    //new TriggerButton(operatorController, 3).whileTrue(new FastCoralSpit());
+    new TriggerButton(operatorController, 2).whileTrue(new CoralInSafe());
+    new TriggerButton(operatorController, 3).whileTrue(new CoralSpit());
 
   }
 
@@ -125,7 +128,8 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return new AlgaeIn();
+
+    return new DriveToPegPID(cam.getClosestID(), "RIGHT");
 
   }
 }
