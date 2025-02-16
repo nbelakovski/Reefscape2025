@@ -30,7 +30,8 @@ public class Elevator extends SubsystemBase {
   /** Creates a new Elevator. */
   private SparkMax elevatorLeftMotor;
   private SparkMax elevatorRightMotor;
-  private RelativeEncoder encoder;
+  private RelativeEncoder leftEncoder;
+  private RelativeEncoder rightEncoder;
   private SparkMaxConfig leftMotorConfig;
   private SparkMaxConfig rightMotorConfig;
   private static Elevator instance;
@@ -47,7 +48,8 @@ public class Elevator extends SubsystemBase {
     elevatorRightMotor = new SparkMax(Ports.ELEVATOR_RIGHT_MOTOR_PORT, MotorType.kBrushless);
     leftMotorConfig = new SparkMaxConfig();
     rightMotorConfig = new SparkMaxConfig();
-    encoder = elevatorLeftMotor.getEncoder();
+    leftEncoder = elevatorLeftMotor.getEncoder();
+    rightEncoder = elevatorRightMotor.getEncoder();
     topLimitSwitch = new DigitalInput(Ports.DIGITAL_TOP_LIMIT_PORT);
     bottomLimitSwitch = new DigitalInput(Ports.DIGITAL_BOTTOM_LIMIT_PORT);
     
@@ -58,7 +60,7 @@ public class Elevator extends SubsystemBase {
 
 
     rightMotorConfig.inverted(ElevatorConstants.RIGHT_ELEVATOR_INVERTED);
-
+  
     rightMotorConfig.idleMode(IdleMode.kBrake);
     leftMotorConfig.idleMode(IdleMode.kBrake);
     //leftMotorConfig.encoder.inverted();
@@ -76,14 +78,15 @@ public class Elevator extends SubsystemBase {
   }
 
   public double getPosition() {
-    return encoder.getPosition();
+    double avg = (leftEncoder.getPosition() + -rightEncoder.getPosition()) / 2;
+    return avg;
   }
 
   public void elevate(double speed){
-
-    if (encoder.getPosition() >= ElevatorConstants.ELEVATOR_MAX || topLimitSwitch.get()) {
-      elevatorRightMotor.set(speed);
-      elevatorLeftMotor.set(-speed);
+//|| getTopLimit()
+    if (getPosition() >= ElevatorConstants.ELEVATOR_MAX ) {
+      elevatorRightMotor.set(0);
+      elevatorLeftMotor.set(0);
     }
 
      else {
@@ -94,10 +97,10 @@ public class Elevator extends SubsystemBase {
   }
   
   public void descend(double speed){
-
-    if (encoder.getPosition() <= ElevatorConstants.ELEVATOR_MIN || bottomLimitSwitch.get()) {
-      elevatorLeftMotor.set(speed);
-      elevatorRightMotor.set(-speed);
+//|| getBotLimit()
+    if (getPosition() <= ElevatorConstants.ELEVATOR_MIN ) {
+      elevatorLeftMotor.set(0);
+      elevatorRightMotor.set(0);
     }
 
     else {
@@ -110,10 +113,10 @@ public class Elevator extends SubsystemBase {
   public void move(double speed){
 
     if(speed >0){
-      elevate(speed);
+      elevate(-speed);
     }
     else if(speed <0){
-      descend(-speed);
+      descend(speed);
     }
     else{
       stop();
@@ -137,19 +140,21 @@ public class Elevator extends SubsystemBase {
   }
 
   public boolean getTopLimit() {
-    return topLimitSwitch.get();
+    return !topLimitSwitch.get();
   }
 
   public boolean getBotLimit() {
-    return bottomLimitSwitch.get();
+    return !bottomLimitSwitch.get();
   }
 
   public void resetPosition(double pos){
-    encoder.setPosition(pos);
+    leftEncoder.setPosition(pos);
+    rightEncoder.setPosition(pos);
   }
 
   public void resetPosition(){
-    encoder.setPosition(0);
+    leftEncoder.setPosition(0);
+    rightEncoder.setPosition(0);
   }
 
   public PIDController getController(){
@@ -160,6 +165,8 @@ public class Elevator extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("elevator position", getPosition());
+    SmartDashboard.putNumber("left elevator position", leftEncoder.getPosition());
+    SmartDashboard.putNumber("right elevator position", -rightEncoder.getPosition());
     SmartDashboard.putBoolean("Top Limit", getTopLimit());
     SmartDashboard.putBoolean("Bottom Limit", getBotLimit());
   }

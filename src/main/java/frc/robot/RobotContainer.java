@@ -31,6 +31,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.DriveToPeg;
 import frc.robot.commands.DriveToPegPID;
+import frc.robot.subsystems.AlgaeHandler;
 import frc.robot.subsystems.Camera;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
@@ -51,6 +52,7 @@ public class RobotContainer {
 
   Drivetrain drivetrain = Drivetrain.getInstance();
   Camera cam = Camera.getInstance();
+  AlgaeHandler algae = AlgaeHandler.getInstance();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -89,15 +91,16 @@ public class RobotContainer {
     ));
 
     // Set Elevator Position for Operator on DPad
-    new DPad(operatorController,180).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L1));
-    new DPad(operatorController,90).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L2));
-    new DPad(operatorController,0).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L3));
-    new DPad(operatorController,270).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L4));
+    // new DPad(operatorController,180).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L1));
+    // new DPad(operatorController,90).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L2));
+    // new DPad(operatorController,0).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L3));
+    // new DPad(operatorController,270).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L4));
 
+    new JoystickButton(operatorController,Button.kY.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L1));
     // Set Elevator Positions for Operator on Joystick Buttons
-    new JoystickButton(operatorController,Button.kY.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_ALGAE_L3));
-    new JoystickButton(operatorController,Button.kX.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_ALGAE_L2));
-    new JoystickButton(operatorController,Button.kA.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_PROCESSOR));
+    // new JoystickButton(operatorController,Button.kY.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_ALGAE_L3));
+    // new JoystickButton(operatorController,Button.kX.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_ALGAE_L2));
+    // new JoystickButton(operatorController,Button.kA.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_PROCESSOR));
 
     //Bumper buttons
     new JoystickButton(operatorController, Button.kLeftBumper.value).whileTrue(new AlgaeIn());
