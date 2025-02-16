@@ -80,8 +80,10 @@ public class RobotContainer {
  
 
 
-    // Elevator Elevate + Elevator Descend
-
+    // Driver Commands
+    new JoystickButton(driverController,Button.kB.value).whileTrue(new DriveToPegPID(cam.getClosestID(), "RIGHT"));
+    new JoystickButton(driverController,Button.kX.value).whileTrue(new DriveToPegPID(cam.getClosestID(), "LEFT"));
+    new JoystickButton(driverController,Button.kY.value).whileTrue(new DriveToPegPID(cam.getClosestID(), "STRAIGHT"));
     //Operator commands
     // Link for joystick doc: https://docs.google.com/presentation/d/1cis5OrQfkU9m38LwgAMIfmPpJAZxnIC-KnAzi0JsRao/edit#slide=id.g18d2b75b637cb431_3
 
@@ -120,7 +122,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return new DriveToPegPID(cam.getClosestID());
+    return new DriveToPegPID(cam.getClosestID(), "RIGHT");
 
   }
 }

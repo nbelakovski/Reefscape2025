@@ -4,7 +4,14 @@
 
 package frc.robot.commands;
 
+import org.opencv.core.Mat;
+
+import edu.wpi.first.math.MathUsageId;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Camera;
@@ -29,14 +36,41 @@ public class DriveToPegPID extends Command {
 
   
   /** Creates a new DriveToPegPID. */
-  public DriveToPegPID(int tagID) {
+  public DriveToPegPID(int tagID, String peg) {
     this.tagID = tagID;
 
     drivetrain = Drivetrain.getInstance(); 
     cam = Camera.getInstance();
 
-    setpointX = cam.getTagPose(tagID).getX() - 0.3;
-    setpointY = cam.getTagPose(tagID).getY();
+    Pose3d tagPose = cam.getTagPose(tagID);
+
+    //1. get the T3d from tagpose
+    Translation3d tagTranslation = tagPose.getTranslation();
+    Rotation3d robotHeading = new Rotation3d(drivetrain.getHeading());
+    double tagAngle = tagPose.getRotation().getAngle();
+    double aprilPegOffset = 6;
+   
+    Translation3d offset = new Translation3d();
+    //2. Create a T3d for the bumpers
+
+    //3. Create a T3d for the right-left offset
+    if (peg.equals("LEFT")){
+      offset = new Translation3d(Math.cos(tagAngle) * aprilPegOffset, Math.sin(tagAngle) * aprilPegOffset, 0);
+    }  else  if (peg.equals("RIGHT")){
+      offset = new Translation3d(-Math.cos(tagAngle) * aprilPegOffset, -Math.sin(tagAngle) * aprilPegOffset, 0);
+    } else if (peg.equals("STRAIGHT")){
+      offset = new Translation3d();
+    }
+
+
+    //4. Add the T3Ds all together
+    offset.plus(tagTranslation);
+
+    Pose3d offsetPose = new Pose3d(offset, robotHeading);
+    
+
+    setpointX = offsetPose.getX();
+    setpointY = offsetPose.getY();
 
     controllerX = new PIDController(0.9, 0.0, 0.0);
     startDistanceX = drivetrain.getPose().getX();
