@@ -120,10 +120,10 @@ public class RobotContainer {
     new JoystickButton(operatorController, Button.kRightBumper.value).whileTrue(new AlgaeOut());
 
     //Trigger buttons for operator
-    new TriggerButton(operatorController, 2).whileTrue(new CoralInSafe());
-    new TriggerButton(operatorController, 3).whileTrue(new CoralSpit());
+    // new TriggerButton(operatorController, 2).whileTrue(new CoralInSafe());
+    // new TriggerButton(operatorController, 3).whileTrue(new CoralSpit());
 
- 
+  }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
