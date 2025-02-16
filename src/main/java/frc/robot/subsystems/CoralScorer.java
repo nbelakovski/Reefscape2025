@@ -10,9 +10,11 @@ import frc.robot.Constants.MechConstants;
 
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.ClosedLoopConfig;
-
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -35,7 +37,9 @@ public class CoralScorer extends SubsystemBase {
     CoralScorerMotor = new SparkMax(Ports.CORALSCORER_MOTOR_PORT, MotorType.kBrushless);
     scorerSensor = new AnalogInput(Ports.ANALOG_CORAL_SENSOR_PORT);
     motorConfig = new SparkMaxConfig();
-    scorerSensor = new AnalogInput(Ports.ANALOG_CORAL_SENSOR_PORT);
+
+    motorConfig.idleMode(IdleMode.kBrake);
+    CoralScorerMotor.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
   public static CoralScorer getInstance(){
     if(instance == null) {
@@ -51,7 +55,7 @@ public class CoralScorer extends SubsystemBase {
   public void spitFast(){
     CoralScorerMotor.set(-MechConstants.SCORE_SPEED);
   }
-  
+
   public void backward(){
     CoralScorerMotor.set(MechConstants.INTAKE_SPEED);
   }

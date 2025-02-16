@@ -118,7 +118,7 @@ public class AprilCam {
     public int getClosestID() {
         int closestID = -1;
         double closestDistance = 100;
-        for(PhotonTrackedTarget t: targets) {
+        for(PhotonTrackedTarget t: getTargets()) {
             double currentDistance = Math.sqrt(Math.pow(getTargetTransform(t).getX(), 2) + Math.pow(getTargetTransform(t).getY(), 2));
             
             if(currentDistance < closestDistance) {

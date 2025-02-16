@@ -54,7 +54,7 @@ public class Elevator extends SubsystemBase {
     bottomLimitSwitch = new DigitalInput(Ports.DIGITAL_BOTTOM_LIMIT_PORT);
     
 
-    controller = new PIDController(1, 0, 0);
+    controller = new PIDController(0.1, 0, 0);
 
     
 
@@ -140,7 +140,7 @@ public class Elevator extends SubsystemBase {
   }
 
   public boolean getTopLimit() {
-    return !topLimitSwitch.get();
+    return topLimitSwitch.get();
   }
 
   public boolean getBotLimit() {
@@ -169,6 +169,8 @@ public class Elevator extends SubsystemBase {
     SmartDashboard.putNumber("right elevator position", -rightEncoder.getPosition());
     SmartDashboard.putBoolean("Top Limit", getTopLimit());
     SmartDashboard.putBoolean("Bottom Limit", getBotLimit());
+
+    
   }
 }
 

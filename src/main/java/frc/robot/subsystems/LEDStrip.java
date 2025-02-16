@@ -18,6 +18,9 @@ public class LEDStrip extends SubsystemBase {
     public static final double DISABLED = LEDColors.RAINBOW_RAINBOW;
     public static final double ENABLED = LEDColors.OCEAN_COLOR_WAVES;
 
+    public static final double IN_SCORER = LEDColors.WHITE;
+    public static final double IN_GAP = LEDColors.LAVA_TWINKLES;
+
     private static int topCurrentPriority = 0;
     private static double[] patternArray = new double[4];
 

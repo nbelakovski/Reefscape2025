@@ -52,7 +52,7 @@ public class Ports {
     public static final int ANALOG_GAP_SENSOR_PORT = 0;
     public static final int ANALOG_CORAL_SENSOR_PORT = 1;
   
-    public static final int BLINKIN_PORT = 24;
+    public static final int BLINKIN_PORT = 9;
 
 
     //PWM PORTS
