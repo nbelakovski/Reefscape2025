@@ -31,7 +31,7 @@ public class SafeJoystick extends Command {
   @Override
   public void execute() {
     
-    if(CoralIntake.getInstance().isGapBlocked()){
+    if(CoralIntake.getInstance().isGapBlocked() && Elevator.getInstance().getPosition() < 15){
       elevator.stop();
     }
     else{

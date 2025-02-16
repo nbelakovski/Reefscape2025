@@ -35,11 +35,11 @@ public class SafeElevate extends Command {
   @Override
   public void execute() {
    
-    if(CoralIntake.getInstance().isGapBlocked()){
+    if(CoralIntake.getInstance().isGapBlocked() && Elevator.getInstance().getPosition() < 15){
       elevator.stop();
     }
     else{
-      elevator.elevate(0.6);
+      elevator.elevate(0.3);
     }
   }
 

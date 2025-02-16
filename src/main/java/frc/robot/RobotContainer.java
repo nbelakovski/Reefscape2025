@@ -29,6 +29,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+// import frc.robot.commands.DriveToPeg;
+// import frc.robot.commands.DriveToPegPID;
+import frc.robot.subsystems.AlgaeHandler;
 import frc.robot.subsystems.Camera;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
@@ -49,6 +52,7 @@ public class RobotContainer {
 
   Drivetrain drivetrain = Drivetrain.getInstance();
   Camera cam = Camera.getInstance();
+  AlgaeHandler algae = AlgaeHandler.getInstance();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -82,35 +86,32 @@ public class RobotContainer {
     // Link for joystick doc: https://docs.google.com/presentation/d/1cis5OrQfkU9m38LwgAMIfmPpJAZxnIC-KnAzi0JsRao/edit#slide=id.g18d2b75b637cb431_3
 
     //Manual Elevator on Operator Joystick
-    Elevator.getInstance().setDefaultCommand(new ElevatorJoystick(
+    Elevator.getInstance().setDefaultCommand(new SafeJoystick(
       () -> operatorController.getRawAxis(1)
     ));
 
+    // Set Elevator Position for Operator on DPad
+    // new DPad(operatorController,180).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L1));
+    // new DPad(operatorController,90).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L2));
+    // new DPad(operatorController,0).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L3));
+    // new DPad(operatorController,270).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L4));
+
+    new JoystickButton(operatorController,Button.kY.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L1));
     // Set Elevator Positions for Operator on Joystick Buttons
-    new JoystickButton(operatorController,Button.kY.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_ALGAE_L3));
-    new JoystickButton(operatorController,Button.kX.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_ALGAE_L2));
-    new JoystickButton(operatorController,Button.kA.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_PROCESSOR));
+    // new JoystickButton(operatorController,Button.kY.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_ALGAE_L3));
+    // new JoystickButton(operatorController,Button.kX.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_ALGAE_L2));
+    // new JoystickButton(operatorController,Button.kA.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_PROCESSOR));
+
+    new JoystickButton(operatorController, Button.kA.value).whileTrue(new SafeElevate());
+    new JoystickButton(operatorController, Button.kB.value).whileTrue(new SafeDescend());
 
     //Bumper buttons
     new JoystickButton(operatorController, Button.kLeftBumper.value).whileTrue(new AlgaeIn());
     new JoystickButton(operatorController, Button.kRightBumper.value).whileTrue(new AlgaeOut());
-    
-    
-
-    // Set Elevator Position for Operator on DPad
-    new DPad(operatorController,180).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L1));
-    new DPad(operatorController,90).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L2));
-    new DPad(operatorController,0).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L3));
-    new DPad(operatorController,270).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L4));
 
     //Trigger buttons for operator
     new TriggerButton(operatorController, 2).whileTrue(new CoralInSafe());
     new TriggerButton(operatorController, 3).whileTrue(new CoralSpit());
-    
-  
-  // Makes button Y/A Algae Intake/Outake
-  // new JoystickButton(operatorController, Button.kY.value).whileTrue(new AlgaeIn());
-  // new JoystickButton(operatorController, Button.kA.value).whileTrue(new AlgaeOut());
 
   }
 
@@ -122,6 +123,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return null;
+    return new AlgaeIn();
+
   }
 }

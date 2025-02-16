@@ -30,11 +30,11 @@ public class SafeDescend extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(CoralIntake.getInstance().isGapBlocked()){
+    if(CoralIntake.getInstance().isGapBlocked() && Elevator.getInstance().getPosition() < 15){
       elevator.stop();
     }
     else{
-      elevator.descend(0.6);
+      elevator.descend(0.3);
     }
   }
 
