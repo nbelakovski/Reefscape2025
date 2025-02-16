@@ -6,11 +6,19 @@ package frc.robot;
 
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.ElevatorDescend;
-import frc.robot.commands.ElevatorElevate;
-import frc.robot.commands.ElevatorSetPosition;
 import frc.robot.utils.DPad;
-import frc.robot.commands.*;
+import frc.robot.commands.auto.*;
+import frc.robot.commands.basic.*;
+import frc.robot.commands.closed.*;
+import frc.robot.commands.complex.*;
+
+import frc.robot.commands.basic.AlgaeIn;
+import frc.robot.commands.basic.AlgaeOut;
+import frc.robot.commands.basic.CoralScore;
+import frc.robot.commands.basic.ElevatorJoystick;
+import frc.robot.commands.closed.ElevatorSetPosition;
+import frc.robot.commands.complex.CoralInSafe;
+import frc.robot.commands.complex.SwerveDrive;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.LEDStrip;
@@ -22,12 +30,14 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.DriveToPeg;
+import frc.robot.commands.DriveToPegPID;
+import frc.robot.subsystems.AlgaeHandler;
 import frc.robot.subsystems.Camera;
-import frc.robot.commands.SwerveDrive;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Elevator;
 import frc.robot.utils.Ports;
+import frc.robot.utils.TriggerButton;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -46,6 +56,7 @@ public class RobotContainer {
 
   Drivetrain drivetrain = Drivetrain.getInstance();
   Camera cam = Camera.getInstance();
+  AlgaeHandler algae = AlgaeHandler.getInstance();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -72,28 +83,47 @@ public class RobotContainer {
       () -> -driverController.getRawAxis(4),
       () -> driverController.getAButton()
     ));
-    
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
+ 
 
-    // new Trigger(m_exampleSubsystem::exampleCondition)
-    //   .onTrue(new ExampleCommand(m_exampleSubsystem));
+    // Driver Commands
+    new JoystickButton(driverController,Button.kB.value).whileTrue(new DriveToPegPID(cam.getClosestID(), "RIGHT"));
+    new JoystickButton(driverController,Button.kX.value).whileTrue(new DriveToPegPID(cam.getClosestID(), "LEFT"));
+    new JoystickButton(driverController,Button.kY.value).whileTrue(new DriveToPegPID(cam.getClosestID(), "STRAIGHT"));
+    //Operator commands
+    // Link for joystick doc: https://docs.google.com/presentation/d/1cis5OrQfkU9m38LwgAMIfmPpJAZxnIC-KnAzi0JsRao/edit#slide=id.g18d2b75b637cb431_3
+
+    //Manual Elevator on Operator Joystick
+    Elevator.getInstance().setDefaultCommand(new SafeJoystick(
+      () -> operatorController.getRawAxis(1)
+    ));
+
+    // Set Elevator Position for Operator on DPad
+    new DPad(operatorController,180).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L1));
+    new DPad(operatorController,270).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L2));
+    new DPad(operatorController,0).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L3));
+    new DPad(operatorController,90).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L4));
+
+ //   new JoystickButton(operatorController,Button.kY.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L1));
+    // Set Elevator Positions for Operator on Joystick Buttons
+    // new JoystickButton(operatorController,Button.kY.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_ALGAE_L3));
+    // new JoystickButton(operatorController,Button.kX.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_ALGAE_L2));
+    // new JoystickButton(operatorController,Button.kA.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_PROCESSOR));
+
+    new JoystickButton(operatorController, Button.kA.value).whileTrue(new SafeElevate());
+    new JoystickButton(operatorController, Button.kB.value).whileTrue(new SafeDescend());
+    new JoystickButton(operatorController, Button.kX.value).whileTrue(new CoralScore());
+    new JoystickButton(operatorController, Button.kY.value).whileTrue(new CoralInSafe());
 
 
-    // Elevator Elevate + Elevator Descend 🐘🐘🐘
+    //Bumper buttons
+    new JoystickButton(operatorController, Button.kLeftBumper.value).whileTrue(new AlgaeIn());
+    new JoystickButton(operatorController, Button.kRightBumper.value).whileTrue(new AlgaeOut());
 
-    new JoystickButton(operatorController,Button.kY.value).whileTrue(new ElevatorElevate());
-    new JoystickButton(operatorController,Button.kA.value).whileTrue(new ElevatorDescend());
+    //Trigger buttons for operator
+    new TriggerButton(operatorController, 2).whileTrue(new CoralInSafe());
+    new TriggerButton(operatorController, 3).whileTrue(new CoralSpit());
 
-    // Set Elevator Position for Driver on DPad
-    new DPad(driverController,90).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L2));
-    new DPad(driverController,0).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L3));
-  
-  // Makes button Y/A Algae Intake/Outake
-  // new JoystickButton(operatorController, Button.kY.value).whileTrue(new AlgaeIn());
-  // new JoystickButton(operatorController, Button.kA.value).whileTrue(new AlgaeOut());
-
-  }
-
+ 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
@@ -101,7 +131,9 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return null;
-  }
-}
 
+    return new DriveToPegPID(cam.getClosestID(), "RIGHT");
+
+  }
+
+}

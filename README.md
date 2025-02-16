@@ -17,6 +17,4 @@ Gabriel Rivera
 
 Steven
 
-Marcus Bistline
-
 

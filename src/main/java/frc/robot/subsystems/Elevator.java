@@ -15,23 +15,32 @@ import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.SerialPort;
+
 
 public class Elevator extends SubsystemBase {
   /** Creates a new Elevator. */
   private SparkMax elevatorLeftMotor;
   private SparkMax elevatorRightMotor;
-  private RelativeEncoder encoder;
+  private RelativeEncoder leftEncoder;
+  private RelativeEncoder rightEncoder;
   private SparkMaxConfig leftMotorConfig;
   private SparkMaxConfig rightMotorConfig;
   private static Elevator instance;
   private PIDController controller;
+  private DigitalInput topLimitSwitch;
+  private DigitalInput bottomLimitSwitch;
+
+  
+
 
 
   private Elevator() {
@@ -39,12 +48,21 @@ public class Elevator extends SubsystemBase {
     elevatorRightMotor = new SparkMax(Ports.ELEVATOR_RIGHT_MOTOR_PORT, MotorType.kBrushless);
     leftMotorConfig = new SparkMaxConfig();
     rightMotorConfig = new SparkMaxConfig();
-    encoder = elevatorLeftMotor.getEncoder();
+    leftEncoder = elevatorLeftMotor.getEncoder();
+    rightEncoder = elevatorRightMotor.getEncoder();
+    topLimitSwitch = new DigitalInput(Ports.DIGITAL_TOP_LIMIT_PORT);
+    bottomLimitSwitch = new DigitalInput(Ports.DIGITAL_BOTTOM_LIMIT_PORT);
+    
 
     controller = new PIDController(1, 0, 0);
 
+    
+
 
     rightMotorConfig.inverted(ElevatorConstants.RIGHT_ELEVATOR_INVERTED);
+  
+    rightMotorConfig.idleMode(IdleMode.kBrake);
+    leftMotorConfig.idleMode(IdleMode.kBrake);
     //leftMotorConfig.encoder.inverted();
     elevatorRightMotor.configure(rightMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     elevatorLeftMotor.configure(leftMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -60,35 +78,42 @@ public class Elevator extends SubsystemBase {
   }
 
   public double getPosition() {
-    return encoder.getPosition();
+    double avg = (leftEncoder.getPosition() + -rightEncoder.getPosition()) / 2;
+    return avg;
   }
 
   public void elevate(double speed){
-
-    if (encoder.getPosition() >= ElevatorConstants.ELEVATOR_MAX) {
-      elevatorLeftMotor.set(0.0);
+//|| getTopLimit()
+    if (getPosition() >= ElevatorConstants.ELEVATOR_MAX ) {
+      elevatorRightMotor.set(0);
+      elevatorLeftMotor.set(0);
     }
 
-    else {
+     else {
       elevatorLeftMotor.set(speed);
-    }
+      elevatorRightMotor.set(-speed);
+     }
+
   }
   
   public void descend(double speed){
-
-    if (encoder.getPosition() <= ElevatorConstants.ELEVATOR_MIN) {
-      elevatorLeftMotor.set(0.0);
+//|| getBotLimit()
+    if (getPosition() <= ElevatorConstants.ELEVATOR_MIN ) {
+      elevatorLeftMotor.set(0);
+      elevatorRightMotor.set(0);
     }
 
     else {
-      elevatorRightMotor.set(-speed);
+      elevatorRightMotor.set(speed);
+      elevatorLeftMotor.set(-speed);
     }
+    
   }
 
   public void move(double speed){
 
     if(speed >0){
-      elevate(speed);
+      elevate(-speed);
     }
     else if(speed <0){
       descend(speed);
@@ -104,12 +129,32 @@ public class Elevator extends SubsystemBase {
     elevatorRightMotor.set(0);
   }
 
+  public void coralGapStop(){
+    if(CoralIntake.getInstance().isGapBlocked()){
+      elevatorLeftMotor.set(0);
+      elevatorRightMotor.set(0);
+    }
+    else{
+
+    }
+  }
+
+  public boolean getTopLimit() {
+    return !topLimitSwitch.get();
+  }
+
+  public boolean getBotLimit() {
+    return !bottomLimitSwitch.get();
+  }
+
   public void resetPosition(double pos){
-    encoder.setPosition(pos);
+    leftEncoder.setPosition(pos);
+    rightEncoder.setPosition(pos);
   }
 
   public void resetPosition(){
-    encoder.setPosition(0);
+    leftEncoder.setPosition(0);
+    rightEncoder.setPosition(0);
   }
 
   public PIDController getController(){
@@ -120,6 +165,10 @@ public class Elevator extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("elevator position", getPosition());
+    SmartDashboard.putNumber("left elevator position", leftEncoder.getPosition());
+    SmartDashboard.putNumber("right elevator position", -rightEncoder.getPosition());
+    SmartDashboard.putBoolean("Top Limit", getTopLimit());
+    SmartDashboard.putBoolean("Bottom Limit", getBotLimit());
   }
 }
 
