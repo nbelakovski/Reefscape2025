@@ -30,7 +30,7 @@ public class Camera extends SubsystemBase {
   private AprilCam cam;
   private static Camera instance;
   // The field from AprilTagFields will be different depending on the game.
-  AprilTagFieldLayout aprilTagFieldLayout = AprilTagFields.k2025Reefscape.loadAprilTagLayoutField();
+  AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);  //AprilTagFields.k2025Reefscape.loadAprilTagLayoutField();
 
   //Forward Camera
   // cam = new PhotonCamera("testCamera");
