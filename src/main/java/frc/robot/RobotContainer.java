@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -39,15 +41,14 @@ public class RobotContainer {
   Drivetrain drivetrain = Drivetrain.getInstance();
   Camera cam = Camera.getInstance();
 
-private SendableChooser<Command> autoChooser = new SendableChooser<>();
+private SendableChooser<Command> autoChooser;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
-    SmartDashboard.putData("Auto Chooser", autoChooser);
-
-    // autoChooser = AutoBuilder.buildAutoChooser();
-    // SmartDashboard.putData("AutoChooser", autoChooser);
+  
+    autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("AutoChooser", autoChooser);
     // Configure the trigger bindings
     configureBindings();
     autoChooserInit();
@@ -75,7 +76,7 @@ private SendableChooser<Command> autoChooser = new SendableChooser<>();
 
 
 
-    // Elevator Elevate + Elevator Descend 🐘🐘🐘
+    // Elevator Elevate + Elevator Descend 
 
     new JoystickButton(operatorController,Button.kY.value).whileTrue(new ElevatorElevate());
     new JoystickButton(operatorController,Button.kA.value).whileTrue(new ElevatorDescend());
@@ -96,6 +97,8 @@ private SendableChooser<Command> autoChooser = new SendableChooser<>();
 
     autoChooser.addOption("CoralIn", new CoralIn());
     autoChooser.addOption("CoralOut", new CoralOut());
+
+    
 
 
   }
