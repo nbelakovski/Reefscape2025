@@ -8,13 +8,13 @@ import frc.robot.subsystems.CoralIntake;
 import frc.robot.subsystems.Elevator;
 
 
-public class SafeJoystick extends Command {
+public class SafeElevatorJoystick extends Command {
 
   private Elevator elevator;
   private Supplier<Double> speed;
   
 
-  public SafeJoystick( Supplier<Double> speed) {
+  public SafeElevatorJoystick( Supplier<Double> speed) {
     this.speed = speed;
     elevator = Elevator.getInstance();
     // Use addRequirements() here to declare subsystem dependencies.

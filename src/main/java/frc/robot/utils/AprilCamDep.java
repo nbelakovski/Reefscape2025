@@ -64,7 +64,7 @@ public class AprilCamDep {
         this.camera = new PhotonCamera(name);
          //Cam mounted facing forward, half a meter forward of center, half a meter up from center.
         this.camOofset = new Transform3d(new Translation3d(0.3683, 0.0, 0.0), new Rotation3d(0,0,0));
-        aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeAndyMark);
+        aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
         this.photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, camOofset);
      }
 
