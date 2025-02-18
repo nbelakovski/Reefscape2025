@@ -49,6 +49,8 @@ public class AprilCam {
     private PhotonPoseEstimator photonPoseEstimator;
     private List<PhotonTrackedTarget> targets;
 
+    public int closestID;
+
     //private static AprilCam instance;
     Transform3d camOofset;
     AprilTagFieldLayout aprilTagFieldLayout;
@@ -115,10 +117,10 @@ public class AprilCam {
         return targets;
     }
 
-    public int getClosestID() {
+    public void updateClosestID(List<PhotonTrackedTarget> help) {
         int closestID = -1;
         double closestDistance = 100;
-        for(PhotonTrackedTarget t: targets) {
+        for(PhotonTrackedTarget t: help) {
             double currentDistance = Math.sqrt(Math.pow(getTargetTransform(t).getX(), 2) + Math.pow(getTargetTransform(t).getY(), 2));
             
             if(currentDistance < closestDistance) {
@@ -127,7 +129,7 @@ public class AprilCam {
             }
 
         }
-        return closestID;
+        this.closestID = closestID;
     }
 
     // Gets the current "best" target
@@ -283,7 +285,8 @@ public class AprilCam {
             visionEst = photonPoseEstimator.update(change);
             updateEstimationStdDevs(visionEst, change.getTargets());
             targets = change.getTargets();
-            
+
+            updateClosestID(targets);
 
         }
         return visionEst;
