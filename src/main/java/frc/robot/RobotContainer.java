@@ -114,13 +114,13 @@ public class RobotContainer {
 
     new JoystickButton(operatorController, Button.kA.value).whileTrue(new SafeElevate());
     new JoystickButton(operatorController, Button.kB.value).whileTrue(new SafeDescend());
-    new JoystickButton(operatorController, Button.kX.value).whileTrue(new CoralScore());
-    new JoystickButton(operatorController, Button.kY.value).whileTrue(new CoralInSafe());
+    // new JoystickButton(operatorController, Button.kX.value).whileTrue(new CoralScore());
+    // new JoystickButton(operatorController, Button.kY.value).whileTrue(new CoralInSafe());
 
 
     //Bumper buttons
-    new JoystickButton(operatorController, Button.kLeftBumper.value).whileTrue(new AlgaeIn());
-    new JoystickButton(operatorController, Button.kRightBumper.value).whileTrue(new AlgaeOut());
+    new JoystickButton(operatorController, Button.kX.value).whileTrue(new AlgaeIn());
+    new JoystickButton(operatorController, Button.kY.value).whileTrue(new AlgaeOut());
 
     //Trigger buttons for operator
     // new TriggerButton(operatorController, 2).whileTrue(new CoralInSafe());

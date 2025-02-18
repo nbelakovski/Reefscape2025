@@ -14,10 +14,12 @@ import static edu.wpi.first.units.Units.Degree;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.spark.SparkBase;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
-
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -47,6 +49,7 @@ motorConfig = new SparkMaxConfig();
 jawMotor = new SparkMax(Ports.ALGAE_JAW_MOTOR_PORT, MotorType.kBrushless);
 jawConfig = new SparkMaxConfig();
 
+motorConfig.idleMode(IdleMode.kBrake);
 
 encoder = jawMotor.getAbsoluteEncoder();
 jawConfig.absoluteEncoder.positionConversionFactor(360);
@@ -55,6 +58,9 @@ jawConfig.absoluteEncoder.positionConversionFactor(360);
 controller = new PIDController(1,0,0);
 
 touchSensor = new DigitalInput(Ports.DIGITAL_ALGAEHANDLER_PORT);
+
+tongueMotor.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+jawMotor.configure(jawConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 }
 public static AlgaeHandler getInstance(){
 if(instance == null) {
@@ -64,10 +70,10 @@ return instance;
 }
 //
 public void spit(){
-tongueMotor.set(-MechConstants.INTAKE_SPEED);
+tongueMotor.set(MechConstants.ALGAE_INTAKE_SPEED);
 }
 public void eat(){
-tongueMotor.set(MechConstants.INTAKE_SPEED);
+tongueMotor.set(-MechConstants.ALGAE_INTAKE_SPEED);
 }
 public void stop(){
 tongueMotor.set(0);
