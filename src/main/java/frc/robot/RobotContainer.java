@@ -86,17 +86,21 @@ public class RobotContainer {
  
 
     // Driver Commands
-    // new JoystickButton(driverController,Button.kB.value).whileTrue(new DriveToPegPID(cam.getClosestID(), "RIGHT"));
-    // new JoystickButton(driverController,Button.kX.value).whileTrue(new DriveToPegPID(cam.getClosestID(), "LEFT"));
-    // new JoystickButton(driverController,Button.kY.value).whileTrue(new DriveToPegPID(cam.getClosestID(), "STRAIGHT"));
+
+    // new JoystickButton(driverController,Button.kB.value).whileTrue(new DriveToPegPID(cam.closestID, "RIGHT"));
+    // new JoystickButton(driverController,Button.kX.value).whileTrue(new DriveToPegPID(cam.closestID, "LEFT"));
+    // new JoystickButton(driverController,Button.kY.value).whileTrue(new DriveToPegPID(cam.closestID, "STRAIGHT"));
     //Operator commands
     // Link for joystick doc: https://docs.google.com/presentation/d/1cis5OrQfkU9m38LwgAMIfmPpJAZxnIC-KnAzi0JsRao/edit#slide=id.g18d2b75b637cb431_3
 
     //Manual Elevator on Operator Joystick
-    Elevator.getInstance().setDefaultCommand(new SafeJoystick(
+    Elevator.getInstance().setDefaultCommand(new SafeElevatorJoystick(
       () -> operatorController.getRawAxis(1)
     ));
-
+    //Manual Algae on Operator Joystick
+    AlgaeHandler.getInstance().setDefaultCommand(new SafeAlgaeJoystick(
+      () -> operatorController.getRawAxis(5)
+    ));
     // Set Elevator Position for Operator on DPad
     new DPad(operatorController,180).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L1));
     new DPad(operatorController,270).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L2));
@@ -111,20 +115,21 @@ public class RobotContainer {
 
     new JoystickButton(operatorController, Button.kA.value).whileTrue(new SafeElevate());
     new JoystickButton(operatorController, Button.kB.value).whileTrue(new SafeDescend());
-    new JoystickButton(operatorController, Button.kX.value).whileTrue(new CoralScore());
-    new JoystickButton(operatorController, Button.kY.value).whileTrue(new CoralInSafe());
+    // new JoystickButton(operatorController, Button.kX.value).whileTrue(new CoralScore());
+    // new JoystickButton(operatorController, Button.kY.value).whileTrue(new CoralInSafe());
 
 
     //Bumper buttons
-    new JoystickButton(operatorController, Button.kLeftBumper.value).whileTrue(new AlgaeIn());
-    new JoystickButton(operatorController, Button.kRightBumper.value).whileTrue(new AlgaeOut());
+    new JoystickButton(operatorController, Button.kX.value).whileTrue(new AlgaeIn());
+    new JoystickButton(operatorController, Button.kY.value).whileTrue(new AlgaeOut());
 
     //Trigger buttons for operator
     new TriggerButton(operatorController, 2).whileTrue(new CoralInSafe());
     new TriggerButton(operatorController, 3).whileTrue(new CoralScore());
   }
 
- 
+
+  }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
@@ -133,7 +138,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
 
-    return new DriveToPegPID(cam.getClosestID(), "RIGHT");
+    return new DriveToPegPID(cam.closestID, "RIGHT");
 
   }
 

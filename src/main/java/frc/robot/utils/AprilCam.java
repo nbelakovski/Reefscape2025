@@ -49,6 +49,8 @@ public class AprilCam {
     private PhotonPoseEstimator photonPoseEstimator;
     private List<PhotonTrackedTarget> targets;
 
+    public int closestID;
+
     //private static AprilCam instance;
     Transform3d camOofset;
     AprilTagFieldLayout aprilTagFieldLayout;
@@ -64,8 +66,8 @@ public class AprilCam {
     public AprilCam(String name, Translation3d position, Rotation3d angle){
         this.camera = new PhotonCamera(name);
          //Cam mounted facing forward, half a meter forward of center, half a meter up from center.
-        this.camOofset = new Transform3d(new Translation3d(0.3683, 0.0, 0.0), new Rotation3d(0,0,0));
-        aprilTagFieldLayout = AprilTagFields.k2025Reefscape.loadAprilTagLayoutField();
+        this.camOofset = new Transform3d(new Translation3d(0.0, 0.0, 0.0), new Rotation3d(0,0,0));
+        aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
         this.photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, camOofset);
      }
 
@@ -115,10 +117,11 @@ public class AprilCam {
         return targets;
     }
 
-    public int getClosestID() {
+    public void updateClosestID(List<PhotonTrackedTarget> help) {
         int closestID = -1;
         double closestDistance = 100;
-        for(PhotonTrackedTarget t: getTargets()) {
+
+        for(PhotonTrackedTarget t: help) {
             double currentDistance = Math.sqrt(Math.pow(getTargetTransform(t).getX(), 2) + Math.pow(getTargetTransform(t).getY(), 2));
             
             if(currentDistance < closestDistance) {
@@ -127,7 +130,7 @@ public class AprilCam {
             }
 
         }
-        return closestID;
+        this.closestID = closestID;
     }
 
     // Gets the current "best" target
@@ -283,7 +286,8 @@ public class AprilCam {
             visionEst = photonPoseEstimator.update(change);
             updateEstimationStdDevs(visionEst, change.getTargets());
             targets = change.getTargets();
-            
+
+            updateClosestID(targets);
 
         }
         return visionEst;

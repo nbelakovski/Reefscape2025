@@ -13,7 +13,9 @@ public class AlgaeIn extends Command {
   private AlgaeHandler algaeHandler;
   /** Creates a new AlgaeIn. */
   public AlgaeIn() {
+    algaeHandler = AlgaeHandler.getInstance();
     // Use addRequirements() here to declare subsystem dependencies.
+    //addRequirements(algaeHandler);
   }
 
   // Called when the command is initially scheduled.

@@ -67,10 +67,10 @@ public final class Constants {
     public static final ModuleConfig SWERVE_BR = new ModuleConfig("BR", Ports.SWERVE_DRIVE_BR, Ports.SWERVE_TURN_BR, BR_SENSOR_OFFSET, BR_ANGULAR_OFFSET, true);
 
     // Chassis configuration
-    public static final double TRACK_WIDTH = Units.inchesToMeters(26);
+    public static final double TRACK_WIDTH = Units.inchesToMeters(28);
 
     // Distance between centers of right and left wheels on robot
-    public static final double WHEEL_BASE = Units.inchesToMeters(26);
+    public static final double WHEEL_BASE = Units.inchesToMeters(28);
 
     public static final double DISTANCE_TO_CENTER = Math.sqrt(Math.pow(WHEEL_BASE/2, 2) + Math.pow(WHEEL_BASE/2, 2));
 
@@ -201,7 +201,9 @@ public static final class ModuleConstants {
     //public static final double BASE_CLIMB_LEFT = 0.0;
 
     //Mech Motor Speeds for Buttons
+
     public static double INTAKE_SPEED = 0.15;
+    public static double ALGAE_INTAKE_SPEED = 1.0;
     public static double SCORE_SPEED = 0.6;
     public static double TELE_INTAKE_SPEED = 1.0;
     public static double AUTO_INTAKE_SPEED = 0.5;
