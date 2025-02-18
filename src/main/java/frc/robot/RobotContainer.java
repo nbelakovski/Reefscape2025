@@ -86,6 +86,7 @@ public class RobotContainer {
  
 
     // Driver Commands
+
     // new JoystickButton(driverController,Button.kB.value).whileTrue(new DriveToPegPID(cam.closestID, "RIGHT"));
     // new JoystickButton(driverController,Button.kX.value).whileTrue(new DriveToPegPID(cam.closestID, "LEFT"));
     // new JoystickButton(driverController,Button.kY.value).whileTrue(new DriveToPegPID(cam.closestID, "STRAIGHT"));
@@ -123,8 +124,10 @@ public class RobotContainer {
     new JoystickButton(operatorController, Button.kY.value).whileTrue(new AlgaeOut());
 
     //Trigger buttons for operator
-    // new TriggerButton(operatorController, 2).whileTrue(new CoralInSafe());
-    // new TriggerButton(operatorController, 3).whileTrue(new CoralSpit());
+    new TriggerButton(operatorController, 2).whileTrue(new CoralInSafe());
+    new TriggerButton(operatorController, 3).whileTrue(new CoralScore());
+  }
+
 
   }
   /**

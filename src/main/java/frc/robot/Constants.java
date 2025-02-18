@@ -168,8 +168,8 @@ public static final class ModuleConstants {
 
   public static class ElevatorConstants {
     
-    public static final double ELEVATOR_MIN = -0.5;
-    public static final double ELEVATOR_MAX = 80;
+    public static final double ELEVATOR_MIN = -3;
+    public static final double ELEVATOR_MAX = 100;
 
     public static final double ELEVATOR_L1 = 10;
     public static final double ELEVATOR_L2 = 20;
@@ -201,9 +201,10 @@ public static final class ModuleConstants {
     //public static final double BASE_CLIMB_LEFT = 0.0;
 
     //Mech Motor Speeds for Buttons
-    public static double INTAKE_SPEED = 0.3;
+
+    public static double INTAKE_SPEED = 0.15;
     public static double ALGAE_INTAKE_SPEED = 1.0;
-    public static double SCORE_SPEED = 1.0;
+    public static double SCORE_SPEED = 0.6;
     public static double TELE_INTAKE_SPEED = 1.0;
     public static double AUTO_INTAKE_SPEED = 0.5;
     //public static final double LAUNCHER_SPEED = 1.0;

@@ -120,6 +120,7 @@ public class AprilCam {
     public void updateClosestID(List<PhotonTrackedTarget> help) {
         int closestID = -1;
         double closestDistance = 100;
+
         for(PhotonTrackedTarget t: help) {
             double currentDistance = Math.sqrt(Math.pow(getTargetTransform(t).getX(), 2) + Math.pow(getTargetTransform(t).getY(), 2));
             
