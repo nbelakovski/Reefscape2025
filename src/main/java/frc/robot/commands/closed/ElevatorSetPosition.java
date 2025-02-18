@@ -18,16 +18,18 @@ public class ElevatorSetPosition extends Command {
   public ElevatorSetPosition(double desiredPosition) {
     // Use addRequirements() here to declare subsystem dependencies.
         elevator = Elevator.getInstance();
-        controller = elevator.getController();
+
+        controller = new PIDController(0.1, 0, 0);
 
         controller.setSetpoint(desiredPosition);
-        controller.setTolerance(1);
+        controller.setTolerance(0.1);
         addRequirements(elevator);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    controller.reset();
     elevator.stop();
   }
 
@@ -47,6 +49,6 @@ public class ElevatorSetPosition extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return controller.atSetpoint();
+    return false;
   }
 }

@@ -19,6 +19,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -35,7 +36,7 @@ public class Elevator extends SubsystemBase {
   private SparkMaxConfig leftMotorConfig;
   private SparkMaxConfig rightMotorConfig;
   private static Elevator instance;
-  private PIDController controller;
+  //private PIDController controller;
   private DigitalInput topLimitSwitch;
   private DigitalInput bottomLimitSwitch;
 
@@ -53,8 +54,6 @@ public class Elevator extends SubsystemBase {
     topLimitSwitch = new DigitalInput(Ports.DIGITAL_TOP_LIMIT_PORT);
     bottomLimitSwitch = new DigitalInput(Ports.DIGITAL_BOTTOM_LIMIT_PORT);
     
-
-    controller = new PIDController(0.1, 0, 0);
 
     
 
@@ -112,11 +111,13 @@ public class Elevator extends SubsystemBase {
 
   public void move(double speed){
 
+    speed = MathUtil.clamp(speed, -0.3, 0.3);
+
     if(speed >0){
-      elevate(-speed);
+      elevate(speed);
     }
     else if(speed <0){
-      descend(speed);
+      descend(-speed);
     }
     else{
       stop();
@@ -157,9 +158,9 @@ public class Elevator extends SubsystemBase {
     rightEncoder.setPosition(0);
   }
 
-  public PIDController getController(){
-    return controller;
-  }
+  // public PIDController getController(){
+  //   return controller;
+  // }
 
   @Override
   public void periodic() {
