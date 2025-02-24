@@ -5,7 +5,6 @@
 package frc.robot.subsystems;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.studica.frc.AHRS;
@@ -14,7 +13,6 @@ import com.studica.frc.AHRS.NavXComType;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
-import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -28,6 +26,7 @@ import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.SwerveConstants;
 
@@ -102,34 +101,63 @@ private final SwerveDrivePoseEstimator poseEstimator;
       stateStdDevs,
       visionStdDevs);
 
-      RobotConfig config = null;
+      
+    // try{
+    //   RobotConfig config = RobotConfig.fromGUISettings();
+
+    //   AutoBuilder.configure(
+    //   this::getPose, 
+    //   this::resetOdometry, 
+    //   this::getSpeeds,
+    //   (speeds, feedforwards) -> driveRobotRelative(speeds),
+    //   AutoConstants.pathFollowerConfig,
+    //   config, 
+    //   () -> {
+    //     // Boolean supplier that controls when the path will be mirrored for the red alliance
+    //     // This will flip the path being followed to the red side of the field.
+    //     // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+    //     var alliance = DriverStation.getAlliance();
+    //     if (alliance.isPresent()) {
+    //       return alliance.get() == DriverStation.Alliance.Red;
+    //     }
+    //     return false;
+    //   },
+    //   this
+    // );
+    // } catch (Exception e) {
+    //   // Handle exception as needed
+    //   e.printStackTrace();
+    // }
+
     try{
-      config = RobotConfig.fromGUISettings();
-    } catch (Exception e) {
-      // Handle exception as needed
-      e.printStackTrace();
+      RobotConfig config = RobotConfig.fromGUISettings();
+
+      // Configure AutoBuilder
+      AutoBuilder.configure(
+        this::getPose, 
+        this::resetOdometry, 
+        this::getSpeeds, 
+        this::driveRobotRelative, 
+        AutoConstants.pathFollowerConfig,
+        config,
+        () -> {
+            // Boolean supplier that controls when the path will be mirrored for the red alliance
+            // This will flip the path being followed to the red side of the field.
+            // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+            var alliance = DriverStation.getAlliance();
+            if (alliance.isPresent()) {
+                return alliance.get() == DriverStation.Alliance.Red;
+            }
+            return false;
+        },
+        this
+      );
+    }catch(Exception e){
+      DriverStation.reportError("Failed to load PathPlanner config and configure AutoBuilder", e.getStackTrace());
     }
-
-    AutoBuilder.configure(
-      this::getPose, 
-      this::resetOdometry, 
-      this::getSpeeds,
-      (speeds, feedforwards) -> driveRobotRelative(speeds),
-      AutoConstants.pathFollowerConfig,
-      config, 
-      () -> {
-        // Boolean supplier that controls when the path will be mirrored for the red alliance
-        // This will flip the path being followed to the red side of the field.
-        // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-
-        var alliance = DriverStation.getAlliance();
-        if (alliance.isPresent()) {
-          return alliance.get() == DriverStation.Alliance.Red;
-        }
-        return false;
-      },
-      this
-    );
+    
 
       
 

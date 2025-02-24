@@ -5,7 +5,6 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
@@ -46,12 +45,12 @@ private SendableChooser<Command> autoChooser;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    configureBindings();
 
   
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("AutoChooser", autoChooser);
     // Configure the trigger bindings
-    configureBindings();
     autoChooserInit();
   }
 
@@ -111,7 +110,7 @@ private SendableChooser<Command> autoChooser;
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return new PathPlannerAuto("MoveToReef");
+    return autoChooser.getSelected();
   }
 
 
