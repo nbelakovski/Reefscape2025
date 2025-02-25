@@ -39,6 +39,7 @@ public class Elevator extends SubsystemBase {
   //private PIDController controller;
   private DigitalInput topLimitSwitch;
   private DigitalInput bottomLimitSwitch;
+  private boolean ignore;
 
   
 
@@ -53,6 +54,8 @@ public class Elevator extends SubsystemBase {
     rightEncoder = elevatorRightMotor.getEncoder();
     topLimitSwitch = new DigitalInput(Ports.DIGITAL_TOP_LIMIT_PORT);
     bottomLimitSwitch = new DigitalInput(Ports.DIGITAL_BOTTOM_LIMIT_PORT);
+
+    ignore = true;
     
 
     
@@ -130,15 +133,27 @@ public class Elevator extends SubsystemBase {
     elevatorRightMotor.set(0);
   }
 
-  public void coralGapStop(){
-    if(CoralIntake.getInstance().isGapBlocked()){
+  public boolean coralGapStop(){
+    if(!ignore){
       elevatorLeftMotor.set(0);
       elevatorRightMotor.set(0);
+      return true;
     }
-    else{
+    return false;
+  
+  }
 
+  public boolean ignore() {
+    if (!(getPosition() > 9 || getPosition() > 15)) {
+      return ignore;
+    } else {
+
+      ignore = false;
+      return ignore;
     }
   }
+  
+
 
   public boolean getTopLimit() {
     return topLimitSwitch.get();
