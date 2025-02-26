@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.studica.frc.AHRS;
@@ -22,12 +23,16 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import static edu.wpi.first.units.Units.Kilograms;
 import frc.robot.Constants;
 import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.MechConstants;
+import frc.robot.Constants.ModuleConstants;
 import frc.robot.Constants.SwerveConstants;
 
 public class Drivetrain extends SubsystemBase {
@@ -130,8 +135,8 @@ private final SwerveDrivePoseEstimator poseEstimator;
     //   e.printStackTrace();
     // }
 
-    try{
-      RobotConfig config = RobotConfig.fromGUISettings();
+    // try{
+      //RobotConfig config = RobotConfig.fromGUISettings();
 
       // Configure AutoBuilder
       AutoBuilder.configure(
@@ -140,7 +145,18 @@ private final SwerveDrivePoseEstimator poseEstimator;
         this::getSpeeds, 
         this::driveRobotRelative, 
         AutoConstants.pathFollowerConfig,
-        config,
+        new RobotConfig(
+          MechConstants.MASS, 
+          MechConstants.MOI, 
+          new ModuleConfig(
+            SwerveConstants.WHEEL_DIAMETER/2, 
+            SwerveConstants.TOP_SPEED, 
+            1.0, 
+            DCMotor.getNEO(1).withReduction(ModuleConstants.kDrivingMotorReduction), 
+            ModuleConstants.kDrivingMotorCurrentLimit, 
+            0), 
+          Constants.SwerveConstants.DRIVE_KINEMATICS.getModules()
+        ),
         () -> {
             // Boolean supplier that controls when the path will be mirrored for the red alliance
             // This will flip the path being followed to the red side of the field.
@@ -154,9 +170,9 @@ private final SwerveDrivePoseEstimator poseEstimator;
         },
         this
       );
-    }catch(Exception e){
-      DriverStation.reportError("Failed to load PathPlanner config and configure AutoBuilder", e.getStackTrace());
-    }
+    // }catch(Exception e){
+    //   DriverStation.reportError("Failed to load PathPlanner config and configure AutoBuilder", e.getStackTrace());
+    // }
     
 
       

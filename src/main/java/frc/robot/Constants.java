@@ -24,8 +24,14 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Mass;
+import edu.wpi.first.units.measure.MomentOfInertia;
+
+import static edu.wpi.first.units.Units.Kilograms;
+import static edu.wpi.first.units.Units.KilogramSquareMeters;
 import frc.robot.utils.ModuleConfig;
 import frc.robot.utils.Ports;
+
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -222,6 +228,10 @@ public static final class ModuleConstants {
     //public static final double AMP_ANGLE = 106;
     //public static final double ARM_POSITION_TOLERANCE = 1.0;
     //public static final double ARM_OFFSET = 357.2335615;
+
+    public static final Mass MASS = Kilograms.of(25);
+    public static final MomentOfInertia MOI = KilogramSquareMeters.of(0.2);
+
   }
 
   public static class VisionConstants{
