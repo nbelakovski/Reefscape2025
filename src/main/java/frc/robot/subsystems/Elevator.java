@@ -134,7 +134,7 @@ public class Elevator extends SubsystemBase {
   }
 
   public boolean coralGapStop(){
-    if(!ignore){
+    if(!ignore && CoralIntake.getInstance().isGapBlocked()){
       elevatorLeftMotor.set(0);
       elevatorRightMotor.set(0);
       return true;
@@ -144,7 +144,7 @@ public class Elevator extends SubsystemBase {
   }
 
   public boolean ignore() {
-    if (!(getPosition() > 9 || getPosition() > 15)) {
+    if (!(getPosition() > 9 || getPosition() < 15)) {
       return ignore;
     } else {
 
