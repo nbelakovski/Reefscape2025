@@ -154,7 +154,7 @@ private final SwerveDrivePoseEstimator poseEstimator;
             1.0, 
             DCMotor.getNEO(1).withReduction(ModuleConstants.kDrivingMotorReduction), 
             ModuleConstants.kDrivingMotorCurrentLimit, 
-            0), 
+            1), 
           Constants.SwerveConstants.DRIVE_KINEMATICS.getModules()
         ),
         () -> {
