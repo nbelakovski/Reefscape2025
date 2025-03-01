@@ -62,17 +62,17 @@ public final class Constants {
 
     //(Old Robot)
     //Angular Offsets for the radian difference between the calibrated swerve and desired forward direction
-    // public static final double FL_ANGULAR_OFFSET = 7 * Math.PI / 6; //Math.PI / 2; //-Math.PI / 2;
-    // public static final double FR_ANGULAR_OFFSET = 2*Math.PI/3;
-    // public static final double BR_ANGULAR_OFFSET = 11*Math.PI/6; //Math.PI / 2;
-    // public static final double BL_ANGULAR_OFFSET = 5*Math.PI/3; //Math.PI;
+    public static final double FL_ANGULAR_OFFSET = 7 * Math.PI / 6; //Math.PI / 2; //-Math.PI / 2;
+    public static final double FR_ANGULAR_OFFSET = 2*Math.PI/3;
+    public static final double BR_ANGULAR_OFFSET = 11*Math.PI/6; //Math.PI / 2;
+    public static final double BL_ANGULAR_OFFSET = 5*Math.PI/3; //Math.PI;
 
     ///(New Robot)(Put new numbers)
     //Angular Offsets for the radian difference between the calibrated swerve and desired forward direction
-    public static final double FL_ANGULAR_OFFSET = 3 * Math.PI/2; //Math.PI / 2; //-Math.PI / 2;
-    public static final double FR_ANGULAR_OFFSET = 0;
-    public static final double BR_ANGULAR_OFFSET = Math.PI / 2; //Math.PI / 2;
-    public static final double BL_ANGULAR_OFFSET = Math.PI; //Math.PI;
+    // public static final double FL_ANGULAR_OFFSET = 3 * Math.PI/2; //Math.PI / 2; //-Math.PI / 2;
+    // public static final double FR_ANGULAR_OFFSET = 0;
+    // public static final double BR_ANGULAR_OFFSET = Math.PI / 2; //Math.PI / 2;
+    // public static final double BL_ANGULAR_OFFSET = Math.PI; //Math.PI;
 
 
     //Constructor to hold all of the data to configure a SwerveModule
@@ -82,10 +82,10 @@ public final class Constants {
     public static final ModuleConfig SWERVE_BR = new ModuleConfig("BR", Ports.SWERVE_DRIVE_BR, Ports.SWERVE_TURN_BR, BR_SENSOR_OFFSET, BR_ANGULAR_OFFSET, true);
 
     // Chassis configuration
-    public static final double TRACK_WIDTH = Units.inchesToMeters(28);
+    public static final double TRACK_WIDTH = Units.inchesToMeters(26);
 
     // Distance between centers of right and left wheels on robot
-    public static final double WHEEL_BASE = Units.inchesToMeters(28);
+    public static final double WHEEL_BASE = Units.inchesToMeters(26);
 
     public static final double DISTANCE_TO_CENTER = Math.sqrt(Math.pow(WHEEL_BASE/2, 2) + Math.pow(WHEEL_BASE/2, 2));
 

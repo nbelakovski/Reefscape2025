@@ -63,6 +63,7 @@ public class RobotContainer {
 private SendableChooser<Command> autoChooser;
  private Command auto1 = new PathPlannerAuto("Auto1");
  private Command oneMeter = new PathPlannerAuto("one meter");
+ private Command testing = new PathPlannerAuto("testing");
 
 
   AlgaeHandler algae = AlgaeHandler.getInstance();
@@ -74,7 +75,6 @@ private SendableChooser<Command> autoChooser;
   
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("AutoChooser", autoChooser);
-    SmartDashboard.putData("one meter", oneMeter);
     // Configure the trigger bindings
     autoChooserInit();
 
@@ -145,10 +145,11 @@ private SendableChooser<Command> autoChooser;
 
 public void autoChooserInit() {
 
-    autoChooser.setDefaultOption("CoralIn", new CoralIn());
+    autoChooser.setDefaultOption("one meter", oneMeter);
 
-    autoChooser.addOption("CoralIn", new CoralIn());
-    autoChooser.addOption("CoralOut", new CoralOut());
+    autoChooser.addOption("Auto 1", auto1);
+    //autoChooser.addOption("one meter", oneMeter);
+    autoChooser.addOption("testing", testing);
 
   }
   /**
