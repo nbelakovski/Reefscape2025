@@ -11,30 +11,30 @@ import frc.robot.subsystems.CoralScorer;
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class CoralScore extends Command {
 
-  private CoralScorer CoralScorer;
+  private CoralScorer coralScorer;
   /** Creates a new CoralOut. */
   public CoralScore() {
-    CoralScorer = CoralScorer.getInstance();
+    coralScorer = CoralScorer.getInstance();
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(CoralScorer);
+    addRequirements(coralScorer);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    CoralScorer.stop();
+    coralScorer.stop();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    CoralScorer.spitFast();
+    coralScorer.spitFast();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    CoralScorer.stop();
+    coralScorer.stop();
   }
 
   // Returns true when the command should end.

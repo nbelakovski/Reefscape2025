@@ -7,7 +7,7 @@ package frc.robot;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.utils.DPad;
-import frc.robot.commands.auto.*;
+// import frc.robot.commands.auto.*;
 import frc.robot.commands.basic.*;
 import frc.robot.commands.closed.*;
 import frc.robot.commands.complex.*;
@@ -22,7 +22,6 @@ import frc.robot.commands.closed.ElevatorSetPosition;
 import frc.robot.commands.complex.CoralInSafe;
 import frc.robot.commands.complex.SwerveDrive;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.LEDStrip;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
@@ -114,7 +113,7 @@ private SendableChooser<Command> autoChooser;
     ));
     //Manual Algae on Operator Joystick
     AlgaeHandler.getInstance().setDefaultCommand(new SafeAlgaeJoystick(
-      () -> operatorController.getRawAxis(5)
+      () -> -operatorController.getRawAxis(5)
     ));
     // Set Elevator Position for Operator on DPad
     new DPad(operatorController,180).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L1));
@@ -128,7 +127,8 @@ private SendableChooser<Command> autoChooser;
     // new JoystickButton(operatorController,Button.kX.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_ALGAE_L2));
     // new JoystickButton(operatorController,Button.kA.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_PROCESSOR));
 
-    new JoystickButton(operatorController, Button.kA.value).whileTrue(new SafeElevate());
+    // new JoystickButton(operatorController, Button.kA.value).whileTrue(new SafeElevate());
+    new JoystickButton(operatorController, Button.kA.value).whileTrue(new ElevatorSetPosition(1.1));
     new JoystickButton(operatorController, Button.kB.value).whileTrue(new SafeDescend());
     // new JoystickButton(operatorController, Button.kX.value).whileTrue(new CoralScore());
     // new JoystickButton(operatorController, Button.kY.value).whileTrue(new CoralInSafe());
@@ -148,8 +148,7 @@ public void autoChooserInit() {
     autoChooser.setDefaultOption("CoralIn", new CoralIn());
 
     autoChooser.addOption("CoralIn", new CoralIn());
-    autoChooser.addOption("CoralOut", new CoralOut());
-
+    
   }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

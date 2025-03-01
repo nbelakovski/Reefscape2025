@@ -156,7 +156,7 @@ public class Elevator extends SubsystemBase {
 
 
   public boolean getTopLimit() {
-    return topLimitSwitch.get();
+    return !topLimitSwitch.get();
   }
 
   public boolean getBotLimit() {

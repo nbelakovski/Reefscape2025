@@ -217,7 +217,7 @@ public static final class ModuleConstants {
 
     //Mech Motor Speeds for Buttons
 
-    public static double INTAKE_SPEED = 0.15;
+    public static double INTAKE_SPEED = 0.3;
     public static double ALGAE_INTAKE_SPEED = 1.0;
     public static double SCORE_SPEED = 0.6;
     public static double TELE_INTAKE_SPEED = 1.0;

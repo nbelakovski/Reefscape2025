@@ -71,9 +71,11 @@ public class CoralScorer extends SubsystemBase {
     if(getDistance() > 2000){
       coralInScorer = true;
     }
-    else{
+    // calibrate 1800 value??
+    else if (getDistance() < 1800) {
       coralInScorer = false;
     }
+    
     return coralInScorer;
   }
 
