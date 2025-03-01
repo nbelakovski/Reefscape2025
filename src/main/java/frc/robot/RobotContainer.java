@@ -4,9 +4,26 @@
 
 package frc.robot;
 
+import frc.robot.Constants.ElevatorConstants;
+import frc.robot.Constants.OperatorConstants;
+import frc.robot.utils.DPad;
+import frc.robot.commands.auto.*;
+import frc.robot.commands.basic.*;
+import frc.robot.commands.closed.*;
+import frc.robot.commands.complex.*;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
+import frc.robot.commands.basic.AlgaeIn;
+import frc.robot.commands.basic.AlgaeOut;
+import frc.robot.commands.basic.CoralScore;
+import frc.robot.commands.closed.ElevatorSetPosition;
+import frc.robot.commands.complex.CoralInSafe;
+import frc.robot.commands.complex.SwerveDrive;
+import frc.robot.Constants.OperatorConstants;
+import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.LEDStrip;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -15,17 +32,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.ElevatorConstants;
-import frc.robot.commands.CoralIn;
-import frc.robot.commands.CoralOut;
-import frc.robot.commands.ElevatorDescend;
-import frc.robot.commands.ElevatorElevate;
-import frc.robot.commands.ElevatorSetPosition;
-import frc.robot.commands.SwerveDrive;
+import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.DriveToPeg;
+import frc.robot.commands.DriveToPegPID;
+import frc.robot.subsystems.AlgaeHandler;
 import frc.robot.subsystems.Camera;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.utils.DPad;
+import frc.robot.subsystems.Elevator;
 import frc.robot.utils.Ports;
+import frc.robot.utils.TriggerButton;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -34,6 +49,9 @@ import frc.robot.utils.Ports;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
+
+  private LEDStrip led;
+  
 
 
   private static final XboxController driverController = new XboxController(Ports.DRIVER_CONTROLLER);
@@ -47,6 +65,7 @@ private SendableChooser<Command> autoChooser;
  private Command oneMeter = new PathPlannerAuto("one meter");
 
 
+  AlgaeHandler algae = AlgaeHandler.getInstance();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -58,6 +77,8 @@ private SendableChooser<Command> autoChooser;
     SmartDashboard.putData("one meter", oneMeter);
     // Configure the trigger bindings
     autoChooserInit();
+
+    led = new LEDStrip();
   }
 
   /**
@@ -77,27 +98,52 @@ private SendableChooser<Command> autoChooser;
       () -> -driverController.getRawAxis(4),
       () -> driverController.getAButton()
     ));
-    
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
+ 
+
+    // Driver Commands
+
+    // new JoystickButton(driverController,Button.kB.value).whileTrue(new DriveToPegPID(cam.closestID, "RIGHT"));
+    // new JoystickButton(driverController,Button.kX.value).whileTrue(new DriveToPegPID(cam.closestID, "LEFT"));
+    // new JoystickButton(driverController,Button.kY.value).whileTrue(new DriveToPegPID(cam.closestID, "STRAIGHT"));
+    //Operator commands
+    // Link for joystick doc: https://docs.google.com/presentation/d/1cis5OrQfkU9m38LwgAMIfmPpJAZxnIC-KnAzi0JsRao/edit#slide=id.g18d2b75b637cb431_3
+
+    //Manual Elevator on Operator Joystick
+    Elevator.getInstance().setDefaultCommand(new SafeElevatorJoystick(
+      () -> operatorController.getRawAxis(1)
+    ));
+    //Manual Algae on Operator Joystick
+    AlgaeHandler.getInstance().setDefaultCommand(new SafeAlgaeJoystick(
+      () -> operatorController.getRawAxis(5)
+    ));
+    // Set Elevator Position for Operator on DPad
+    new DPad(operatorController,180).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L1));
+    new DPad(operatorController,270).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L2));
+    new DPad(operatorController,0).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L3));
+    new DPad(operatorController,90).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L4));
+
+ //   new JoystickButton(operatorController,Button.kY.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L1));
+    // Set Elevator Positions for Operator on Joystick Buttons
+    // new JoystickButton(operatorController,Button.kY.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_ALGAE_L3));
+    // new JoystickButton(operatorController,Button.kX.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_ALGAE_L2));
+    // new JoystickButton(operatorController,Button.kA.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_PROCESSOR));
+
+    new JoystickButton(operatorController, Button.kA.value).whileTrue(new SafeElevate());
+    new JoystickButton(operatorController, Button.kB.value).whileTrue(new SafeDescend());
+    // new JoystickButton(operatorController, Button.kX.value).whileTrue(new CoralScore());
+    // new JoystickButton(operatorController, Button.kY.value).whileTrue(new CoralInSafe());
 
 
+    //Bumper buttons
+    new JoystickButton(operatorController, Button.kX.value).whileTrue(new AlgaeIn());
+    new JoystickButton(operatorController, Button.kY.value).whileTrue(new AlgaeOut());
 
-    // Elevator Elevate + Elevator Descend 
-
-    new JoystickButton(operatorController,Button.kY.value).whileTrue(new ElevatorElevate());
-    new JoystickButton(operatorController,Button.kA.value).whileTrue(new ElevatorDescend());
-
-    // Set Elevator Position for Driver on DPad
-    new DPad(driverController,90).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L2));
-    new DPad(driverController,0).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L3));
-  
-  // Makes button Y/A Algae Intake/Outake
-  // new JoystickButton(operatorController, Button.kY.value).whileTrue(new AlgaeIn());
-  // new JoystickButton(operatorController, Button.kA.value).whileTrue(new AlgaeOut());
-
+    //Trigger buttons for operator
+    new TriggerButton(operatorController, 2).whileTrue(new CoralInSafe());
+    new TriggerButton(operatorController, 3).whileTrue(new CoralScore());
   }
 
-  public void autoChooserInit() {
+public void autoChooserInit() {
 
     autoChooser.setDefaultOption("CoralIn", new CoralIn());
 
@@ -105,7 +151,6 @@ private SendableChooser<Command> autoChooser;
     autoChooser.addOption("CoralOut", new CoralOut());
 
   }
-
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
@@ -115,9 +160,6 @@ private SendableChooser<Command> autoChooser;
     // An example command will be run in autonomous
     return autoChooser.getSelected();
   }
-
-
-
 }
 
 

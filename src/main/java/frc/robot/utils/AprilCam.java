@@ -47,6 +47,9 @@ public class AprilCam {
 
     private PhotonTrackedTarget desiredTarget;
     private PhotonPoseEstimator photonPoseEstimator;
+    private List<PhotonTrackedTarget> targets;
+
+    public int closestID;
 
     //private static AprilCam instance;
     Transform3d camOofset;
@@ -63,7 +66,7 @@ public class AprilCam {
     public AprilCam(String name, Translation3d position, Rotation3d angle){
         this.camera = new PhotonCamera(name);
          //Cam mounted facing forward, half a meter forward of center, half a meter up from center.
-        this.camOofset = new Transform3d(new Translation3d(0.3683, 0.0, 0.0), new Rotation3d(0,0,0));
+        this.camOofset = new Transform3d(new Translation3d(0.0, 0.0, 0.0), new Rotation3d(0,0,0));
         aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
         this.photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, camOofset);
      }
@@ -110,9 +113,25 @@ public class AprilCam {
     // }
 
     //Gets all the AprilTag targets the camera can currently see
-    // public List<PhotonTrackedTarget> getTargets(){
-    //     return result.getTargets();
-    // }
+    public List<PhotonTrackedTarget> getTargets(){
+        return targets;
+    }
+
+    public void updateClosestID(List<PhotonTrackedTarget> help) {
+        int closestID = -1;
+        double closestDistance = 100;
+
+        for(PhotonTrackedTarget t: help) {
+            double currentDistance = Math.sqrt(Math.pow(getTargetTransform(t).getX(), 2) + Math.pow(getTargetTransform(t).getY(), 2));
+            
+            if(currentDistance < closestDistance) {
+                closestDistance = currentDistance;
+                closestID = t.fiducialId;
+            }
+
+        }
+        this.closestID = closestID;
+    }
 
     // Gets the current "best" target
     // public PhotonTrackedTarget getBestTarget(){
@@ -120,20 +139,20 @@ public class AprilCam {
     // }
 
     // Gets a target object for a specific AprilTag
-    // public PhotonTrackedTarget getDesiredTarget(int desiredTargetID){
+    public PhotonTrackedTarget getDesiredTarget(int desiredTargetID){
 
-    //     //look at each target in the arraylist of targets
-    //     for (PhotonTrackedTarget t: getTargets())
-    //     {
-    //         //look for the target with the desired ID
-    //         if (t.getFiducialId() == desiredTargetID)
-    //         {
-    //             return t;
-    //         }
-    //     }
-    //     //return null if you can't find the desiredTarget
-    //     return null;
-    // }
+        //look at each target in the arraylist of targets
+        for (PhotonTrackedTarget t: getTargets())
+        {
+            //look for the target with the desired ID
+            if (t.getFiducialId() == desiredTargetID)
+            {
+                return t;
+            }
+        }
+        //return null if you can't find the desiredTarget
+        return null;
+    }
 
     // Checks if a desired AprilTag is visible
     // public boolean hasDesiredTarget(int desiredTargetID) {
@@ -167,10 +186,10 @@ public class AprilCam {
     }
 
     // // Gets the X value of a desired target
-    // public double getXDesired(PhotonTrackedTarget target){
-    //     if(target == null) { return Float.NaN; }
-    //     return getTargetTransform(target).getX();
-    // }
+    public double getXDesired(PhotonTrackedTarget target){
+        if(target == null) { return Float.NaN; }
+        return getTargetTransform(target).getX();
+    }
 
     // // Gets the X value of the "Best" target
     // public double getXBest(){
@@ -266,6 +285,9 @@ public class AprilCam {
         for (var change : this.results) {
             visionEst = photonPoseEstimator.update(change);
             updateEstimationStdDevs(visionEst, change.getTargets());
+            targets = change.getTargets();
+
+            updateClosestID(targets);
 
         }
         return visionEst;

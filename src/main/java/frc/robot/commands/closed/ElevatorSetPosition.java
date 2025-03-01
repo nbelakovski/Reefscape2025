@@ -2,36 +2,48 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.closed;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.AlgaeHandler;
+import frc.robot.subsystems.Elevator;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class AlgaeIn extends Command {
+public class ElevatorSetPosition extends Command {
 
-  private AlgaeHandler algaeHandler;
-  /** Creates a new AlgaeIn. */
-  public AlgaeIn() {
+    private static Elevator elevator;
+    private PIDController controller;
+
+  /** Creates a new ElevatorSetPositionNew. */
+  public ElevatorSetPosition(double desiredPosition) {
     // Use addRequirements() here to declare subsystem dependencies.
+        elevator = Elevator.getInstance();
+
+        controller = new PIDController(0.1, 0, 0);
+
+        controller.setSetpoint(desiredPosition);
+        controller.setTolerance(0.1);
+        addRequirements(elevator);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    algaeHandler.stop();
+    controller.reset();
+    elevator.stop();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    algaeHandler.in();
+    double speed = controller.calculate(elevator.getPosition());
+    elevator.move(speed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    algaeHandler.stop();
+    elevator.stop();
   }
 
   // Returns true when the command should end.

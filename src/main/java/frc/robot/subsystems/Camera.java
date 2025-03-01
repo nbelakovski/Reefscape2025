@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -27,10 +28,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Camera extends SubsystemBase {
 
-  private AprilCam cam;
+  public AprilCam cam;
   private static Camera instance;
   // The field from AprilTagFields will be different depending on the game.
-  AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);  //AprilTagFields.k2025Reefscape.loadAprilTagLayoutField();
+  AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
+
+  public int closestID;
 
   //Forward Camera
   // cam = new PhotonCamera("testCamera");
@@ -62,13 +65,17 @@ public class Camera extends SubsystemBase {
   //   return cam;
   // }
 
-  // public PhotonTrackedTarget getDesiredTarget(int target) {
-  //   return cam.getDesiredTarget(target);
-  // }
+  public PhotonTrackedTarget getDesiredTarget(int target) {
+    return cam.getDesiredTarget(target);
+  }
 
-  // public double getXDesired(PhotonTrackedTarget target) {
-  //   return cam.getXDesired(target);
-  // }
+  public double getXDesired(PhotonTrackedTarget target) {
+    return cam.getXDesired(target);
+  }
+
+  public  Pose3d getTagPose(int tagID){
+    return aprilTagFieldLayout.getTagPose(tagID).get();
+  }
 
   // public double getX(){
   //   return cam.getXBest();
@@ -89,7 +96,9 @@ public class Camera extends SubsystemBase {
   //   return cam.hasTarget();
   // }
   
-  
+  public int getClosestID(){
+    return cam.closestID;
+  }
     
 
   @Override
@@ -128,8 +137,10 @@ public class Camera extends SubsystemBase {
     //   SmartDashboard.putNumber("rot", 0);
     // }
     
-    SmartDashboard.putNumber("tag 1 pose x", aprilTagFieldLayout.getTagPose(1).get().getX());
-    SmartDashboard.putNumber("tag 1 pose y", aprilTagFieldLayout.getTagPose(1).get().getY());
+    SmartDashboard.putNumber("tag 10 pose x", aprilTagFieldLayout.getTagPose(10).get().getX());
+    SmartDashboard.putNumber("tag 10 pose y", aprilTagFieldLayout.getTagPose(10).get().getY());
+    SmartDashboard.putNumber("closest ID", closestID);
+    
    
     
   }

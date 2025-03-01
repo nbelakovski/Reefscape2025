@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import frc.robot.utils.Ports;
 import frc.robot.Constants;
 import frc.robot.Constants.MechConstants;
+import frc.robot.subsystems.LEDStrip.SubsystemPriority;
 
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase;
@@ -17,8 +18,11 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.SerialPort;
+
+
 
 public class CoralIntake extends SubsystemBase {
   /** Creates a new Intake. */
@@ -26,11 +30,16 @@ public class CoralIntake extends SubsystemBase {
   private SparkMaxConfig motorConfig;
   private static CoralIntake instance;
   private Timer timer;
+  private boolean coralInGap = false;
+  private AnalogInput gapSensor;
+  private double distance;
   
 
   private CoralIntake() {
-    CoralIntakeMotor = new SparkMax(Ports.INTAKE_MOTOR_PORT, MotorType.kBrushless);
+    CoralIntakeMotor = new SparkMax(Ports.LEFT_INTAKE_MOTOR_PORT, MotorType.kBrushless);
     motorConfig = new SparkMaxConfig();
+    
+    gapSensor = new AnalogInput(Ports.ANALOG_GAP_SENSOR_PORT);
   }
   public static CoralIntake getInstance(){
     if(instance == null) {
@@ -40,10 +49,10 @@ public class CoralIntake extends SubsystemBase {
   }
   //
   public void eat(){
-    CoralIntakeMotor.set(-MechConstants.INTAKE_SPEED);
+    CoralIntakeMotor.set(MechConstants.INTAKE_SPEED);
   }
   public void spit(){
-    CoralIntakeMotor.set(MechConstants.INTAKE_SPEED);
+    CoralIntakeMotor.set(-MechConstants.INTAKE_SPEED);
   }
   public void stop(){
     CoralIntakeMotor.set(0);
@@ -53,8 +62,34 @@ public class CoralIntake extends SubsystemBase {
     MechConstants.INTAKE_SPEED = newSpeed;
   }
 
+  public boolean isGapBlocked(){
+
+    if(getDistance() >800){
+      coralInGap = true;
+    }
+    else{
+      coralInGap = false;
+    }
+
+    return coralInGap;
+  }
+
+  public double getDistance(){
+    distance = gapSensor.getValue();
+    return distance;
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putBoolean("Coral in Gap", isGapBlocked());
+    SmartDashboard.putNumber("anolog distance", getDistance());
+
+    if(!coralInGap && CoralScorer.getInstance().hasCoral()){
+       LEDStrip.request(SubsystemPriority.CORAL, LEDStrip.IN_SCORER);
+    }
+    else if(coralInGap && !CoralScorer.getInstance().hasCoral()){
+      LEDStrip.request(SubsystemPriority.CORAL, LEDStrip.IN_GAP);
+    }
   }
 }
