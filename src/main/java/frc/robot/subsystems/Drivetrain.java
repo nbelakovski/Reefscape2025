@@ -4,13 +4,16 @@
 
 package frc.robot.subsystems;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.ModuleConfig;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
-import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -20,10 +23,17 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.util.WPIUtilJNI;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import static edu.wpi.first.units.Units.Kilograms;
+import frc.robot.Constants;
+import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.MechConstants;
+import frc.robot.Constants.ModuleConstants;
 import frc.robot.Constants.SwerveConstants;
 
 public class Drivetrain extends SubsystemBase {
@@ -99,6 +109,77 @@ private final Field2d field;
       new Pose2d(),
       stateStdDevs,
       visionStdDevs);
+
+      
+    // try{
+    //   RobotConfig config = RobotConfig.fromGUISettings();
+
+    //   AutoBuilder.configure(
+    //   this::getPose, 
+    //   this::resetOdometry, 
+    //   this::getSpeeds,
+    //   (speeds, feedforwards) -> driveRobotRelative(speeds),
+    //   AutoConstants.pathFollowerConfig,
+    //   config, 
+    //   () -> {
+    //     // Boolean supplier that controls when the path will be mirrored for the red alliance
+    //     // This will flip the path being followed to the red side of the field.
+    //     // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+    //     var alliance = DriverStation.getAlliance();
+    //     if (alliance.isPresent()) {
+    //       return alliance.get() == DriverStation.Alliance.Red;
+    //     }
+    //     return false;
+    //   },
+    //   this
+    // );
+    // } catch (Exception e) {
+    //   // Handle exception as needed
+    //   e.printStackTrace();
+    // }
+
+    // try{
+      //RobotConfig config = RobotConfig.fromGUISettings();
+
+      // Configure AutoBuilder
+      AutoBuilder.configure(
+        this::getPose, 
+        this::resetOdometry, 
+        this::getSpeeds, 
+        this::driveRobotRelative, 
+        AutoConstants.pathFollowerConfig,
+        new RobotConfig(
+          MechConstants.MASS, 
+          MechConstants.MOI, 
+          new ModuleConfig(
+            SwerveConstants.WHEEL_DIAMETER/2, 
+            SwerveConstants.TOP_SPEED, 
+            1.0, 
+            DCMotor.getNEO(1).withReduction(ModuleConstants.kDrivingMotorReduction), 
+            ModuleConstants.kDrivingMotorCurrentLimit, 
+            1), 
+          Constants.SwerveConstants.DRIVE_KINEMATICS.getModules()
+        ),
+        () -> {
+            // Boolean supplier that controls when the path will be mirrored for the red alliance
+            // This will flip the path being followed to the red side of the field.
+            // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+            var alliance = DriverStation.getAlliance();
+            if (alliance.isPresent()) {
+                return alliance.get() == DriverStation.Alliance.Red;
+            }
+            return false;
+        },
+        this
+      );
+    // }catch(Exception e){
+    //   DriverStation.reportError("Failed to load PathPlanner config and configure AutoBuilder", e.getStackTrace());
+    // }
+    
+
+      
 
   }
 
