@@ -187,9 +187,10 @@ public static final class ModuleConstants {
     public static final double ELEVATOR_MAX = 100;
 
     public static final double ELEVATOR_L1 = 3;
-    public static final double ELEVATOR_L2 = 8.9;
-    public static final double ELEVATOR_L3 = 23;
-    public static final double ELEVATOR_L4 = 40;
+    public static final double ELEVATOR_L2 = 11.7;
+    public static final double ELEVATOR_L3 = 26;
+    public static final double ELEVATOR_L4 = 46;
+    public static final double INTAKE_HEIGHT = 2.5;
 
     public static final double ELEVATOR_PROCESSOR = 0;
     public static final double ELEVATOR_ALGAE_L2 = 15;
