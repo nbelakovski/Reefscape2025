@@ -152,7 +152,7 @@ public void autoChooserInit() {
     //autoChooser.addOption("one meter", oneMeter);
     autoChooser.addOption("testing", testing);
 
-  }
+
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
@@ -162,6 +162,5 @@ public void autoChooserInit() {
     // An example command will be run in autonomous
     return autoChooser.getSelected();
   }
+
 }
-
-

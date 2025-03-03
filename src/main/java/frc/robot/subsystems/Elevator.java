@@ -187,6 +187,22 @@ public class Elevator extends SubsystemBase {
     SmartDashboard.putBoolean("Top Limit", getTopLimit());
     SmartDashboard.putBoolean("Bottom Limit", getBotLimit());
 
+
+//     if (instance.getPosition() == ElevatorConstants.ELEVATOR_L1) {
+//       LEDStrip.request(SubsystemPriority.ELEVATOR, LEDStrip.L1);
+//     }
+    
+//     else if (instance.getPosition() == ElevatorConstants.ELEVATOR_L1) {
+//       LEDStrip.request(SubsystemPriority.ELEVATOR, LEDStrip.L2);
+//     }
+
+//     else if (instance.getPosition() == ElevatorConstants.ELEVATOR_L1) {
+//       LEDStrip.request(SubsystemPriority.ELEVATOR, LEDStrip.L3);
+//     }
+
+//     else if (instance.getPosition() == ElevatorConstants.ELEVATOR_L1) {
+//       LEDStrip.request(SubsystemPriority.ELEVATOR, LEDStrip.L4);
+//     }
      if (instance.getPosition() == ElevatorConstants.ELEVATOR_L1) {
       LEDStrip.request(SubsystemPriority.ELEVATOR, LEDStrip.L1);
     }

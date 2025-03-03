@@ -11,12 +11,14 @@ import frc.robot.utils.Ports;
 public class LEDStrip extends SubsystemBase {
     private static Spark LED = new Spark(Ports.BLINKIN_PORT);
 
+
     public static final double HAVE_ALGAE = LEDColors.YELLOW; //random colors
     
    // public static final double IN_BLUE_ZONE = LEDColors.BLUE;
     // public static final double IN_GREEN_ZONE = LEDColors.GREEN;
     public static final double DISABLED = LEDColors.END_BLEND_C1_C2;
     public static final double ENABLED = LEDColors.OCEAN_COLOR_WAVES;
+    // public static final double ENABLED = LEDColors.NO_BLENDING_C1_C2;
 
     // Intake/Coral Colors 
     public static final double IN_SCORER = LEDColors.FOREST_BPM;
