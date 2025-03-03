@@ -12,14 +12,25 @@ public class LEDStrip extends SubsystemBase {
     private static Spark LED = new Spark(Ports.BLINKIN_PORT);
 
     public static final double HAVE_ALGAE = LEDColors.YELLOW; //random colors
-    public static final double HAVE_CORAL = LEDColors.VIOLET; //random colors
+    
    // public static final double IN_BLUE_ZONE = LEDColors.BLUE;
     // public static final double IN_GREEN_ZONE = LEDColors.GREEN;
-    public static final double DISABLED = LEDColors.RAINBOW_RAINBOW;
+    public static final double DISABLED = LEDColors.END_BLEND_C1_C2;
     public static final double ENABLED = LEDColors.OCEAN_COLOR_WAVES;
 
-    public static final double IN_SCORER = LEDColors.WHITE;
-    public static final double IN_GAP = LEDColors.LAVA_TWINKLES;
+    // Intake/Coral Colors 
+    public static final double IN_SCORER = LEDColors.FOREST_BPM;
+    public static final double IN_GAP = LEDColors.LAVA_BPM;
+    public static final double IN_GAP_SCORER = LEDColors.RED_LARSON_SCANNER;
+    public static final double INTAKING = LEDColors.BLUE_HEARTBEAT;
+
+    // Elevator Heights
+    public static final double L1 = LEDColors.WHITE_HEARTBEAT;
+    public static final double L2 = LEDColors.RED_HEARTBEAT;
+    public static final double L3 = LEDColors.MEDIUM_HEARTBEAT;
+    public static final double L4 = LEDColors.MEDIUM_HEARTBEAT_2;
+
+    public static final double ALIGNED = LEDColors.RAINBOW_PARTY;
 
     private static int topCurrentPriority = 0;
     private static double[] patternArray = new double[4];

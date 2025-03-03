@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 import frc.robot.utils.Ports;
 import frc.robot.Constants;
 import frc.robot.Constants.ElevatorConstants;
+import frc.robot.subsystems.LEDStrip.SubsystemPriority;
 
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -186,7 +187,22 @@ public class Elevator extends SubsystemBase {
     SmartDashboard.putBoolean("Top Limit", getTopLimit());
     SmartDashboard.putBoolean("Bottom Limit", getBotLimit());
 
+     if (instance.getPosition() == ElevatorConstants.ELEVATOR_L1) {
+      LEDStrip.request(SubsystemPriority.ELEVATOR, LEDStrip.L1);
+    }
     
+    else if (instance.getPosition() == ElevatorConstants.ELEVATOR_L2) {
+      LEDStrip.request(SubsystemPriority.ELEVATOR, LEDStrip.L2);
+    }
+
+    else if (instance.getPosition() == ElevatorConstants.ELEVATOR_L3) {
+      LEDStrip.request(SubsystemPriority.ELEVATOR, LEDStrip.L3);
+    }
+
+    else if (instance.getPosition() == ElevatorConstants.ELEVATOR_L4) {
+      LEDStrip.request(SubsystemPriority.ELEVATOR, LEDStrip.L4);
+    }
+
   }
 }
 
