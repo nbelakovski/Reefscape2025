@@ -20,6 +20,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -36,9 +37,10 @@ public class Elevator extends SubsystemBase {
   private SparkMaxConfig leftMotorConfig;
   private SparkMaxConfig rightMotorConfig;
   private static Elevator instance;
-  private PIDController controller;
+  //private PIDController controller;
   private DigitalInput topLimitSwitch;
   private DigitalInput bottomLimitSwitch;
+  private boolean ignore;
 
   
 
@@ -53,9 +55,9 @@ public class Elevator extends SubsystemBase {
     rightEncoder = elevatorRightMotor.getEncoder();
     topLimitSwitch = new DigitalInput(Ports.DIGITAL_TOP_LIMIT_PORT);
     bottomLimitSwitch = new DigitalInput(Ports.DIGITAL_BOTTOM_LIMIT_PORT);
-    
 
-    controller = new PIDController(0.1, 0, 0);
+    ignore = true;
+    
 
     
 
@@ -113,11 +115,13 @@ public class Elevator extends SubsystemBase {
 
   public void move(double speed){
 
+    speed = MathUtil.clamp(speed, -0.3, 0.3);
+
     if(speed >0){
-      elevate(-speed);
+      elevate(speed);
     }
     else if(speed <0){
-      descend(speed);
+      descend(-speed);
     }
     else{
       stop();
@@ -130,18 +134,30 @@ public class Elevator extends SubsystemBase {
     elevatorRightMotor.set(0);
   }
 
-  public void coralGapStop(){
-    if(CoralIntake.getInstance().isGapBlocked()){
+  public boolean coralGapStop(){
+    if(!ignore && CoralIntake.getInstance().isGapBlocked()){
       elevatorLeftMotor.set(0);
       elevatorRightMotor.set(0);
+      return true;
     }
-    else{
-
-    }
+    return false;
+  
   }
 
+  public boolean ignore() {
+    if (!(getPosition() > 9 || getPosition() < 15)) {
+      return ignore;
+    } else {
+
+      ignore = false;
+      return ignore;
+    }
+  }
+  
+
+
   public boolean getTopLimit() {
-    return topLimitSwitch.get();
+    return !topLimitSwitch.get();
   }
 
   public boolean getBotLimit() {
@@ -158,9 +174,9 @@ public class Elevator extends SubsystemBase {
     rightEncoder.setPosition(0);
   }
 
-  public PIDController getController(){
-    return controller;
-  }
+  // public PIDController getController(){
+  //   return controller;
+  // }
 
   @Override
   public void periodic() {
@@ -171,22 +187,38 @@ public class Elevator extends SubsystemBase {
     SmartDashboard.putBoolean("Top Limit", getTopLimit());
     SmartDashboard.putBoolean("Bottom Limit", getBotLimit());
 
-    if (instance.getPosition() == ElevatorConstants.ELEVATOR_L1) {
+
+//     if (instance.getPosition() == ElevatorConstants.ELEVATOR_L1) {
+//       LEDStrip.request(SubsystemPriority.ELEVATOR, LEDStrip.L1);
+//     }
+    
+//     else if (instance.getPosition() == ElevatorConstants.ELEVATOR_L1) {
+//       LEDStrip.request(SubsystemPriority.ELEVATOR, LEDStrip.L2);
+//     }
+
+//     else if (instance.getPosition() == ElevatorConstants.ELEVATOR_L1) {
+//       LEDStrip.request(SubsystemPriority.ELEVATOR, LEDStrip.L3);
+//     }
+
+//     else if (instance.getPosition() == ElevatorConstants.ELEVATOR_L1) {
+//       LEDStrip.request(SubsystemPriority.ELEVATOR, LEDStrip.L4);
+//     }
+     if (instance.getPosition() == ElevatorConstants.ELEVATOR_L1) {
       LEDStrip.request(SubsystemPriority.ELEVATOR, LEDStrip.L1);
     }
     
-    else if (instance.getPosition() == ElevatorConstants.ELEVATOR_L1) {
+    else if (instance.getPosition() == ElevatorConstants.ELEVATOR_L2) {
       LEDStrip.request(SubsystemPriority.ELEVATOR, LEDStrip.L2);
     }
 
-    else if (instance.getPosition() == ElevatorConstants.ELEVATOR_L1) {
+    else if (instance.getPosition() == ElevatorConstants.ELEVATOR_L3) {
       LEDStrip.request(SubsystemPriority.ELEVATOR, LEDStrip.L3);
     }
 
-    else if (instance.getPosition() == ElevatorConstants.ELEVATOR_L1) {
+    else if (instance.getPosition() == ElevatorConstants.ELEVATOR_L4) {
       LEDStrip.request(SubsystemPriority.ELEVATOR, LEDStrip.L4);
     }
-    
+
   }
 }
 

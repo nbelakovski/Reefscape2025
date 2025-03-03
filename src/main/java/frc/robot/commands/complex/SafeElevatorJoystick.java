@@ -11,11 +11,11 @@ import frc.robot.subsystems.Elevator;
 public class SafeElevatorJoystick extends Command {
 
   private Elevator elevator;
-  private Supplier<Double> speed;
+  private Supplier<Double> speedSupplier;
   
 
-  public SafeElevatorJoystick( Supplier<Double> speed) {
-    this.speed = speed;
+  public SafeElevatorJoystick( Supplier<Double> speedSupplier) {
+    this.speedSupplier = speedSupplier;
     elevator = Elevator.getInstance();
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(elevator);
@@ -31,11 +31,11 @@ public class SafeElevatorJoystick extends Command {
   @Override
   public void execute() {
     
-    if(CoralIntake.getInstance().isGapBlocked() && Elevator.getInstance().getPosition() < 15){
+    if(elevator.coralGapStop()){
       elevator.stop();
     }
     else{
-      elevator.move(MathUtil.applyDeadband(speed.get(), 0.2));
+      elevator.move(MathUtil.applyDeadband(-speedSupplier.get(), 0.2));
     }   
   }
 

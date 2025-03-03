@@ -4,19 +4,34 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+
+// import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+// import com.pathplanner.lib.util.PIDConstants;
+// import com.pathplanner.lib.util.ReplanningConfig;
+import com.pathplanner.lib.util.*;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Mass;
+import edu.wpi.first.units.measure.MomentOfInertia;
+
+import static edu.wpi.first.units.Units.Kilograms;
+import static edu.wpi.first.units.Units.KilogramSquareMeters;
 import frc.robot.utils.ModuleConfig;
 import frc.robot.utils.Ports;
+
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -67,10 +82,10 @@ public final class Constants {
     public static final ModuleConfig SWERVE_BR = new ModuleConfig("BR", Ports.SWERVE_DRIVE_BR, Ports.SWERVE_TURN_BR, BR_SENSOR_OFFSET, BR_ANGULAR_OFFSET, true);
 
     // Chassis configuration
-    public static final double TRACK_WIDTH = Units.inchesToMeters(28);
+    public static final double TRACK_WIDTH = Units.inchesToMeters(26);
 
     // Distance between centers of right and left wheels on robot
-    public static final double WHEEL_BASE = Units.inchesToMeters(28);
+    public static final double WHEEL_BASE = Units.inchesToMeters(26);
 
     public static final double DISTANCE_TO_CENTER = Math.sqrt(Math.pow(WHEEL_BASE/2, 2) + Math.pow(WHEEL_BASE/2, 2));
 
@@ -172,9 +187,11 @@ public static final class ModuleConstants {
     public static final double ELEVATOR_MAX = 100;
 
     public static final double ELEVATOR_L1 = 3;
-    public static final double ELEVATOR_L2 = 18;
-    public static final double ELEVATOR_L3 = 40;
-    public static final double ELEVATOR_L4 = 72;
+
+    public static final double ELEVATOR_L2 = 11.7;
+    public static final double ELEVATOR_L3 = 26;
+    public static final double ELEVATOR_L4 = 46;
+    public static final double INTAKE_HEIGHT = 2.5;
 
     public static final double ELEVATOR_PROCESSOR = 0;
     public static final double ELEVATOR_ALGAE_L2 = 15;
@@ -202,7 +219,7 @@ public static final class ModuleConstants {
 
     //Mech Motor Speeds for Buttons
 
-    public static double INTAKE_SPEED = 0.15;
+    public static double INTAKE_SPEED = 0.3;
     public static double ALGAE_INTAKE_SPEED = 1.0;
     public static double SCORE_SPEED = 0.6;
     public static double TELE_INTAKE_SPEED = 1.0;
@@ -218,6 +235,10 @@ public static final class ModuleConstants {
     //public static final double AMP_ANGLE = 106;
     //public static final double ARM_POSITION_TOLERANCE = 1.0;
     //public static final double ARM_OFFSET = 357.2335615;
+
+    public static final Mass MASS = Kilograms.of(25);
+    public static final MomentOfInertia MOI = KilogramSquareMeters.of(0.2);
+
   }
 
   public static class VisionConstants{
@@ -253,6 +274,26 @@ public static final class ModuleConstants {
     public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
     public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
 
+  }
+
+  public static final class AutoConstants {
+    public static final double kMaxSpeedMetersPerSecond = 3;
+    public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+    public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
+    public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
+
+    public static final double kPXController = 1;
+    public static final double kPYController = 1;
+    public static final double kPThetaController = 1;
+
+    // Constraint for the motion profiled robot angle controller
+    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
+        kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
+
+    public static final PPHolonomicDriveController pathFollowerConfig = new PPHolonomicDriveController(
+      new PIDConstants(1.0, 0, 0), // Translation constants 
+      new PIDConstants(.005, 0, 0) // Rotation constants 
+    );
   }
 
 

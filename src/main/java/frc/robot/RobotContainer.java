@@ -7,25 +7,27 @@ package frc.robot;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.utils.DPad;
-import frc.robot.commands.auto.*;
+// import frc.robot.commands.auto.*;
 import frc.robot.commands.basic.*;
 import frc.robot.commands.closed.*;
 import frc.robot.commands.complex.*;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
 import frc.robot.commands.basic.AlgaeIn;
 import frc.robot.commands.basic.AlgaeOut;
 import frc.robot.commands.basic.CoralScore;
-import frc.robot.commands.basic.ElevatorJoystick;
 import frc.robot.commands.closed.ElevatorSetPosition;
 import frc.robot.commands.complex.CoralInSafe;
 import frc.robot.commands.complex.SwerveDrive;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.LEDStrip;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -56,12 +58,24 @@ public class RobotContainer {
 
   Drivetrain drivetrain = Drivetrain.getInstance();
   Camera cam = Camera.getInstance();
+
+private SendableChooser<Command> autoChooser;
+ private Command auto1 = new PathPlannerAuto("Auto1");
+ private Command oneMeter = new PathPlannerAuto("one meter");
+ private Command testing = new PathPlannerAuto("testing");
+
+
   AlgaeHandler algae = AlgaeHandler.getInstance();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    // Configure the trigger bindings
     configureBindings();
+
+  
+    autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("AutoChooser", autoChooser);
+    // Configure the trigger bindings
+    autoChooserInit();
 
     led = new LEDStrip();
   }
@@ -86,6 +100,7 @@ public class RobotContainer {
  
 
     // Driver Commands
+    new JoystickButton(driverController, Button.kY.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.INTAKE_HEIGHT));
 
     // new JoystickButton(driverController,Button.kB.value).whileTrue(new DriveToPegPID(cam.closestID, "RIGHT"));
     // new JoystickButton(driverController,Button.kX.value).whileTrue(new DriveToPegPID(cam.closestID, "LEFT"));
@@ -99,7 +114,7 @@ public class RobotContainer {
     ));
     //Manual Algae on Operator Joystick
     AlgaeHandler.getInstance().setDefaultCommand(new SafeAlgaeJoystick(
-      () -> operatorController.getRawAxis(5)
+      () -> -operatorController.getRawAxis(5)
     ));
     // Set Elevator Position for Operator on DPad
     new DPad(operatorController,180).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L1));
@@ -113,6 +128,7 @@ public class RobotContainer {
     // new JoystickButton(operatorController,Button.kX.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_ALGAE_L2));
     // new JoystickButton(operatorController,Button.kA.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_PROCESSOR));
 
+    // new JoystickButton(operatorController, Button.kA.value).whileTrue(new SafeElevate());
     new JoystickButton(operatorController, Button.kA.value).whileTrue(new SafeElevate());
     new JoystickButton(operatorController, Button.kB.value).whileTrue(new SafeDescend());
     // new JoystickButton(operatorController, Button.kX.value).whileTrue(new CoralScore());
@@ -128,6 +144,13 @@ public class RobotContainer {
     new TriggerButton(operatorController, 3).whileTrue(new CoralScore());
   }
 
+public void autoChooserInit() {
+
+    autoChooser.setDefaultOption("one meter", oneMeter);
+
+    autoChooser.addOption("Auto 1", auto1);
+    //autoChooser.addOption("one meter", oneMeter);
+    autoChooser.addOption("testing", testing);
 
 
   /**
@@ -137,8 +160,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-
-    return new DriveToPegPID(cam.closestID, "RIGHT");
-
+    return autoChooser.getSelected();
   }
+
 }
