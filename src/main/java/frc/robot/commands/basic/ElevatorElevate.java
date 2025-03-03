@@ -29,7 +29,7 @@ public class ElevatorElevate extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    elevator.elevate(0.6);
+    elevator.elevate(1);
   }
 
   // Called once the command ends or is interrupted.

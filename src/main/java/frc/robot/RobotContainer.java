@@ -128,7 +128,7 @@ private SendableChooser<Command> autoChooser;
     // new JoystickButton(operatorController,Button.kA.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_PROCESSOR));
 
     // new JoystickButton(operatorController, Button.kA.value).whileTrue(new SafeElevate());
-    new JoystickButton(operatorController, Button.kA.value).whileTrue(new ElevatorSetPosition(1.1));
+    new JoystickButton(operatorController, Button.kA.value).whileTrue(new SafeElevate());
     new JoystickButton(operatorController, Button.kB.value).whileTrue(new SafeDescend());
     // new JoystickButton(operatorController, Button.kX.value).whileTrue(new CoralScore());
     // new JoystickButton(operatorController, Button.kY.value).whileTrue(new CoralInSafe());

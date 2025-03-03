@@ -39,7 +39,7 @@ public class SafeElevate extends Command {
       elevator.stop();
     }
     else{
-      elevator.elevate(0.3);
+      elevator.move(0.6);
     }
   }
 
