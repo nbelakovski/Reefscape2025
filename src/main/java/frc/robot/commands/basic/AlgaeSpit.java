@@ -8,11 +8,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.AlgaeHandler;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class AlgaeOut extends Command {
+public class AlgaeSpit extends Command {
 
   private AlgaeHandler algaeHandler;
   /** Creates a new AlgaeIn. */
-  public AlgaeOut() {
+  public AlgaeSpit() {
     algaeHandler = AlgaeHandler.getInstance();
     // Use addRequirements() here to declare subsystem dependencies.
     //addRequirements(algaeHandler);

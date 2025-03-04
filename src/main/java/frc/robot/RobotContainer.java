@@ -16,8 +16,8 @@ import frc.robot.commands.complex.*;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
-import frc.robot.commands.basic.AlgaeIn;
-import frc.robot.commands.basic.AlgaeOut;
+import frc.robot.commands.basic.AlgaeEat;
+import frc.robot.commands.basic.AlgaeSpit;
 import frc.robot.commands.basic.CoralScore;
 import frc.robot.commands.closed.ElevatorSetPosition;
 import frc.robot.commands.combos.ElevatorIntakeCombo;
@@ -133,15 +133,15 @@ public class RobotContainer {
     // new JoystickButton(operatorController,Button.kA.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_PROCESSOR));
 
     // new JoystickButton(operatorController, Button.kA.value).whileTrue(new SafeElevate());
-    new JoystickButton(operatorController, Button.kA.value).whileTrue(new SafeElevate());
-    new JoystickButton(operatorController, Button.kB.value).whileTrue(new SafeDescend());
+    new JoystickButton(operatorController, Button.kB.value).whileTrue(new SafeElevate());
+    new JoystickButton(operatorController, Button.kA.value).whileTrue(new SafeDescend());
     // new JoystickButton(operatorController, Button.kX.value).whileTrue(new CoralScore());
     // new JoystickButton(operatorController, Button.kY.value).whileTrue(new CoralInSafe());
 
 
-    //Bumper buttons
-    new JoystickButton(operatorController, Button.kX.value).whileTrue(new AlgaeIn());
-    new JoystickButton(operatorController, Button.kY.value).whileTrue(new AlgaeOut());
+    //Bumper buttons??
+    new JoystickButton(operatorController, Button.kX.value).whileTrue(new AlgaeSpit());
+    new JoystickButton(operatorController, Button.kY.value).whileTrue(new AlgaeEat());
 
     //Trigger buttons for operator
     new TriggerButton(operatorController, 2).whileTrue(new CoralInSafe());
