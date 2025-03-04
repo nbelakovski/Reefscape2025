@@ -14,10 +14,12 @@ public class CoralInSafe extends Command {
 
   private CoralIntake coralIntake;
   private CoralScorer coralScorer;
+  private boolean stop;
   /** Creates a new CoralIn. */
   public CoralInSafe() {
     coralIntake = CoralIntake.getInstance();
     coralScorer = CoralScorer.getInstance();
+    stop = false;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(coralIntake, coralScorer);
   }
@@ -33,8 +35,10 @@ public class CoralInSafe extends Command {
   @Override
   public void execute() {
     
+    stop = !coralIntake.isGapBlocked() && coralScorer.hasCoral();
+    
     //If coral is completely inside of the scorer then were done intaking 
-    if(!coralIntake.isGapBlocked() && coralScorer.hasCoral()){
+    if(stop){
       coralIntake.stop();
       coralScorer.stop();
     }
@@ -55,6 +59,6 @@ public class CoralInSafe extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return stop;
   }
 }

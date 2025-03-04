@@ -239,6 +239,8 @@ public static final class ModuleConstants {
     public static final Mass MASS = Kilograms.of(25);
     public static final MomentOfInertia MOI = KilogramSquareMeters.of(0.2);
 
+    public static final double JAW_INTAKE_ANGLE = 45;
+
   }
 
   public static class VisionConstants{

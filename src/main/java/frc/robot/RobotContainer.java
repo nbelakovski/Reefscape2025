@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.Constants.ElevatorConstants;
+import frc.robot.Constants.MechConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.utils.DPad;
 // import frc.robot.commands.auto.*;
@@ -19,6 +20,8 @@ import frc.robot.commands.basic.AlgaeIn;
 import frc.robot.commands.basic.AlgaeOut;
 import frc.robot.commands.basic.CoralScore;
 import frc.robot.commands.closed.ElevatorSetPosition;
+import frc.robot.commands.combos.ElevatorIntakeCombo;
+import frc.robot.commands.combos.ElevatorJawCombo;
 import frc.robot.commands.complex.CoralInSafe;
 import frc.robot.commands.complex.SwerveDrive;
 import frc.robot.Constants.OperatorConstants;
@@ -101,7 +104,8 @@ public class RobotContainer {
 
     // Driver Commands
     new JoystickButton(driverController, Button.kY.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.INTAKE_HEIGHT));
-
+    new JoystickButton(driverController, Button.kX.value).whileTrue(new ElevatorIntakeCombo());
+    new JoystickButton(driverController, Button.kB.value).whileTrue(new ElevatorJawCombo(ElevatorConstants.ELEVATOR_ALGAE_L2));
     // new JoystickButton(driverController,Button.kB.value).whileTrue(new DriveToPegPID(cam.closestID, "RIGHT"));
     // new JoystickButton(driverController,Button.kX.value).whileTrue(new DriveToPegPID(cam.closestID, "LEFT"));
     // new JoystickButton(driverController,Button.kY.value).whileTrue(new DriveToPegPID(cam.closestID, "STRAIGHT"));
