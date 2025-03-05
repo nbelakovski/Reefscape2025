@@ -135,7 +135,7 @@ public class Elevator extends SubsystemBase {
   }
 
   public boolean coralGapStop(){
-    if(!ignore && CoralIntake.getInstance().isGapBlocked()){
+    if(!ignore() && CoralIntake.getInstance().isGapBlocked()){
       elevatorLeftMotor.set(0);
       elevatorRightMotor.set(0);
       return true;
@@ -145,12 +145,12 @@ public class Elevator extends SubsystemBase {
   }
 
   public boolean ignore() {
-    if (!(getPosition() > 9 || getPosition() < 15)) {
-      return ignore;
+    if ((getPosition() > 3)) {
+      return true;
     } else {
 
       ignore = false;
-      return ignore;
+      return false;
     }
   }
   
@@ -180,12 +180,15 @@ public class Elevator extends SubsystemBase {
 
   @Override
   public void periodic() {
+    ignore();
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("elevator position", getPosition());
     SmartDashboard.putNumber("left elevator position", leftEncoder.getPosition());
     SmartDashboard.putNumber("right elevator position", -rightEncoder.getPosition());
     SmartDashboard.putBoolean("Top Limit", getTopLimit());
     SmartDashboard.putBoolean("Bottom Limit", getBotLimit());
+    SmartDashboard.putBoolean("coral stop", coralGapStop());
+    SmartDashboard.putBoolean("ignore", ignore());
 
 
 //     if (instance.getPosition() == ElevatorConstants.ELEVATOR_L1) {
@@ -203,6 +206,11 @@ public class Elevator extends SubsystemBase {
 //     else if (instance.getPosition() == ElevatorConstants.ELEVATOR_L1) {
 //       LEDStrip.request(SubsystemPriority.ELEVATOR, LEDStrip.L4);
 //     }
+
+    // if (instance.getBotLimit()) {
+    //   LEDStrip.request(SubsystemPriority.ELEVATOR, LEDStrip.MIN_HEIGHT);
+    // }
+
     if (instance.getPosition() > 1.5 && instance.getPosition() < 1.8){
       LEDStrip.request(SubsystemPriority.ELEVATOR, LEDStrip.INTAKE_HEIGHT);
     }
@@ -221,6 +229,10 @@ public class Elevator extends SubsystemBase {
     else if (instance.getPosition() == ElevatorConstants.ELEVATOR_L4) {
       LEDStrip.request(SubsystemPriority.ELEVATOR, LEDStrip.L4);
     }
+
+    // else if (instance.getTopLimit()) {
+    //   LEDStrip.request(SubsystemPriority.ELEVATOR, LEDStrip.MAX_HEIGHT);
+    // }
 
   }
 }

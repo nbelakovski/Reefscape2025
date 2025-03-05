@@ -4,6 +4,7 @@
 
 package frc.robot.commands.closed;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ElevatorConstants;
@@ -44,7 +45,14 @@ public class ElevatorSetPosition extends Command {
   @Override
   public void execute() {
     double speed = controller.calculate(elevator.getPosition());
-    elevator.move(speed);
+
+    if(elevator.coralGapStop()){
+      elevator.stop();
+    }
+    else{
+      elevator.move(speed);
+    }
+    
 
     // if (setpoint == ElevatorConstants.ELEVATOR_L4 && (controller.getError() < 2 && controller.getError() > -2)) {
     //   finished = true;

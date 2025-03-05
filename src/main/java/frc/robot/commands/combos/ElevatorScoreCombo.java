@@ -7,7 +7,7 @@ package frc.robot.commands.combos;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.basic.CoralScore;
+import frc.robot.commands.basic.CoralRetract;
 import frc.robot.commands.closed.ElevatorSetPosition;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -21,7 +21,7 @@ public class ElevatorScoreCombo extends SequentialCommandGroup {
     addCommands(
       new ElevatorSetPosition(position),
       new ParallelRaceGroup(
-        new CoralScore(),
+        new CoralRetract(),
         new WaitCommand(1)
       )
     );

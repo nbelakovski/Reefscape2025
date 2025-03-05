@@ -16,9 +16,6 @@ import frc.robot.commands.complex.*;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
-import frc.robot.commands.basic.AlgaeEat;
-import frc.robot.commands.basic.AlgaeSpit;
-import frc.robot.commands.basic.CoralScore;
 import frc.robot.commands.combos.ElevatorIntakeCombo;
 import frc.robot.commands.combos.ElevatorJawCombo;
 import frc.robot.commands.combos.ElevatorScoreCombo;
@@ -66,6 +63,7 @@ public class RobotContainer {
  private Command auto1 = new PathPlannerAuto("Auto1");
  private Command oneMeter = new PathPlannerAuto("one meter");
  private Command testing = new PathPlannerAuto("testing");
+ private Command ERComboPath = new PathPlannerAuto("ERComboPath");
 
 
   AlgaeHandler algae = AlgaeHandler.getInstance();
@@ -115,11 +113,13 @@ public class RobotContainer {
     //---------- CORAL INTAKE ----------//
 
     // Driver - RT - Move Elevator in position to Intake + Spin Intake wheels
+    new TriggerButton(operatorController, 2).whileTrue(new CoralRetract()); 
     new TriggerButton(driverController, 3).whileTrue(new ElevatorIntakeCombo());        //RT 
-    new JoystickButton(driverController, Button.kRightBumper.value).whileTrue( new ElevatorIntakeCombo() ); //RB test
+    // new JoystickButton(driverController, Button.kRightBumper.value).whileTrue( new ElevatorIntakeCombo() ); //RB test
 
     // Operator - LT - Intake Coral with sensors
     new TriggerButton(operatorController, 2).whileTrue(new CoralInSafe());        //LT    
+    new JoystickButton(operatorController, Button.kLeftBumper.value).whileTrue(new CoralRetract());
 
 
     //---------- ELEVATOR ----------//
@@ -184,6 +184,7 @@ public void autoChooserInit() {
     autoChooser.addOption("Auto 1", auto1);
     //autoChooser.addOption("one meter", oneMeter);
     autoChooser.addOption("testing", testing);
+    autoChooser.addOption("ERComboPath", ERComboPath);
 }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
