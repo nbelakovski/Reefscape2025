@@ -240,7 +240,7 @@ public static final class ModuleConstants {
     public static final MomentOfInertia MOI = KilogramSquareMeters.of(0.2);
 
     public static final double JAW_CORAL_STOP_ANGLE = 260;
-    public static final double JAW_INTAKE_ANGLE = 153;
+    public static final double JAW_INTAKE_ANGLE = 158;
 
   }
 
