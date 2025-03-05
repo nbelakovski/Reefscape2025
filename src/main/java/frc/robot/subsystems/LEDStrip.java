@@ -24,13 +24,14 @@ public class LEDStrip extends SubsystemBase {
     public static final double IN_SCORER = LEDColors.FOREST_BPM;
     public static final double IN_GAP = LEDColors.LAVA_BPM;
     public static final double IN_GAP_SCORER = LEDColors.RED_LARSON_SCANNER;
-    public static final double INTAKING = LEDColors.BLUE_HEARTBEAT;
+    public static final double INTAKING = LEDColors.WHITE_HEARTBEAT;
 
     // Elevator Heights
     public static final double L1 = LEDColors.WHITE_HEARTBEAT;
     public static final double L2 = LEDColors.RED_HEARTBEAT;
     public static final double L3 = LEDColors.MEDIUM_HEARTBEAT;
     public static final double L4 = LEDColors.MEDIUM_HEARTBEAT_2;
+    public static final double INTAKE_HEIGHT = LEDColors.SHOT_WHITE;
 
     public static final double ALIGNED = LEDColors.RAINBOW_PARTY;
 
@@ -39,9 +40,9 @@ public class LEDStrip extends SubsystemBase {
 
     public enum SubsystemPriority {
         
-        ELEVATOR(3),
+        ELEVATOR(1),
         CORAL(2),
-        ALGAE(1),
+        ALGAE(3),
         DEFAULT(0);
 
         private int priority;

@@ -4,26 +4,26 @@
 
 package frc.robot.commands.combos;
 
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import frc.robot.Constants.ElevatorConstants;
-import frc.robot.Constants.MechConstants;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.commands.basic.CoralScore;
 import frc.robot.commands.closed.ElevatorSetPosition;
-import frc.robot.commands.closed.SetJawAngle;
-import frc.robot.commands.complex.CoralInSafe;
-import frc.robot.subsystems.LEDStrip;
-import frc.robot.subsystems.LEDStrip.SubsystemPriority;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class ElevatorIntakeCombo extends ParallelCommandGroup {
-  /** Creates a new ElevatorIntakeCombo. */
-  public ElevatorIntakeCombo() {
+public class ElevatorScoreCombo extends SequentialCommandGroup {
+  /** Creates a new ElevatorScoreCombo. */
+  public ElevatorScoreCombo(double position) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new ElevatorSetPosition(ElevatorConstants.INTAKE_HEIGHT),
-      new CoralInSafe()
+      new ElevatorSetPosition(position),
+      new ParallelRaceGroup(
+        new CoralScore(),
+        new WaitCommand(1)
+      )
     );
   }
 }

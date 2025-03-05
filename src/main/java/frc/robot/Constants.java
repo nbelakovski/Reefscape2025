@@ -221,7 +221,7 @@ public static final class ModuleConstants {
 
     public static double INTAKE_SPEED = 0.3;
     public static double ALGAE_INTAKE_SPEED = 1.0;
-    public static double SCORE_SPEED = 0.6;
+    public static double SCORE_SPEED = 0.5;
     public static double TELE_INTAKE_SPEED = 1.0;
     public static double AUTO_INTAKE_SPEED = 0.5;
     //public static final double LAUNCHER_SPEED = 1.0;
@@ -239,7 +239,8 @@ public static final class ModuleConstants {
     public static final Mass MASS = Kilograms.of(25);
     public static final MomentOfInertia MOI = KilogramSquareMeters.of(0.2);
 
-    public static final double JAW_INTAKE_ANGLE = 45;
+    public static final double JAW_CORAL_STOP_ANGLE = 260;
+    public static final double JAW_INTAKE_ANGLE = 153;
 
   }
 

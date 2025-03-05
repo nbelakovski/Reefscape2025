@@ -6,6 +6,7 @@ package frc.robot.commands.closed;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.ElevatorConstants;
 import frc.robot.subsystems.Elevator;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
@@ -13,6 +14,9 @@ public class ElevatorSetPosition extends Command {
 
     private static Elevator elevator;
     private PIDController controller;
+
+    private boolean finished;
+    private double setpoint;
 
   /** Creates a new ElevatorSetPositionNew. */
   public ElevatorSetPosition(double desiredPosition) {
@@ -23,6 +27,9 @@ public class ElevatorSetPosition extends Command {
 
         controller.setSetpoint(desiredPosition);
         controller.setTolerance(0.1);
+
+        setpoint = desiredPosition;
+        finished = false;
         addRequirements(elevator);
   }
 
@@ -38,6 +45,16 @@ public class ElevatorSetPosition extends Command {
   public void execute() {
     double speed = controller.calculate(elevator.getPosition());
     elevator.move(speed);
+
+    if (setpoint == ElevatorConstants.ELEVATOR_L4 && (controller.getError() < 2 && controller.getError() > -2)) {
+      finished = true;
+    }
+    else if (controller.getError() < 0.5 && controller.getError() > -0.5) {
+      finished = true;
+    }
+    else {
+      finished = false;
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -49,6 +66,6 @@ public class ElevatorSetPosition extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return finished;
   }
 }

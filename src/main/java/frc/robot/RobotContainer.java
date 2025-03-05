@@ -19,9 +19,9 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import frc.robot.commands.basic.AlgaeEat;
 import frc.robot.commands.basic.AlgaeSpit;
 import frc.robot.commands.basic.CoralScore;
-import frc.robot.commands.closed.ElevatorSetPosition;
 import frc.robot.commands.combos.ElevatorIntakeCombo;
 import frc.robot.commands.combos.ElevatorJawCombo;
+import frc.robot.commands.combos.ElevatorScoreCombo;
 import frc.robot.commands.complex.CoralInSafe;
 import frc.robot.commands.complex.SwerveDrive;
 import frc.robot.Constants.OperatorConstants;
@@ -106,6 +106,12 @@ public class RobotContainer {
     new JoystickButton(driverController, Button.kY.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.INTAKE_HEIGHT));
     new JoystickButton(driverController, Button.kX.value).whileTrue(new ElevatorIntakeCombo());
     new JoystickButton(driverController, Button.kB.value).whileTrue(new ElevatorJawCombo(ElevatorConstants.ELEVATOR_ALGAE_L2));
+    //new JoystickButton(driverController, Button.kA.value).whileTrue(new SetJawAngle(MechConstants.JAW_INTAKE_ANGLE));
+
+
+    //Driver DPad
+    new DPad(driverController, 0).whileTrue(new SetJawAngle(MechConstants.JAW_INTAKE_ANGLE));
+    new DPad(driverController, 180).whileTrue(new SetJawAngle(MechConstants.JAW_CORAL_STOP_ANGLE));
     // new JoystickButton(driverController,Button.kB.value).whileTrue(new DriveToPegPID(cam.closestID, "RIGHT"));
     // new JoystickButton(driverController,Button.kX.value).whileTrue(new DriveToPegPID(cam.closestID, "LEFT"));
     // new JoystickButton(driverController,Button.kY.value).whileTrue(new DriveToPegPID(cam.closestID, "STRAIGHT"));
@@ -118,7 +124,7 @@ public class RobotContainer {
     ));
     //Manual Algae on Operator Joystick
     AlgaeHandler.getInstance().setDefaultCommand(new SafeAlgaeJoystick(
-      () -> -operatorController.getRawAxis(5)
+      () -> operatorController.getRawAxis(5)
     ));
     // Set Elevator Position for Operator on DPad
     new DPad(operatorController,180).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L1));
@@ -132,9 +138,9 @@ public class RobotContainer {
     // new JoystickButton(operatorController,Button.kX.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_ALGAE_L2));
     // new JoystickButton(operatorController,Button.kA.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_PROCESSOR));
 
-    // new JoystickButton(operatorController, Button.kA.value).whileTrue(new SafeElevate());
-    new JoystickButton(operatorController, Button.kB.value).whileTrue(new SafeElevate());
-    new JoystickButton(operatorController, Button.kA.value).whileTrue(new SafeDescend());
+    // new JoystickButton(operatorController, Button.kB.value).whileTrue(new SafeElevate());
+    new JoystickButton(operatorController, Button.kA.value).whileTrue(new SetJawAngle(MechConstants.JAW_INTAKE_ANGLE));
+    new JoystickButton(operatorController, Button.kB.value).whileTrue(new ElevatorIntakeCombo());
     // new JoystickButton(operatorController, Button.kX.value).whileTrue(new CoralScore());
     // new JoystickButton(operatorController, Button.kY.value).whileTrue(new CoralInSafe());
 

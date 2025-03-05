@@ -115,7 +115,7 @@ public class Elevator extends SubsystemBase {
 
   public void move(double speed){
 
-    speed = MathUtil.clamp(speed, -0.3, 0.3);
+    speed = MathUtil.clamp(speed, -0.6, 0.6);
 
     if(speed >0){
       elevate(speed);
@@ -203,7 +203,10 @@ public class Elevator extends SubsystemBase {
 //     else if (instance.getPosition() == ElevatorConstants.ELEVATOR_L1) {
 //       LEDStrip.request(SubsystemPriority.ELEVATOR, LEDStrip.L4);
 //     }
-     if (instance.getPosition() == ElevatorConstants.ELEVATOR_L1) {
+    if (instance.getPosition() > 1.5 && instance.getPosition() < 1.8){
+      LEDStrip.request(SubsystemPriority.ELEVATOR, LEDStrip.INTAKE_HEIGHT);
+    }
+    else if (instance.getPosition() == ElevatorConstants.ELEVATOR_L1) {
       LEDStrip.request(SubsystemPriority.ELEVATOR, LEDStrip.L1);
     }
     

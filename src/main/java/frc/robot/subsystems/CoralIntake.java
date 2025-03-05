@@ -64,7 +64,7 @@ public class CoralIntake extends SubsystemBase {
 
   public boolean isGapBlocked(){
 
-    if(getDistance() >800){
+    if(getDistance() > 950 && getDistance() < 1400){
       coralInGap = true;
     }
     else{
