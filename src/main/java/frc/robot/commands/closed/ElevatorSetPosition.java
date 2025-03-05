@@ -46,15 +46,15 @@ public class ElevatorSetPosition extends Command {
     double speed = controller.calculate(elevator.getPosition());
     elevator.move(speed);
 
-    if (setpoint == ElevatorConstants.ELEVATOR_L4 && (controller.getError() < 2 && controller.getError() > -2)) {
-      finished = true;
-    }
-    else if (controller.getError() < 0.5 && controller.getError() > -0.5) {
-      finished = true;
-    }
-    else {
-      finished = false;
-    }
+    // if (setpoint == ElevatorConstants.ELEVATOR_L4 && (controller.getError() < 2 && controller.getError() > -2)) {
+    //   finished = true;
+    // }
+    // else if (controller.getError() < 0.5 && controller.getError() > -0.5) {
+    //   finished = true;
+    // }
+    // else {
+    //   finished = false;
+    // }
   }
 
   // Called once the command ends or is interrupted.

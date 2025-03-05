@@ -82,16 +82,16 @@ public final class Constants {
     public static final ModuleConfig SWERVE_BR = new ModuleConfig("BR", Ports.SWERVE_DRIVE_BR, Ports.SWERVE_TURN_BR, BR_SENSOR_OFFSET, BR_ANGULAR_OFFSET, true);
 
     // Chassis configuration
-    public static final double TRACK_WIDTH = Units.inchesToMeters(26);
+    public static final double TRACK_WIDTH = Units.inchesToMeters(25);
 
     // Distance between centers of right and left wheels on robot
-    public static final double WHEEL_BASE = Units.inchesToMeters(26);
+    public static final double WHEEL_BASE = Units.inchesToMeters(25);
 
     public static final double DISTANCE_TO_CENTER = Math.sqrt(Math.pow(WHEEL_BASE/2, 2) + Math.pow(WHEEL_BASE/2, 2));
 
     // Diamter of the REV Swerve wheels in inches
     public static final double WHEEL_DIAMETER = Units.inchesToMeters(3);
-    public static final double FREE_SPIN_METER = 2;
+    public static final double FREE_SPIN_METER = 5.28;
 
 
     // Distance between front and back wheels on robot
@@ -157,7 +157,7 @@ public static final class ModuleConstants {
   public static final double kTurningEncoderPositionPIDMinInput = -Math.PI; // radians
   public static final double kTurningEncoderPositionPIDMaxInput = Math.PI; // radians
 
-  public static final double kDrivingP = 0.04;
+  public static final double kDrivingP = 0.03;
   public static final double kDrivingI = 0;
   public static final double kDrivingD = 0;
   public static final double kDrivingFF = 1 / kDriveWheelFreeSpeedRps;
@@ -219,7 +219,7 @@ public static final class ModuleConstants {
 
     //Mech Motor Speeds for Buttons
 
-    public static double INTAKE_SPEED = 0.3;
+    public static double INTAKE_SPEED = 0.4;
     public static double ALGAE_INTAKE_SPEED = 1.0;
     public static double SCORE_SPEED = 0.5;
     public static double TELE_INTAKE_SPEED = 1.0;

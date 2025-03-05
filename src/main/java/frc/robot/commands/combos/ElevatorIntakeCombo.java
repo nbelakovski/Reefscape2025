@@ -23,7 +23,8 @@ public class ElevatorIntakeCombo extends ParallelCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       new ElevatorSetPosition(ElevatorConstants.INTAKE_HEIGHT),
-      new CoralInSafe()
+      new CoralInSafe(),
+      new SetJawAngle(MechConstants.JAW_CORAL_STOP_ANGLE)
     );
   }
 }
