@@ -94,66 +94,63 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
+    // Link for joystick doc: https://docs.google.com/presentation/d/1cis5OrQfkU9m38LwgAMIfmPpJAZxnIC-KnAzi0JsRao/edit#slide=id.g18d2b75b637cb431_3
+
+
+    // DRIVETRAIN
     Drivetrain.getInstance().setDefaultCommand(new SwerveDrive(
       () -> -driverController.getRawAxis(1),
       () -> -driverController.getRawAxis(0),
       () -> -driverController.getRawAxis(4),
       () -> driverController.getAButton()
     ));
- 
-
-    // Driver Commands
-    new JoystickButton(driverController, Button.kY.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.INTAKE_HEIGHT));
-    new JoystickButton(driverController, Button.kX.value).whileTrue(new ElevatorIntakeCombo());
-    new JoystickButton(driverController, Button.kB.value).whileTrue(new ElevatorJawCombo(ElevatorConstants.ELEVATOR_ALGAE_L2));
-    //new JoystickButton(driverController, Button.kA.value).whileTrue(new SetJawAngle(MechConstants.JAW_INTAKE_ANGLE));
-
-    new TriggerButton(operatorController, 3).whileTrue(new ElevatorIntakeCombo());
-
-
-    //Driver DPad
-    new DPad(driverController, 0).whileTrue(new SetJawAngle(MechConstants.JAW_INTAKE_ANGLE));
-    new DPad(driverController, 180).whileTrue(new SetJawAngle(MechConstants.JAW_CORAL_STOP_ANGLE));
     // new JoystickButton(driverController,Button.kB.value).whileTrue(new DriveToPegPID(cam.closestID, "RIGHT"));
     // new JoystickButton(driverController,Button.kX.value).whileTrue(new DriveToPegPID(cam.closestID, "LEFT"));
     // new JoystickButton(driverController,Button.kY.value).whileTrue(new DriveToPegPID(cam.closestID, "STRAIGHT"));
-    //Operator commands
-    // Link for joystick doc: https://docs.google.com/presentation/d/1cis5OrQfkU9m38LwgAMIfmPpJAZxnIC-KnAzi0JsRao/edit#slide=id.g18d2b75b637cb431_3
 
-    //Manual Elevator on Operator Joystick
+
+    // CORAL INTAKE
+    new JoystickButton(driverController, Button.kY.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.INTAKE_HEIGHT));
+    new JoystickButton(driverController, Button.kX.value).whileTrue(new ElevatorIntakeCombo());
+    new TriggerButton(operatorController, 3).whileTrue(new ElevatorIntakeCombo());
+    new TriggerButton(operatorController, 2).whileTrue(new CoralInSafe());
+    // new JoystickButton(operatorController, Button.kY.value).whileTrue(new CoralInSafe());
+
+
+    //ELEVATOR
     Elevator.getInstance().setDefaultCommand(new SafeElevatorJoystick(
       () -> operatorController.getRawAxis(1)
     ));
-    //Manual Algae on Operator Joystick
-    AlgaeHandler.getInstance().setDefaultCommand(new SafeAlgaeJoystick(
-      () -> operatorController.getRawAxis(5)
-    ));
-    // Set Elevator Position for Operator on DPad
     new DPad(operatorController,180).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L1));
     new DPad(operatorController,270).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L2));
     new DPad(operatorController,0).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L3));
     new DPad(operatorController,90).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L4));
-
- //   new JoystickButton(operatorController,Button.kY.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L1));
-    // Set Elevator Positions for Operator on Joystick Buttons
-    // new JoystickButton(operatorController,Button.kY.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_ALGAE_L3));
-    // new JoystickButton(operatorController,Button.kX.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_ALGAE_L2));
-    // new JoystickButton(operatorController,Button.kA.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_PROCESSOR));
-
     // new JoystickButton(operatorController, Button.kB.value).whileTrue(new SafeElevate());
+      
+
+    //CORAL SCORE
+    new TriggerButton(operatorController, 3).whileTrue(new CoralScore());
+    // new JoystickButton(operatorController, Button.kX.value).whileTrue(new CoralScore());
+    
+
+    // ALGAE JAW
+    AlgaeHandler.getInstance().setDefaultCommand(new SafeAlgaeJoystick(
+      () -> operatorController.getRawAxis(5)
+    ));
     new JoystickButton(operatorController, Button.kA.value).whileTrue(new SetJawAngle(MechConstants.JAW_INTAKE_ANGLE));
     new JoystickButton(operatorController, Button.kB.value).whileTrue(new SetJawAngle(MechConstants.JAW_CORAL_STOP_ANGLE));
-    // new JoystickButton(operatorController, Button.kX.value).whileTrue(new CoralScore());
-    // new JoystickButton(operatorController, Button.kY.value).whileTrue(new CoralInSafe());
+
+    new JoystickButton(driverController, Button.kB.value).whileTrue(new ElevatorJawCombo(ElevatorConstants.ELEVATOR_ALGAE_L2));
+    new DPad(driverController, 0).whileTrue(new SetJawAngle(MechConstants.JAW_INTAKE_ANGLE));
+    new DPad(driverController, 180).whileTrue(new SetJawAngle(MechConstants.JAW_CORAL_STOP_ANGLE));
+    //new JoystickButton(driverController, Button.kA.value).whileTrue(new SetJawAngle(MechConstants.JAW_INTAKE_ANGLE));
 
 
-    //Bumper buttons??
+    //ALGAE TONGUE
     new JoystickButton(operatorController, Button.kX.value).whileTrue(new AlgaeSpit());
     new JoystickButton(operatorController, Button.kY.value).whileTrue(new AlgaeEat());
 
-    //Trigger buttons for operator
-    new TriggerButton(operatorController, 2).whileTrue(new CoralInSafe());
-    new TriggerButton(operatorController, 3).whileTrue(new CoralScore());
+
   }
 
 public void autoChooserInit() {
