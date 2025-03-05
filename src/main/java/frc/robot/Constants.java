@@ -236,8 +236,8 @@ public static final class ModuleConstants {
     //public static final double ARM_POSITION_TOLERANCE = 1.0;
     //public static final double ARM_OFFSET = 357.2335615;
 
-    public static final Mass MASS = Kilograms.of(25);
-    public static final MomentOfInertia MOI = KilogramSquareMeters.of(0.2);
+    public static final Mass MASS = Kilograms.of(63); //was 25kg = 55lbs, 63kg =140lb
+    public static final MomentOfInertia MOI = KilogramSquareMeters.of(5); //was 0.2, Typical FRC robot will be between 3-8 Kg*m^2
 
     public static final double JAW_CORAL_STOP_ANGLE = 260;
     public static final double JAW_INTAKE_ANGLE = 158;
