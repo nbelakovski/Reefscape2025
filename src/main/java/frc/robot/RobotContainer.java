@@ -114,13 +114,15 @@ public class RobotContainer {
     //---------- CORAL INTAKE ----------//
 
     // Driver - RT - Move Elevator in position to Intake + Spin Intake wheels
-    new TriggerButton(operatorController, 2).whileTrue(new CoralRetract()); 
     new TriggerButton(driverController, 3).whileTrue(new ElevatorIntakeCombo());        //RT 
-    // new JoystickButton(driverController, Button.kRightBumper.value).whileTrue( new ElevatorIntakeCombo() ); //RB test
+  
 
     // Operator - LT - Intake Coral with sensors
     new TriggerButton(operatorController, 2).whileTrue(new CoralInSafe());        //LT    
-    new JoystickButton(operatorController, Button.kLeftBumper.value).whileTrue(new CoralRetract());
+    
+    // Operator - RB - Retract Coral if hanging too far out
+    new TriggerButton(operatorController, 2).whileTrue(new CoralRetract());       //LT
+    // new JoystickButton(operatorController, Button.kLeftBumper.value).whileTrue(new CoralRetract()); //LB
 
 
     //---------- ELEVATOR ----------//

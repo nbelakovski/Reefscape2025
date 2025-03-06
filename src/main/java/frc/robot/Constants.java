@@ -108,7 +108,7 @@ public final class Constants {
     public static final boolean TURN_INVERSION = true;
 
     // Driving Parameters - max speeds allowed, not capable
-    public static final double TOP_SPEED = Units.feetToMeters(2 * 4.8); //9.6
+    public static final double TOP_SPEED = 4.0; //9.6
     public static final double TOP_ANGULAR_SPEED = 2 * Math.PI;
     public static final double GEER_RATTIOLI = 3.56;
 
@@ -142,7 +142,7 @@ public static final class ModuleConstants {
   public static final double kWheelDiameterMeters = 0.0762;
   public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
   // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15 teeth on the bevel pinion
-  public static final double kDrivingMotorReduction = (45.0 * 22) / (kDrivingMotorPinionTeeth * 15);
+  public static final double kDrivingMotorReduction = (45.0 * 20) / (kDrivingMotorPinionTeeth * 15);
   public static final double kDriveWheelFreeSpeedRps = (kDrivingMotorFreeSpeedRps * kWheelCircumferenceMeters)
       / kDrivingMotorReduction;
 
