@@ -55,6 +55,7 @@ public class RobotContainer {
 
   private static final XboxController driverController = new XboxController(Ports.DRIVER_CONTROLLER);
   private static final XboxController operatorController = new XboxController(Ports.OPERATOR_CONTROLLER);
+  private static final XboxController sysIdController = new XboxController(2);
 
   Drivetrain drivetrain = Drivetrain.getInstance();
   Camera cam = Camera.getInstance();
@@ -177,6 +178,11 @@ public class RobotContainer {
 
     // Operator - X - Spit out the Algae
     new JoystickButton(operatorController, Button.kX.value).whileTrue(new AlgaeSpit());
+
+    new JoystickButton(sysIdController, Button.kX.value).whileTrue(Drivetrain.getInstance().q1);
+    new JoystickButton(sysIdController, Button.kY.value).whileTrue(Drivetrain.getInstance().q2);
+    new JoystickButton(sysIdController, Button.kA.value).whileTrue(Drivetrain.getInstance().d1);
+    new JoystickButton(sysIdController, Button.kB.value).whileTrue(Drivetrain.getInstance().d2);
 
 
   }

@@ -9,6 +9,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.Drivetrain;
 
+import org.littletonrobotics.urcl.URCL;
+
+import edu.wpi.first.wpilibj.DataLogManager;
+
+
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
  * the TimedRobot documentation. If you change the name of this class or the package after creating
@@ -29,6 +34,14 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
   }
 
+  public void robotInit() {
+    // If publishing to NetworkTables and DataLog
+    DataLogManager.start();
+    URCL.start();
+  
+    // If logging only to DataLog
+    URCL.start(DataLogManager.getLog());
+  }
   /**
    * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
    * that you want ran during disabled, autonomous, teleoperated and test.

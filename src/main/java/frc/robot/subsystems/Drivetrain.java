@@ -28,8 +28,16 @@ import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+
 import static edu.wpi.first.units.Units.Kilograms;
+import static edu.wpi.first.units.Units.Volts;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import frc.robot.Constants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.MechConstants;
@@ -41,6 +49,7 @@ public class Drivetrain extends SubsystemBase {
 private static Drivetrain instance;
 
 private final SwerveModule[] modules;
+private final List<SwerveModule> modulesNew;
 private final SwerveDriveKinematics driveKinematics;
 private final SwerveDriveOdometry driveOdometry;
 
@@ -72,6 +81,12 @@ private final SwerveDrivePoseEstimator poseEstimator;
 
 private final Field2d field;
 
+public Command q1;
+public Command q2;
+public Command d1;
+public Command d2;
+
+
   /** Creates a new Drivetrain. */
   private Drivetrain() {
 
@@ -80,6 +95,12 @@ private final Field2d field;
     modules[1] = frontR;
     modules[2] = backL;
     modules[3] = backR;
+
+    modulesNew = new ArrayList<SwerveModule>();
+    modulesNew.add(frontL);
+    modulesNew.add(frontR);
+    modulesNew.add(backL);
+    modulesNew.add(backR);
 
     this.navX = new AHRS(NavXComType.kMXP_SPI);
     field = new Field2d();
@@ -179,6 +200,25 @@ private final Field2d field;
     // }
     
 
+
+   // Create the SysId routine
+var sysIdRoutine = new SysIdRoutine(
+  new SysIdRoutine.Config(),
+  new SysIdRoutine.Mechanism(
+    volts ->
+    modulesNew.forEach(
+        m -> m.updateInputs(Rotation2d.fromRadians(0), volts.in(Volts))),
+    // (voltage) -> this.runVolts(voltage.in(Volts)),
+    null, // No log consumer, since data is recorded by URCL
+    this
+  )
+);
+
+// The methods below return Command objects
+q1 = sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
+q2 = sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
+d1 = sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
+d2 = sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
       
 
   }

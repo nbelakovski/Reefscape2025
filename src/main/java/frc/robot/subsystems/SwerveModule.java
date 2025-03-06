@@ -44,7 +44,9 @@ public class SwerveModule {
     private SwerveModuleState desiredState; 
 
     public final ModuleConfig config;
-  
+
+//     private final VelocityVoltage velocityOut = new VelocityVoltage(0);
+//     private final PositionVoltage rotationsIn = new PositionVoltage(0);
   /** Creates a new SwerveModule. */
   public SwerveModule(ModuleConfig config) {
     this.config = config;
@@ -187,6 +189,26 @@ public class SwerveModule {
     this.desiredState = desiredState;
      
   }
+
+  
+  public void updateInputs(Rotation2d angle, double voltage) {
+    desiredState.angle = angle;
+    setDriveVoltage(voltage);
+    setTurnSetpoint(angle);
+  }
+
+public void setDriveVoltage(double voltage) {
+  driveMotor.setVoltage(voltage);
+}
+
+public void setTurnVoltage(double voltage) {
+  turnMotor.setVoltage(voltage);
+}
+
+public void setTurnSetpoint(Rotation2d angle) {
+  //turnMotor.setControl(rotationsIn.withPosition(angle.getRotations()).withSlot(0));
+  turnController.setReference(angle.getRadians(), ControlType.kPosition);
+}
 
    public void resetEncoders() {
     driveEncoder.setPosition(0);
