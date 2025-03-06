@@ -241,6 +241,7 @@ public static final class ModuleConstants {
 
     public static final double JAW_CORAL_STOP_ANGLE = 260;
     public static final double JAW_INTAKE_ANGLE = 158;
+    public static final double JAW_UP_ANGLE = 95;
 
   }
 

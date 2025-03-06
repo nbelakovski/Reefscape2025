@@ -83,7 +83,7 @@ tongueMotor.set(0);
 }
 
 public void pivot(double speed){
-speed = MathUtil.clamp(speed, -0.6, 0.6);
+speed = MathUtil.clamp(speed, -0.3, 0.3);
 jawMotor.set(speed);
 }
 public void stopPivot(){

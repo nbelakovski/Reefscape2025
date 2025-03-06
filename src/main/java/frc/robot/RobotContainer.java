@@ -120,8 +120,9 @@ public class RobotContainer {
     new TriggerButton(operatorController, 2).whileTrue(new CoralInSafe());        //LT    
     
     // Operator - RB - Retract Coral if hanging too far out
-    new TriggerButton(operatorController, 2).whileTrue(new CoralRetract());       //LT
-    // new JoystickButton(operatorController, Button.kLeftBumper.value).whileTrue(new CoralRetract()); //LB
+    //new TriggerButton(operatorController, 2).whileTrue(new CoralRetract());       //LT
+     new JoystickButton(operatorController, Button.kLeftBumper.value).whileTrue(new CoralRetract()); //LB
+     //new JoystickButton(operatorController, Button.kRightBumper.value).whileTrue(new SetJawAngle(MechConstants.JAW_UP_ANGLE)); //RB
 
 
     //---------- ELEVATOR ----------//
