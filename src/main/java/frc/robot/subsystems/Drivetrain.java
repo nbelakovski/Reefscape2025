@@ -155,7 +155,7 @@ private final Field2d field;
           new ModuleConfig(
             SwerveConstants.WHEEL_DIAMETER/2, 
             SwerveConstants.TOP_SPEED, 
-            1.0, 
+            1.2, 
             DCMotor.getNEO(1).withReduction(ModuleConstants.kDrivingMotorReduction), 
             ModuleConstants.kDrivingMotorCurrentLimit, 
             1), 
