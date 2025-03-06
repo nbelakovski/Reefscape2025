@@ -64,6 +64,7 @@ public class RobotContainer {
  private Command oneMeter = new PathPlannerAuto("one meter");
  private Command testing = new PathPlannerAuto("testing");
  private Command ERComboPath = new PathPlannerAuto("ERComboPath");
+ private Command auto2 = new PathPlannerAuto("auto2");
 
 
   AlgaeHandler algae = AlgaeHandler.getInstance();
@@ -188,6 +189,7 @@ public void autoChooserInit() {
     //autoChooser.addOption("one meter", oneMeter);
     autoChooser.addOption("testing", testing);
     autoChooser.addOption("ERComboPath", ERComboPath);
+    autoChooser.addOption("auto2", auto2);
 }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
