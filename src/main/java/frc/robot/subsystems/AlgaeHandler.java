@@ -43,7 +43,7 @@ private Timer timer;
 private DigitalInput touchSensor;
 private boolean haveAlgae = false;
 //private AbsoluteEncoder encoder;
-private AbsoluteEncoder encoder;
+private RelativeEncoder encoder;
 
 private AlgaeHandler() {
 tongueMotor = new SparkMax(Ports.ALGAE_TONGUE_MOTOR_PORT, MotorType.kBrushless);
@@ -52,9 +52,9 @@ jawMotor = new SparkMax(Ports.ALGAE_JAW_MOTOR_PORT, MotorType.kBrushless);
 jawConfig = new SparkMaxConfig();
 
 motorConfig.idleMode(IdleMode.kBrake);
-jawConfig.inverted(true);
+jawConfig.inverted(false);
 
-encoder = jawMotor.getAbsoluteEncoder();
+encoder = jawMotor.getEncoder();
 jawConfig.absoluteEncoder.positionConversionFactor(360);
 jawConfig.absoluteEncoder.zeroOffset(0.94);
 
@@ -80,6 +80,9 @@ tongueMotor.set(-MechConstants.ALGAE_INTAKE_SPEED);
 }
 public void stop(){
 tongueMotor.set(0);
+}
+public void zeroAngle() {
+    encoder.setPosition(0);
 }
 
 public void pivot(double speed){
