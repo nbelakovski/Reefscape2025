@@ -183,10 +183,17 @@ public class RobotContainer {
     // Operator - X - Spit out the Algae
     new JoystickButton(operatorController, Button.kX.value).whileTrue(new AlgaeSpit());
 
-    new JoystickButton(sysIdController, Button.kX.value).whileTrue(Drivetrain.getInstance().q1);
-    new JoystickButton(sysIdController, Button.kY.value).whileTrue(Drivetrain.getInstance().q2);
-    new JoystickButton(sysIdController, Button.kA.value).whileTrue(Drivetrain.getInstance().d1);
-    new JoystickButton(sysIdController, Button.kB.value).whileTrue(Drivetrain.getInstance().d2);
+    new JoystickButton(sysIdController, Button.kX.value).whileTrue(Drivetrain.getInstance().transQ1);
+    new JoystickButton(sysIdController, Button.kY.value).whileTrue(Drivetrain.getInstance().transQ2);
+    new JoystickButton(sysIdController, Button.kA.value).whileTrue(Drivetrain.getInstance().transD1);
+    new JoystickButton(sysIdController, Button.kB.value).whileTrue(Drivetrain.getInstance().transD2);
+
+    new DPad(sysIdController,180).whileTrue(Drivetrain.getInstance().rotQ1);
+    new DPad(sysIdController,270).whileTrue(Drivetrain.getInstance().rotQ2);
+    new DPad(sysIdController,90).whileTrue(Drivetrain.getInstance().rotD1);
+    new DPad(sysIdController,0).whileTrue(Drivetrain.getInstance().rotD2);
+
+    
 
 
   }

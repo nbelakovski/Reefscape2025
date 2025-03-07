@@ -81,10 +81,15 @@ private final SwerveDrivePoseEstimator poseEstimator;
 
 private final Field2d field;
 
-public Command q1;
-public Command q2;
-public Command d1;
-public Command d2;
+public Command transQ1;
+public Command transQ2;
+public Command transD1;
+public Command transD2;
+
+public Command rotQ1;
+public Command rotQ2;
+public Command rotD1;
+public Command rotD2;
 
 
   /** Creates a new Drivetrain. */
@@ -202,7 +207,7 @@ public Command d2;
 
 
    // Create the SysId routine
-var sysIdRoutine = new SysIdRoutine(
+var translationSysIdRoutine = new SysIdRoutine(
   new SysIdRoutine.Config(),
   new SysIdRoutine.Mechanism(
     volts ->
@@ -214,12 +219,36 @@ var sysIdRoutine = new SysIdRoutine(
   )
 );
 
+var rotationalSysIdRoutine = new SysIdRoutine(
+  new SysIdRoutine.Config(),
+  new SysIdRoutine.Mechanism(
+    volts -> {
+      this.frontL.updateInputs(
+        Rotation2d.fromRadians((3 * Math.PI / 4) + SwerveConstants.FL_ANGULAR_OFFSET), volts.in(Volts));
+    this.frontR.updateInputs(
+        Rotation2d.fromRadians((Math.PI / 4) + SwerveConstants.FR_ANGULAR_OFFSET), volts.in(Volts));
+    this.backL.updateInputs(
+        Rotation2d.fromRadians((-3 * Math.PI / 4) + SwerveConstants.BL_ANGULAR_OFFSET), volts.in(Volts));
+    this.backR.updateInputs(
+        Rotation2d.fromRadians((-Math.PI / 4) + SwerveConstants.BR_ANGULAR_OFFSET), volts.in(Volts));
+    },
+    
+    // (voltage) -> this.runVolts(voltage.in(Volts)),
+    null, // No log consumer, since data is recorded by URCL
+    this
+  )
+);
 // The methods below return Command objects
-q1 = sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
-q2 = sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
-d1 = sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
-d2 = sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
-      
+transQ1 = translationSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
+transQ2 = translationSysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
+transD1 = translationSysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
+transD2 = translationSysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
+
+rotQ1 = rotationalSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
+rotQ2 = rotationalSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
+rotD1 = rotationalSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
+rotD2 = rotationalSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
+
 
   }
 

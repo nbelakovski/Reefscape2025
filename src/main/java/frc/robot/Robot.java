@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.AlgaeHandler;
@@ -12,6 +13,9 @@ import frc.robot.subsystems.Drivetrain;
 
 import org.littletonrobotics.urcl.URCL;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.DataLogManager;
 
 
@@ -30,6 +34,11 @@ public class Robot extends TimedRobot {
    * initialization code.
    */
   public Robot() {
+    UsbCamera cam = CameraServer.startAutomaticCapture();
+   
+    
+    // cam.setResolution(640, 480);
+    // cam.setFPS(15);
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();

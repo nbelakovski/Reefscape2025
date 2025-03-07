@@ -73,6 +73,10 @@ public final class Constants {
     public static final double FR_ANGULAR_OFFSET = 0;
     public static final double BR_ANGULAR_OFFSET = Math.PI / 2; //Math.PI / 2;
     public static final double BL_ANGULAR_OFFSET = Math.PI; //Math.PI;
+    // public static final double FL_ANGULAR_OFFSET = 0; //Math.PI / 2; //-Math.PI / 2;
+    // public static final double FR_ANGULAR_OFFSET = 0;
+    // public static final double BR_ANGULAR_OFFSET = 0; //Math.PI / 2;
+    // public static final double BL_ANGULAR_OFFSET = 0; //Math.PI;
 
 
     //Constructor to hold all of the data to configure a SwerveModule
