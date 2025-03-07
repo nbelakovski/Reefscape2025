@@ -18,7 +18,7 @@ private PIDController controller;
 public SetJawAngle(double desiredAngle) {
 // Use addRequirements() here to declare subsystem dependencies.
 handler = AlgaeHandler.getInstance();
-controller = new PIDController(0.04,0,0);
+controller = new PIDController(0.01,0,0);
 
 controller.setSetpoint(desiredAngle);
 controller.setTolerance(1);

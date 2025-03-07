@@ -58,7 +58,7 @@ private final SwerveModule frontR = new SwerveModule(SwerveConstants.SWERVE_FR);
 private final SwerveModule backL = new SwerveModule(SwerveConstants.SWERVE_BL);
 private final SwerveModule backR = new SwerveModule(SwerveConstants.SWERVE_BR);
 
-private boolean fieldCentric;
+public boolean fieldCentric;
 
 // The gyro sensor
 private AHRS navX;
@@ -579,6 +579,8 @@ rotD2 = rotationalSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
 
     field.setRobotPose(getPose());
     SmartDashboard.putData("Odometry Field", field);
+
+    SmartDashboard.putBoolean("fieldCentric", fieldCentric);
   }
 
 
