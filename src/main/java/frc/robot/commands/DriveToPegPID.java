@@ -36,7 +36,7 @@ public class DriveToPegPID extends Command {
 
   
   /** Creates a new DriveToPegPID. */
-  public DriveToPegPID(int tagID, String peg) {
+  public DriveToPegPID(int tagID) {
     this.tagID = tagID;
 
     drivetrain = Drivetrain.getInstance(); 
@@ -54,13 +54,13 @@ public class DriveToPegPID extends Command {
     //2. Create a T3d for the bumpers
 
     //3. Create a T3d for the right-left offset
-    if (peg.equals("LEFT")){
-      offset = new Translation3d(Math.cos(tagAngle) * aprilPegOffset, Math.sin(tagAngle) * aprilPegOffset, 0);
-    }  else  if (peg.equals("RIGHT")){
-      offset = new Translation3d(-Math.cos(tagAngle) * aprilPegOffset, -Math.sin(tagAngle) * aprilPegOffset, 0);
-    } else if (peg.equals("STRAIGHT")){
-      offset = new Translation3d();
-    }
+    // if (peg.equals("LEFT")){
+    //   offset = new Translation3d(Math.cos(tagAngle) * aprilPegOffset, Math.sin(tagAngle) * aprilPegOffset, 0);
+    // }  else  if (peg.equals("RIGHT")){
+    //   offset = new Translation3d(-Math.cos(tagAngle) * aprilPegOffset, -Math.sin(tagAngle) * aprilPegOffset, 0);
+    // } else if (peg.equals("STRAIGHT")){
+    //   offset = new Translation3d();
+    // }
 
 
     //4. Add the T3Ds all together
@@ -69,8 +69,9 @@ public class DriveToPegPID extends Command {
     Pose3d offsetPose = new Pose3d(offset, robotHeading);
     
 
-    setpointX = offsetPose.getX();
-    setpointY = offsetPose.getY();
+    // setpointX = offsetPose.getX();
+    // setpointY = offsetPose.getY();
+    setpointX = cam.getXDesired(cam.getDesiredTarget(tagID));
 
     controllerX = new PIDController(0.9, 0.0, 0.0);
     startDistanceX = drivetrain.getPose().getX();

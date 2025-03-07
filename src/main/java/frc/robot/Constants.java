@@ -55,7 +55,7 @@ public final class Constants {
     // public static final double BL_SENSOR_OFFSET = 0.3813912; //from REV Hardware Client
 
     ///(New Robot)(Put new numbers)
-    public static final double FL_SENSOR_OFFSET = 0.2050785; //from REV Hardware Client
+    public static final double FL_SENSOR_OFFSET = 0.6419091; //from REV Hardware Client
     public static final double FR_SENSOR_OFFSET = 0.5335500; //from REV Hardware Client
     public static final double BR_SENSOR_OFFSET = 0.0243658; //from REV Hardware Client
     public static final double BL_SENSOR_OFFSET = 0.5267535; //from REV Hardware Client
@@ -246,6 +246,7 @@ public static final class ModuleConstants {
     public static final double JAW_CORAL_STOP_ANGLE = 260;
     public static final double JAW_INTAKE_ANGLE = 160;
     // public static final double JAW_UP_ANGLE = 25;
+    public static final double JAW_AUTO_ANGLE = 80;
 
   }
 

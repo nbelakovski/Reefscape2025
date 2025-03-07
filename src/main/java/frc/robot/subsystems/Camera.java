@@ -130,6 +130,7 @@ public class Camera extends SubsystemBase {
       SmartDashboard.putNumber("pose X", visionEst.get().estimatedPose.getX());
       SmartDashboard.putNumber("pose Y", visionEst.get().estimatedPose.getY());
       SmartDashboard.putNumber("rot", visionEst.get().estimatedPose.getRotation().getAngle());
+      SmartDashboard.putNumber("tag x", getXDesired(getDesiredTarget(closestID)));
     }
     // else {
     //   SmartDashboard.putNumber("pose X", 0);

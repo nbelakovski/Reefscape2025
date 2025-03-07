@@ -6,11 +6,17 @@ package frc.robot.commands.combos;
 
 import java.util.function.Supplier;
 
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.MechConstants;
+import frc.robot.commands.DriveToPeg;
+import frc.robot.commands.basic.CoralRetract;
 import frc.robot.commands.basic.CoralScore;
 import frc.robot.commands.closed.ElevatorSetPosition;
 import frc.robot.commands.closed.SetJawAngle;
@@ -29,28 +35,31 @@ public class DriveDtoL4 extends SequentialCommandGroup {
   public DriveDtoL4() {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
+    drivetrain = Drivetrain.getInstance();
     addCommands(
-      
-        new ParallelCommandGroup(
-          new SetJawAngle(MechConstants.JAW_UP_ANGLE),
+        new ParallelRaceGroup(
+        new CoralScore(),
+        new WaitCommand(0.1)  
+        ),
+        new ParallelRaceGroup(
+          new SetJawAngle(MechConstants.JAW_AUTO_ANGLE),
           new WaitCommand(3)
         ),
-        new ParallelCommandGroup(
-          //new SwerveDrive(1.0, 0.0, 0.0),
+        new ParallelRaceGroup(
+          //new DriveToPeg(21), //b=10,r=21
+          new PathPlannerAuto("Auto2"),
           new WaitCommand(2)
         ),
-        new ParallelCommandGroup(
+        new ParallelRaceGroup(
           new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L2),
           new WaitCommand(3)
         ),
-        new ParallelCommandGroup(
+        new ParallelDeadlineGroup(
+          new WaitCommand(3),
           new CoralScore(),
-          new WaitCommand(1)
+          new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L2)
+         
         )
-       
-      
-
-      
       
     );
   }
