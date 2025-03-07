@@ -16,6 +16,7 @@ import frc.robot.commands.complex.*;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
+import frc.robot.commands.combos.DriveDtoL4;
 import frc.robot.commands.combos.ElevatorIntakeCombo;
 import frc.robot.commands.combos.ElevatorJawCombo;
 import frc.robot.commands.combos.ElevatorScoreCombo;
@@ -66,6 +67,8 @@ public class RobotContainer {
  private Command testing = new PathPlannerAuto("testing");
  private Command ERComboPath = new PathPlannerAuto("ERComboPath");
  private Command auto2 = new PathPlannerAuto("auto2");
+ private Command driveDtoL4 = new DriveDtoL4();
+
 
 
   AlgaeHandler algae = AlgaeHandler.getInstance();
@@ -207,6 +210,7 @@ public void autoChooserInit() {
     autoChooser.addOption("testing", testing);
     autoChooser.addOption("ERComboPath", ERComboPath);
     autoChooser.addOption("auto2", auto2);
+    autoChooser.addOption("DriveDtol4", driveDtoL4);
 }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
