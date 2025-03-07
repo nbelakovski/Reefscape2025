@@ -115,7 +115,7 @@ public class Elevator extends SubsystemBase {
 
   public void move(double speed){
 
-    speed = MathUtil.clamp(speed, -0.6, 0.6);
+    speed = MathUtil.clamp(speed, -0.8, 0.8);
 
     if(speed >0){
       elevate(speed);

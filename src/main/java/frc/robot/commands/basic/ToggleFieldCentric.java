@@ -5,22 +5,23 @@
 package frc.robot.commands.basic;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.subsystems.AlgaeHandler;
+import frc.robot.subsystems.Drivetrain;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class ZeroAlgae extends InstantCommand {
-  private AlgaeHandler algaeHandler;
-  public ZeroAlgae() {
-    algaeHandler = AlgaeHandler.getInstance();
+public class ToggleFieldCentric extends InstantCommand {
+
+  private Drivetrain drivetrain;
+
+  public ToggleFieldCentric() {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(algaeHandler);
+    drivetrain = Drivetrain.getInstance();
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    //algaeHandler.zeroAngle();
+    drivetrain.setFieldCentric(!drivetrain.fieldCentric);
   }
 }

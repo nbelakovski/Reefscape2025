@@ -107,6 +107,8 @@ public class RobotContainer {
       () -> driverController.getAButton()
     ));
 
+    new JoystickButton(driverController,Button.kX.value).toggleOnTrue(new ToggleFieldCentric());
+
     // new JoystickButton(driverController,Button.kB.value).whileTrue(new DriveToPegPID(cam.closestID, "RIGHT"));
     // new JoystickButton(driverController,Button.kX.value).whileTrue(new DriveToPegPID(cam.closestID, "LEFT"));
     // new JoystickButton(driverController,Button.kY.value).whileTrue(new DriveToPegPID(cam.closestID, "STRAIGHT"));
@@ -156,7 +158,7 @@ public class RobotContainer {
     new TriggerButton(driverController, 2).whileTrue(new ZeroAlgae());
 
     AlgaeHandler.getInstance().setDefaultCommand(new SafeAlgaeJoystick(
-      () -> -operatorController.getRawAxis(5)
+      () -> operatorController.getRawAxis(5)
     ));
 
     // Operator - A - Rotate jaw to Intake Angle
@@ -165,7 +167,7 @@ public class RobotContainer {
     // Operator - B - Rotate Jaw to Starting/Coral Stop Angle
     new JoystickButton(operatorController, Button.kB.value).whileTrue(new SetJawAngle(MechConstants.JAW_CORAL_STOP_ANGLE).repeatedly());
 
-    new JoystickButton(operatorController, Button.kRightBumper.value).whileTrue(new SetJawAngle(MechConstants.JAW_UP_ANGLE)); //RB
+    //new JoystickButton(operatorController, Button.kRightBumper.value).whileTrue(new SetJawAngle(MechConstants.JAW_UP_ANGLE)); //RB
 
     // Driver - B - Snap Elevator & Jaw to prep for Algae on L2
     new JoystickButton(driverController, Button.kB.value).whileTrue(new ElevatorJawCombo(ElevatorConstants.ELEVATOR_ALGAE_L2));
