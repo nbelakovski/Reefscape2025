@@ -213,6 +213,7 @@ public void autoChooserInit() {
     autoChooser.addOption("ERComboPath", ERComboPath);
     autoChooser.addOption("auto2", auto2);
     autoChooser.addOption("DriveDtol4", driveDtoL4);
+    autoChooser.addOption("drivetopeg", new DriveToPeg(10));
 }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

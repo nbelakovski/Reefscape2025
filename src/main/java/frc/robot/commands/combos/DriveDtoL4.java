@@ -45,19 +45,29 @@ public class DriveDtoL4 extends SequentialCommandGroup {
           new SetJawAngle(MechConstants.JAW_AUTO_ANGLE),
           new WaitCommand(3)
         ),
-        new ParallelRaceGroup(
-          //new DriveToPeg(21), //b=10,r=21
-          new PathPlannerAuto("Auto2"),
-          new WaitCommand(2)
+        new ParallelDeadlineGroup(
+          new WaitCommand(2),
+          new DriveToPeg(10) //b=10,r=21
+          //new PathPlannerAuto("Auto2"),
+          //new SetJawAngle(MechConstants.JAW_AUTO_ANGLE)
         ),
         new ParallelRaceGroup(
-          new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L2),
+          //new PathPlannerAuto("Auto2"),
+          new SwerveDrive(
+            () -> 0.3,
+            () -> 0.1,
+            () -> 0.0,
+            () -> false),
+          new WaitCommand(0.5)
+        ),
+        new ParallelRaceGroup(
+          new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L4),
           new WaitCommand(3)
         ),
         new ParallelDeadlineGroup(
           new WaitCommand(3),
           new CoralScore(),
-          new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L2)
+          new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L4)
          
         )
       

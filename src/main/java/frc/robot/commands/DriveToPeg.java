@@ -29,7 +29,7 @@ public class DriveToPeg extends Command {
     this.ySpeed = -0.3;
     this.rotSpeed = 0.7;
 
-    tagX = cam.getTagPose(10).getX() -0.7;
+    tagX = cam.getTagPose(10).getX();
     tagY = cam.getTagPose(10).getY();
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drivetrain, cam);
