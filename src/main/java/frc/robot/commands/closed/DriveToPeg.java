@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.closed;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Camera;
@@ -19,18 +19,23 @@ public class DriveToPeg extends Command {
   private double rotSpeed;
   private double tagX;
   private double tagY;
+  private double yTolerance;
+  private double yOffset;
 
   /** Creates a new DriveToPeg. */
   public DriveToPeg(int tagID) {
+    
     drivetrain = Drivetrain.getInstance();
     cam = Camera.getInstance();
     this.tagID = tagID;
     this.xSpeed = 0.4;
-    this.ySpeed = -0.3;
+    this.ySpeed = 0.3;
     this.rotSpeed = 0.7;
+    this.yTolerance = 2 * 0.0254 ; //to score 4" coral (was 0.2)
+    this.yOffset = 0.0; //was 0.7 at TH
 
-    tagX = cam.getTagPose(10).getX();
-    tagY = cam.getTagPose(10).getY();
+    tagX = cam.getTagPose(tagID).getX();
+    tagY = cam.getTagPose(tagID).getY();
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drivetrain, cam);
   }
@@ -44,11 +49,25 @@ public class DriveToPeg extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(drivetrain.getPose().getY() > tagY && drivetrain.getPose().getX() < tagX){
-      drivetrain.setDrive(xSpeed, ySpeed, 0.0);
-    } else if ((drivetrain.getPose().getY() <= tagY + 0.2 || drivetrain.getPose().getY() >= tagY - 0.2) && drivetrain.getPose().getX() < tagX) {
+
+    // if target is centered and not reached yet
+    if ((drivetrain.getPose().getY() < tagY + yTolerance || drivetrain.getPose().getY() > tagY - yTolerance) 
+                && drivetrain.getPose().getX() < tagX) {
       drivetrain.setDrive(xSpeed, 0.0, 0.0);
-    } else {
+    } 
+
+    // if target is to the left and not reached yet
+    else if(drivetrain.getPose().getY() > tagY && drivetrain.getPose().getX() < tagX){
+      drivetrain.setDrive(xSpeed, -ySpeed, 0.0);
+    }
+    
+    // if target is to the RIGHT and not reached yet
+    else if(drivetrain.getPose().getY() < tagY && drivetrain.getPose().getX() < tagX){
+      drivetrain.setDrive(xSpeed, ySpeed, 0.0);
+    }
+    
+    // othewise stop!
+    else {
       drivetrain.stopDrive();
     }
   }
@@ -62,6 +81,9 @@ public class DriveToPeg extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return drivetrain.getPose().getY() <= cam.getTagPose(10).getY() && drivetrain.getPose().getX() >= cam.getTagPose(10).getX() -0.7 ;
+    return 
+      drivetrain.getPose().getY() < tagY 
+      && drivetrain.getPose().getX() > tagX - yOffset 
+      ;
   }
 }

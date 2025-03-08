@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.closed;
 
 import org.opencv.core.Mat;
 
@@ -37,12 +37,13 @@ public class DriveToPegPID extends Command {
   
   /** Creates a new DriveToPegPID. */
   public DriveToPegPID(int tagID) {
+
     this.tagID = tagID;
 
     drivetrain = Drivetrain.getInstance(); 
     cam = Camera.getInstance();
 
-    Pose3d tagPose = cam.getTagPose(19);
+    Pose3d tagPose = cam.getTagPose(tagID);
 
     //1. get the T3d from tagpose
     Translation3d tagTranslation = tagPose.getTranslation();
@@ -92,6 +93,8 @@ public class DriveToPegPID extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    controllerX.reset();
+    controllerY.reset();
     drivetrain.stopDrive(); 
   }
 

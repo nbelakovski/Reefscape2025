@@ -16,12 +16,11 @@ import frc.robot.commands.complex.*;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
+import frc.robot.commands.combos.AutoStraightPathToCoralScore;
 import frc.robot.commands.combos.DriveDtoL4;
 import frc.robot.commands.combos.ElevatorIntakeCombo;
 import frc.robot.commands.combos.ElevatorJawCombo;
 import frc.robot.commands.combos.ElevatorScoreCombo;
-import frc.robot.commands.complex.CoralInSafe;
-import frc.robot.commands.complex.SwerveDrive;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.LEDStrip;
 import edu.wpi.first.wpilibj.XboxController;
@@ -33,8 +32,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.DriveToPeg;
-import frc.robot.commands.DriveToPegPID;
 import frc.robot.subsystems.AlgaeHandler;
 import frc.robot.subsystems.Camera;
 import frc.robot.subsystems.Drivetrain;
@@ -212,8 +209,19 @@ public void autoChooserInit() {
     autoChooser.addOption("testing", testing);
     autoChooser.addOption("ERComboPath", ERComboPath);
     autoChooser.addOption("auto2", auto2);
-    autoChooser.addOption("DriveDtol4", driveDtoL4);
+    autoChooser.addOption("DrivetoDL4-old", driveDtoL4);
     autoChooser.addOption("drivetopeg", new DriveToPeg(10));
+    autoChooser.addOption("straightToDL4-RED", new AutoStraightPathToCoralScore(21,4) );
+
+    // Table for AprilTag IDs
+    // 9	Red Reef C --> (Blue 22)
+    // 10	Red Reef D --> (Blue 21)
+    // 11	Red Reef E --> (Blue 20)
+    // 22	Blue Reef C --> (Red 9)
+    // 21	Blue Reef D --> (Red 10)
+    // 20	Blue Reef E --> (Red 11)
+
+
 }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

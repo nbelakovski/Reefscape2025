@@ -8,6 +8,7 @@ import java.util.function.Supplier;
 
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
@@ -26,14 +27,37 @@ import frc.robot.subsystems.Drivetrain;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class DriveDtoL4 extends SequentialCommandGroup {
+public class AutoStraightPathToCoralScore extends SequentialCommandGroup {
 
   public Drivetrain drivetrain;
   
-  public DriveDtoL4() {
+  public AutoStraightPathToCoralScore(int aprilTagId, double level) {
     
     drivetrain = Drivetrain.getInstance();
 
+    // Set the desired elevator height
+    double elevatorLevelHeight = ElevatorConstants.ELEVATOR_L2;
+    if(level == 3){
+      elevatorLevelHeight = ElevatorConstants.ELEVATOR_L3;
+    } else if(level == 4){
+      elevatorLevelHeight = ElevatorConstants.ELEVATOR_L4;
+    }
+
+    // Table for AprilTag IDs
+    // 6	Red Reef F --> (Blue 19)
+    // 7	Red Reef A --> (Blue 18)
+    // 8	Red Reef B --> (Blue 17)
+    // 9	Red Reef C --> (Blue 22)
+    // 10	Red Reef D --> (Blue 21)
+    // 11	Red Reef E --> (Blue 20)
+    // 17	Blue Reef B --> (Red 8)
+    // 18	Blue Reef A --> (Red 7)
+    // 19	Blue Reef F --> (Red 6)
+    // 20	Blue Reef E --> (Red 11)
+    // 21	Blue Reef D --> (Red 10)
+    // 22	Blue Reef C --> (Red 9)
+
+    
     addCommands(
     
       // Move coral forward a tiny bit to avoid elevator jamming
@@ -51,7 +75,7 @@ public class DriveDtoL4 extends SequentialCommandGroup {
       // Use AprilCam to drive to a specific ID
       new ParallelDeadlineGroup(
         new WaitCommand(2),
-        new DriveToPeg(10) //b=10,r=21
+        new DriveToPeg(aprilTagId) //Blue Center = 10, Red Center = 21
         //new PathPlannerAuto("Auto2"),
         //new SetJawAngle(MechConstants.JAW_AUTO_ANGLE)
       ),
@@ -61,26 +85,26 @@ public class DriveDtoL4 extends SequentialCommandGroup {
         //new PathPlannerAuto("Auto2"),
         new SwerveDrive(
           () -> 0.3,  //speed to drive forward
-          () -> 0.1,  //adjust the y-offset to align to peg
+          () -> 0.0,
           () -> 0.0,
           () -> false),
         new WaitCommand(0.5)
       ),
 
-      // Move elevator up to L4 position
+      // Move elevator up to desired elevator position
       new ParallelRaceGroup(
-        new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L4),
+        new ElevatorSetPosition(elevatorLevelHeight),
         new WaitCommand(3)
       ),
 
-      //For 3 seconds, spin the coral and maintain the L4 position
+      //For 2 seconds, spin the coral and maintain the elevator's position
       new ParallelDeadlineGroup(
-        new WaitCommand(3),
+        new WaitCommand(2),
         new CoralScore(),
-        new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L4)
-        
+        new ElevatorSetPosition(elevatorLevelHeight)
       )
       
+
     );
   }
 }
