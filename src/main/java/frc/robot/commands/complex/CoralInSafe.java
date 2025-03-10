@@ -6,6 +6,7 @@
 package frc.robot.commands.complex;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.MechConstants;
 import frc.robot.subsystems.CoralIntake;
 import frc.robot.subsystems.CoralScorer;
 
@@ -43,6 +44,8 @@ public class CoralInSafe extends Command {
       coralScorer.stop();
     }
     else{
+
+      // coralScorer.changeSpeed(MechConstants.INTAKE_SPEED);
       coralIntake.eat();
       coralScorer.spitSlow();
     }

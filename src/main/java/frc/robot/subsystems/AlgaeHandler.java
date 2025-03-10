@@ -43,7 +43,8 @@ private Timer timer;
 private DigitalInput touchSensor;
 private boolean haveAlgae = false;
 //private AbsoluteEncoder encoder;
-private AbsoluteEncoder encoder;
+//private AbsoluteEncoder encoder;
+private RelativeEncoder encoder;
 
 private AlgaeHandler() {
 tongueMotor = new SparkMax(Ports.ALGAE_TONGUE_MOTOR_PORT, MotorType.kBrushless);
@@ -54,9 +55,10 @@ jawConfig = new SparkMaxConfig();
 motorConfig.idleMode(IdleMode.kBrake);
 jawConfig.inverted(true);
 
-encoder = jawMotor.getAbsoluteEncoder();
-jawConfig.absoluteEncoder.positionConversionFactor(360);
-jawConfig.absoluteEncoder.zeroOffset(0.94);
+//encoder = jawMotor.getAbsoluteEncoder();
+encoder = jawMotor.getEncoder();
+// jawConfig.absoluteEncoder.positionConversionFactor(360);
+// jawConfig.absoluteEncoder.zeroOffset(0.94);
 
 // encoder.setPositionConversionFactor(360); tried making it to 360 but method wont work
 
@@ -81,13 +83,14 @@ tongueMotor.set(-MechConstants.ALGAE_INTAKE_SPEED);
 public void stop(){
 tongueMotor.set(0);
 }
-// public void zeroAngle() {
-//     encoder.setPosition(0);
-// }
+public void zeroAngle() {
+    encoder.setPosition(0);
+}
 
 public void pivot(double speed){
 speed = MathUtil.clamp(speed, -0.5, 0.5);
 jawMotor.set(speed);
+
 }
 public void stopPivot(){
 jawMotor.set(0);
@@ -95,7 +98,7 @@ jawMotor.set(0);
 
 
 public void changeSpeed(double newSpeed){
-MechConstants.INTAKE_SPEED = newSpeed;
+MechConstants.ALGAE_INTAKE_SPEED = newSpeed;
 }
 
 public boolean checkAlgae() {

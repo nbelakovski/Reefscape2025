@@ -21,6 +21,7 @@ import frc.robot.commands.basic.CoralScore;
 import frc.robot.commands.closed.DriveToPeg;
 import frc.robot.commands.closed.ElevatorSetPosition;
 import frc.robot.commands.closed.SetJawAngle;
+import frc.robot.commands.complex.SafeAlgaeJoystick;
 import frc.robot.commands.complex.SwerveDrive;
 import frc.robot.subsystems.Drivetrain;
 
@@ -59,50 +60,56 @@ public class AutoStraightPathToCoralScore extends SequentialCommandGroup {
 
     
     addCommands(
-    
+      new WaitCommand(2),
       // Move coral forward a tiny bit to avoid elevator jamming
-      new ParallelRaceGroup(
-        new CoralScore(),
-        new WaitCommand(0.1)  
-      ),
+      // new ParallelRaceGroup(
+      //   //new SafeAlgaeJoystick(() -> 0.5),
+      //   new CoralScore(),
+      //   new WaitCommand(0.1)  
+      // ),
 
       // Move jaw up out of the way
-      new ParallelRaceGroup(
-        new SetJawAngle(MechConstants.JAW_AUTO_ANGLE),
-        new WaitCommand(3)
-      ),
+      // new ParallelRaceGroup(
+      //   new SetJawAngle(MechConstants.JAW_AUTO_ANGLE),
+      //   new WaitCommand(3)
+      // ),
 
       // Use AprilCam to drive to a specific ID
       new ParallelDeadlineGroup(
-        new WaitCommand(2),
-        new DriveToPeg(aprilTagId) //Blue Center = 10, Red Center = 21
-        //new PathPlannerAuto("Auto2"),
+        // new WaitCommand(2),
+        // new SwerveDrive(
+        //   () -> -0.3,  //speed to drive forward
+        //   () -> 0.0,
+        //   () -> 0.0,   
+        //   () -> false)
+        // new DriveToPeg(aprilTagId) //Blue Center = 10, Red Center = 21
+        new PathPlannerAuto("one meter")
         //new SetJawAngle(MechConstants.JAW_AUTO_ANGLE)
       ),
 
       // Drive forward a little bit more (6") to hit bumper on Reef
-      new ParallelRaceGroup(
-        //new PathPlannerAuto("Auto2"),
-        new SwerveDrive(
-          () -> 0.3,  //speed to drive forward
-          () -> 0.0,
-          () -> 0.0,
-          () -> false),
-        new WaitCommand(0.5)
-      ),
+      // new ParallelRaceGroup(
+      //   //new PathPlannerAuto("Auto2"),
+      //   new SwerveDrive(
+      //     () -> 0.3,  //speed to drive forward
+      //     () -> 0.0,
+      //     () -> 0.0,
+      //     () -> false),
+      //   new WaitCommand(0.5)
+      // ),
 
       // Move elevator up to desired elevator position
       new ParallelRaceGroup(
-        new ElevatorSetPosition(elevatorLevelHeight),
+        // new ElevatorSetPosition(elevatorLevelHeight),
         new WaitCommand(3)
-      ),
+      )
 
       //For 2 seconds, spin the coral and maintain the elevator's position
-      new ParallelDeadlineGroup(
-        new WaitCommand(2),
-        new CoralScore(),
-        new ElevatorSetPosition(elevatorLevelHeight)
-      )
+      // new ParallelDeadlineGroup(
+      //   new WaitCommand(2),
+      //   new CoralScore(),
+      //   new ElevatorSetPosition(elevatorLevelHeight)
+      // )
       
 
     );

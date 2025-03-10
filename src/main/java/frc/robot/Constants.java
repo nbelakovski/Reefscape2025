@@ -193,7 +193,7 @@ public static final class ModuleConstants {
     public static final double ELEVATOR_L1 = 3;
 
     public static final double ELEVATOR_L2 = 11.7;
-    public static final double ELEVATOR_L3 = 26;
+    public static final double ELEVATOR_L3 = 24;
     public static final double ELEVATOR_L4 = 46;
     public static final double INTAKE_HEIGHT = 2.5;
 
@@ -223,14 +223,12 @@ public static final class ModuleConstants {
 
     //Mech Motor Speeds for Buttons
 
-    public static double INTAKE_SPEED = 0.3;
+    public static double CORAL_INTAKE_SPEED = 0.27;
+    public static double CORAL_RETRACT_SPEED = 0.3;
     public static double ALGAE_INTAKE_SPEED = 1.0;
-    public static double SCORE_SPEED = 0.5;
-    public static double TELE_INTAKE_SPEED = 1.0;
-    public static double AUTO_INTAKE_SPEED = 0.5;
-    //public static final double LAUNCHER_SPEED = 1.0;
-    //public static final double ARM_PIVOT_SPEED = 1.0;
-   // public static final double CLIMBER_SPEED = 0.3;
+    public static double CORAL_SCORE_SPEED = 0.5;
+    // public static double TELE_INTAKE_SPEED = 1.0;
+    // public static double AUTO_INTAKE_SPEED = 0.5;
 
     //Arm Angles    
     //public static final double START_ANGLE = 94;

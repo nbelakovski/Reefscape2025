@@ -68,7 +68,7 @@ public class RobotContainer {
 
 
 
-  AlgaeHandler algae = AlgaeHandler.getInstance();
+  //AlgaeHandler algae = AlgaeHandler.getInstance();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -155,35 +155,38 @@ public class RobotContainer {
     //---------- ALGAE JAW ----------//
     
     // Operator - RY joystick - manually move Jaw up & down
-    new TriggerButton(driverController, 2).whileTrue(new ZeroAlgae());
+    // new TriggerButton(driverController, 2).whileTrue(new ZeroAlgae());
 
-    AlgaeHandler.getInstance().setDefaultCommand(new SafeAlgaeJoystick(
-      () -> operatorController.getRawAxis(5)
-    ));
+    // AlgaeHandler.getInstance().setDefaultCommand(new SafeAlgaeJoystick(
+    //   () -> operatorController.getRawAxis(5)
+    // ));
 
     // Operator - A - Rotate jaw to Intake Angle
-    new JoystickButton(operatorController, Button.kA.value).whileTrue(new SetJawAngle(MechConstants.JAW_INTAKE_ANGLE).repeatedly());
+    //new JoystickButton(operatorController, Button.kA.value).whileTrue(new SetJawAngle(MechConstants.JAW_INTAKE_ANGLE).repeatedly());
 
     // Operator - B - Rotate Jaw to Starting/Coral Stop Angle
-    new JoystickButton(operatorController, Button.kB.value).whileTrue(new SetJawAngle(MechConstants.JAW_CORAL_STOP_ANGLE).repeatedly());
+    //new JoystickButton(operatorController, Button.kB.value).whileTrue(new SetJawAngle(MechConstants.JAW_CORAL_STOP_ANGLE).repeatedly());
 
     //new JoystickButton(operatorController, Button.kRightBumper.value).whileTrue(new SetJawAngle(MechConstants.JAW_UP_ANGLE)); //RB
 
     // Driver - B - Snap Elevator & Jaw to prep for Algae on L2
-    new JoystickButton(driverController, Button.kB.value).whileTrue(new ElevatorJawCombo(ElevatorConstants.ELEVATOR_ALGAE_L2));
+    //new JoystickButton(driverController, Button.kB.value).whileTrue(new ElevatorJawCombo(ElevatorConstants.ELEVATOR_ALGAE_L2));
 
     // Driver - DPAD - Set Jaw angles
-    new DPad(driverController, 0).whileTrue(new SetJawAngle(MechConstants.JAW_INTAKE_ANGLE));
-    new DPad(driverController, 180).whileTrue(new SetJawAngle(MechConstants.JAW_CORAL_STOP_ANGLE));
+    //new DPad(driverController, 0).whileTrue(new SetJawAngle(MechConstants.JAW_INTAKE_ANGLE));
+    //new DPad(driverController, 180).whileTrue(new SetJawAngle(MechConstants.JAW_CORAL_STOP_ANGLE));
+
+    new DPad(driverController, 0).whileTrue(new SafeAlgaeJoystick(() -> 0.5));
+    new DPad(driverController, 180).whileTrue(new SafeAlgaeJoystick(() -> -0.5));
  
 
     //---------- ALGAE TONGUE ----------//
 
     // Operator - Y - Eat the Algae
-    new JoystickButton(operatorController, Button.kY.value).whileTrue(new AlgaeEat());
+    //new JoystickButton(operatorController, Button.kY.value).whileTrue(new AlgaeEat());
 
     // Operator - X - Spit out the Algae
-    new JoystickButton(operatorController, Button.kX.value).whileTrue(new AlgaeSpit());
+    //new JoystickButton(operatorController, Button.kX.value).whileTrue(new AlgaeSpit());
 
     new JoystickButton(sysIdController, Button.kX.value).whileTrue(Drivetrain.getInstance().transQ1);
     new JoystickButton(sysIdController, Button.kY.value).whileTrue(Drivetrain.getInstance().transQ2);

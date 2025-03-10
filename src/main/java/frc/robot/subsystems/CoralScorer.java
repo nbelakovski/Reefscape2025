@@ -49,23 +49,23 @@ public class CoralScorer extends SubsystemBase {
   }
   //
   public void spitSlow(){
-    CoralScorerMotor.set(-MechConstants.INTAKE_SPEED);
+    CoralScorerMotor.set(-MechConstants.CORAL_INTAKE_SPEED);
   }
 
   public void spitFast(){
-    CoralScorerMotor.set(-MechConstants.SCORE_SPEED);
+    CoralScorerMotor.set(-MechConstants.CORAL_SCORE_SPEED);
   }
 
   public void backward(){
-    CoralScorerMotor.set(MechConstants.INTAKE_SPEED);
+    CoralScorerMotor.set(MechConstants.CORAL_RETRACT_SPEED);
   }
   public void stop(){
     CoralScorerMotor.set(0);
   }
 
-  public void changeSpeed(double newSpeed){
-    MechConstants.INTAKE_SPEED = newSpeed;
-  }
+  // public void changeSpeed(double newSpeed){
+  //   MechConstants.INTAKE_SPEED = newSpeed;
+  // }
 
   public boolean hasCoral(){
     if(getDistance() > 2000){

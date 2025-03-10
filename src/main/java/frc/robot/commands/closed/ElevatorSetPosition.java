@@ -8,6 +8,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ElevatorConstants;
+import frc.robot.Constants.MechConstants;
 import frc.robot.subsystems.Elevator;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
@@ -46,7 +47,7 @@ public class ElevatorSetPosition extends Command {
   public void execute() {
     double speed = controller.calculate(elevator.getPosition());
 
-    if(elevator.coralGapStop()){
+    if(elevator.coralGapStop() && !(setpoint == ElevatorConstants.INTAKE_HEIGHT)){
       elevator.stop();
     }
     else{

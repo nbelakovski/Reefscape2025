@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.AlgaeHandler;
 import frc.robot.subsystems.Drivetrain;
 
-import org.littletonrobotics.urcl.URCL;
+//import org.littletonrobotics.urcl.URCL;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
@@ -47,10 +47,10 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // If publishing to NetworkTables and DataLog
     DataLogManager.start();
-    URCL.start();
+    //URCL.start();
   
     // If logging only to DataLog
-    URCL.start(DataLogManager.getLog());
+    //URCL.start(DataLogManager.getLog());
   }
   /**
    * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
@@ -102,7 +102,8 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    Drivetrain.getInstance().resetIMU();
+    Drivetrain.getInstance().navX.setAngleAdjustment(180);
+    //Drivetrain.getInstance().resetIMU();
   }
 
   /** This function is called periodically during operator control. */

@@ -31,11 +31,11 @@ public class CoralScore extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(Elevator.getInstance().getPosition() > 40) {
-      coralScorer.changeSpeed(MechConstants.SCORE_SPEED - 0.1);
-    } else {
-      coralScorer.changeSpeed(MechConstants.SCORE_SPEED);
-    }
+    // if(Elevator.getInstance().getPosition() > 40) {
+    //   coralScorer.changeSpeed(MechConstants.SCORE_SPEED - 0.1);
+    // } else {
+    //   coralScorer.changeSpeed(MechConstants.SCORE_SPEED);
+    // }
     coralScorer.spitFast();
   }
 

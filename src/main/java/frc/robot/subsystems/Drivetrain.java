@@ -61,7 +61,7 @@ private final SwerveModule backR = new SwerveModule(SwerveConstants.SWERVE_BR);
 public boolean fieldCentric;
 
 // The gyro sensor
-private AHRS navX;
+public AHRS navX;
 
 // Slew rate filter variables for controlling lateral acceleration
 private double m_currentRotation = 0.0;
@@ -108,6 +108,7 @@ public Command rotD2;
     modulesNew.add(backR);
 
     this.navX = new AHRS(NavXComType.kMXP_SPI);
+    
     field = new Field2d();
     
     //assign the NavX to be our sensor for rotation
