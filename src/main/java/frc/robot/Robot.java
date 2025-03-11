@@ -102,7 +102,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    Drivetrain.getInstance().navX.setAngleAdjustment(180);
+   // Drivetrain.getInstance().navX.setAngleAdjustment(180);
     //Drivetrain.getInstance().resetIMU();
   }
 

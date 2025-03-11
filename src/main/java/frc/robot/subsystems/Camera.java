@@ -138,8 +138,8 @@ public class Camera extends SubsystemBase {
     //   SmartDashboard.putNumber("rot", 0);
     // }
     
-    SmartDashboard.putNumber("tag 10 pose x", aprilTagFieldLayout.getTagPose(10).get().getX());
-    SmartDashboard.putNumber("tag 10 pose y", aprilTagFieldLayout.getTagPose(10).get().getY());
+    SmartDashboard.putNumber("tag 21 pose x", aprilTagFieldLayout.getTagPose(21).get().getX());
+    SmartDashboard.putNumber("tag 21 pose y", aprilTagFieldLayout.getTagPose(21).get().getY());
     SmartDashboard.putNumber("closest ID", closestID);
     
    

@@ -68,7 +68,7 @@ public class RobotContainer {
 
 
 
-  //AlgaeHandler algae = AlgaeHandler.getInstance();
+  AlgaeHandler algae = AlgaeHandler.getInstance();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -157,9 +157,9 @@ public class RobotContainer {
     // Operator - RY joystick - manually move Jaw up & down
     // new TriggerButton(driverController, 2).whileTrue(new ZeroAlgae());
 
-    // AlgaeHandler.getInstance().setDefaultCommand(new SafeAlgaeJoystick(
-    //   () -> operatorController.getRawAxis(5)
-    // ));
+    AlgaeHandler.getInstance().setDefaultCommand(new SafeAlgaeJoystick(
+      () -> operatorController.getRawAxis(5)
+    ));
 
     // Operator - A - Rotate jaw to Intake Angle
     //new JoystickButton(operatorController, Button.kA.value).whileTrue(new SetJawAngle(MechConstants.JAW_INTAKE_ANGLE).repeatedly());
@@ -183,10 +183,10 @@ public class RobotContainer {
     //---------- ALGAE TONGUE ----------//
 
     // Operator - Y - Eat the Algae
-    //new JoystickButton(operatorController, Button.kY.value).whileTrue(new AlgaeEat());
+    new JoystickButton(operatorController, Button.kY.value).whileTrue(new AlgaeEat());
 
     // Operator - X - Spit out the Algae
-    //new JoystickButton(operatorController, Button.kX.value).whileTrue(new AlgaeSpit());
+    new JoystickButton(operatorController, Button.kX.value).whileTrue(new AlgaeSpit());
 
     new JoystickButton(sysIdController, Button.kX.value).whileTrue(Drivetrain.getInstance().transQ1);
     new JoystickButton(sysIdController, Button.kY.value).whileTrue(Drivetrain.getInstance().transQ2);
@@ -213,7 +213,7 @@ public void autoChooserInit() {
     autoChooser.addOption("ERComboPath", ERComboPath);
     autoChooser.addOption("auto2", auto2);
     autoChooser.addOption("DrivetoDL4-old", driveDtoL4);
-    autoChooser.addOption("drivetopeg", new DriveToPeg(10));
+    autoChooser.addOption("drivetopeg", new DriveToPeg(20));
     autoChooser.addOption("straightToDL4-RED", new AutoStraightPathToCoralScore(21,4) );
 
     // Table for AprilTag IDs

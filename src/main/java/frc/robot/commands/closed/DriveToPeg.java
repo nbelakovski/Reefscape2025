@@ -4,6 +4,7 @@
 
 package frc.robot.commands.closed;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Camera;
 import frc.robot.subsystems.Drivetrain;
@@ -21,6 +22,7 @@ public class DriveToPeg extends Command {
   private double tagY;
   private double yTolerance;
   private double yOffset;
+  
 
   /** Creates a new DriveToPeg. */
   public DriveToPeg(int tagID) {
@@ -50,26 +52,36 @@ public class DriveToPeg extends Command {
   @Override
   public void execute() {
 
+  if(Math.abs(drivetrain.getPose().getX() - tagX) > 0.1  ){
+    SmartDashboard.putString("DTP Execute", "NOT");
+
     // if target is centered and not reached yet
-    if ((drivetrain.getPose().getY() < tagY + yTolerance || drivetrain.getPose().getY() > tagY - yTolerance) 
-                && drivetrain.getPose().getX() < tagX) {
+    if ((drivetrain.getPose().getY() < tagY + yTolerance || drivetrain.getPose().getY() > tagY - yTolerance)) {
       drivetrain.setDrive(xSpeed, 0.0, 0.0);
+      SmartDashboard.putString("DTP", "Centered");
     } 
 
     // if target is to the left and not reached yet
-    else if(drivetrain.getPose().getY() > tagY && drivetrain.getPose().getX() < tagX){
+    else if(drivetrain.getPose().getY() > tagY){
       drivetrain.setDrive(xSpeed, -ySpeed, 0.0);
+      SmartDashboard.putString("DTP", "Left");
+
     }
     
     // if target is to the RIGHT and not reached yet
-    else if(drivetrain.getPose().getY() < tagY && drivetrain.getPose().getX() < tagX){
+    else if(drivetrain.getPose().getY() < tagY){
       drivetrain.setDrive(xSpeed, ySpeed, 0.0);
+      SmartDashboard.putString("DTP", "Right");
+
     }
-    
+  }
     // othewise stop!
     else {
       drivetrain.stopDrive();
+      SmartDashboard.putString("DTP Execute", "Reached");
+
     }
+
   }
 
   // Called once the command ends or is interrupted.
