@@ -4,25 +4,15 @@
 
 package frc.robot;
 
-import frc.robot.Constants.ElevatorConstants;
-import frc.robot.Constants.MechConstants;
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.utils.DPad;
-// import frc.robot.commands.auto.*;
+import frc.robot.Constants.*;
+import frc.robot.utils.*;
+import frc.robot.subsystems.*;
 import frc.robot.commands.basic.*;
 import frc.robot.commands.closed.*;
 import frc.robot.commands.complex.*;
-
+import frc.robot.commands.combos.*;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
-
-import frc.robot.commands.combos.AutoStraightPathToCoralScore;
-import frc.robot.commands.combos.DriveDtoL4;
-import frc.robot.commands.combos.ElevatorIntakeCombo;
-import frc.robot.commands.combos.ElevatorJawCombo;
-import frc.robot.commands.combos.ElevatorScoreCombo;
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.subsystems.LEDStrip;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -31,13 +21,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.subsystems.AlgaeHandler;
-import frc.robot.subsystems.Camera;
-import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Elevator;
-import frc.robot.utils.Ports;
-import frc.robot.utils.TriggerButton;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -47,36 +31,31 @@ import frc.robot.utils.TriggerButton;
  */
 public class RobotContainer {
 
-  private LEDStrip led;
-  
-
-
   private static final XboxController driverController = new XboxController(Ports.DRIVER_CONTROLLER);
   private static final XboxController operatorController = new XboxController(Ports.OPERATOR_CONTROLLER);
   private static final XboxController sysIdController = new XboxController(2);
+  private static final XboxController testController = new XboxController(3);
 
-  Drivetrain drivetrain = Drivetrain.getInstance();
-  Camera cam = Camera.getInstance();
+  private Camera cam = Camera.getInstance();
+  private Drivetrain drivetrain = Drivetrain.getInstance();
+  private AlgaeHandler algae = AlgaeHandler.getInstance();
+  private LEDStrip led;
 
- private SendableChooser<Command> autoChooser;
- private Command auto1 = new PathPlannerAuto("Auto1");
- private Command oneMeter = new PathPlannerAuto("one meter");
- private Command testing = new PathPlannerAuto("testing");
- private Command ERComboPath = new PathPlannerAuto("ERComboPath");
- private Command auto2 = new PathPlannerAuto("auto2");
- private Command driveDtoL4 = new DriveDtoL4();
+  private SendableChooser<Command> autoChooser;
+  private Command auto1 = new PathPlannerAuto("Auto1");
+  private Command oneMeter = new PathPlannerAuto("one meter");
+  private Command testing = new PathPlannerAuto("testing");
+  private Command ERComboPath = new PathPlannerAuto("ERComboPath");
+  private Command auto2 = new PathPlannerAuto("auto2");
 
-
-
-  AlgaeHandler algae = AlgaeHandler.getInstance();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     configureBindings();
 
-  
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("AutoChooser", autoChooser);
+    
     // Configure the trigger bindings
     autoChooserInit();
 
@@ -107,8 +86,10 @@ public class RobotContainer {
       () -> driverController.getAButton()
     ));
 
+    // Driver - X - Toggle FieldCentric on/off
     new JoystickButton(driverController,Button.kX.value).toggleOnTrue(new ToggleFieldCentric());
 
+    // Driver - DPAD - Align to a Visible Branch on the Reef
     // new JoystickButton(driverController,Button.kB.value).whileTrue(new DriveToPegPID(cam.closestID, "RIGHT"));
     // new JoystickButton(driverController,Button.kX.value).whileTrue(new DriveToPegPID(cam.closestID, "LEFT"));
     // new JoystickButton(driverController,Button.kY.value).whileTrue(new DriveToPegPID(cam.closestID, "STRAIGHT"));
@@ -155,11 +136,17 @@ public class RobotContainer {
     //---------- ALGAE JAW ----------//
     
     // Operator - RY joystick - manually move Jaw up & down
-    // new TriggerButton(driverController, 2).whileTrue(new ZeroAlgae());
-
     AlgaeHandler.getInstance().setDefaultCommand(new SafeAlgaeJoystick(
       () -> operatorController.getRawAxis(5)
     ));
+
+    // Driver - DPAD - manually move Jaw up & down
+    new DPad(driverController, 0).whileTrue(new SafeAlgaeJoystick(() -> 0.5));
+    new DPad(driverController, 180).whileTrue(new SafeAlgaeJoystick(() -> -0.5));
+
+    // Driver - ?? - Zero Angle of Algae Handler
+    // new TriggerButton(driverController, 2).whileTrue(new ZeroAlgae());
+
 
     // Operator - A - Rotate jaw to Intake Angle
     //new JoystickButton(operatorController, Button.kA.value).whileTrue(new SetJawAngle(MechConstants.JAW_INTAKE_ANGLE).repeatedly());
@@ -176,8 +163,6 @@ public class RobotContainer {
     //new DPad(driverController, 0).whileTrue(new SetJawAngle(MechConstants.JAW_INTAKE_ANGLE));
     //new DPad(driverController, 180).whileTrue(new SetJawAngle(MechConstants.JAW_CORAL_STOP_ANGLE));
 
-    new DPad(driverController, 0).whileTrue(new SafeAlgaeJoystick(() -> 0.5));
-    new DPad(driverController, 180).whileTrue(new SafeAlgaeJoystick(() -> -0.5));
  
 
     //---------- ALGAE TONGUE ----------//
@@ -188,17 +173,22 @@ public class RobotContainer {
     // Operator - X - Spit out the Algae
     new JoystickButton(operatorController, Button.kX.value).whileTrue(new AlgaeSpit());
 
+
+
+    //---------- SYSID  ----------//
+
+    // SYSID - X,Y,A,B - Drive Tests
     new JoystickButton(sysIdController, Button.kX.value).whileTrue(Drivetrain.getInstance().transQ1);
     new JoystickButton(sysIdController, Button.kY.value).whileTrue(Drivetrain.getInstance().transQ2);
     new JoystickButton(sysIdController, Button.kA.value).whileTrue(Drivetrain.getInstance().transD1);
     new JoystickButton(sysIdController, Button.kB.value).whileTrue(Drivetrain.getInstance().transD2);
 
+    // SYSID - D-PAD - Rot Tests
     new DPad(sysIdController,180).whileTrue(Drivetrain.getInstance().rotQ1);
     new DPad(sysIdController,270).whileTrue(Drivetrain.getInstance().rotQ2);
     new DPad(sysIdController,90).whileTrue(Drivetrain.getInstance().rotD1);
     new DPad(sysIdController,0).whileTrue(Drivetrain.getInstance().rotD2);
 
-    
 
 
   }
@@ -212,9 +202,10 @@ public void autoChooserInit() {
     autoChooser.addOption("testing", testing);
     autoChooser.addOption("ERComboPath", ERComboPath);
     autoChooser.addOption("auto2", auto2);
-    autoChooser.addOption("DrivetoDL4-old", driveDtoL4);
-    autoChooser.addOption("drivetopeg", new DriveToPeg(20));
+    autoChooser.addOption("DrivetoDL4-old", new DriveDtoL4() );
+    autoChooser.addOption("drivetopeg", new DriveToPeg(21));
     autoChooser.addOption("straightToDL4-RED", new AutoStraightPathToCoralScore(21,4) );
+    autoChooser.addOption("driveToBranch", new DriveToBranchPID(21, "RIGHT"));
 
     // Table for AprilTag IDs
     // 9	Red Reef C --> (Blue 22)

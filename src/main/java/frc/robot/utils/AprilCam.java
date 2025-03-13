@@ -44,31 +44,30 @@ public class AprilCam {
 
     private PhotonCamera camera;
     private List<PhotonPipelineResult> results;
-
     private PhotonTrackedTarget desiredTarget;
     private PhotonPoseEstimator photonPoseEstimator;
     private List<PhotonTrackedTarget> targets;
-
     public int closestID;
 
-    //private static AprilCam instance;
-    Transform3d camOofset;
+    Transform3d camOffset;
+    Translation3d camOffsetTranslation;
+    Rotation3d camOffsetRotation;
     AprilTagFieldLayout aprilTagFieldLayout;
 
     // Simulation
     private PhotonCameraSim cameraSim;
     private VisionSystemSim visionSim;
-
     private Matrix<N3, N1> curStdDevs;
     
     
     // Constructor 1
     public AprilCam(String name, Translation3d position, Rotation3d angle){
         this.camera = new PhotonCamera(name);
-         //Cam mounted facing forward, half a meter forward of center, half a meter up from center.
-        this.camOofset = new Transform3d(new Translation3d(0.0, 0.0, 0.0), new Rotation3d(0,0,0));
+        this.camOffsetTranslation = new Translation3d(-0.40, -0.15, 0.0); //cam mounted 13" back from front bumper, slightly right?
+        this.camOffsetRotation = new Rotation3d(0,0,0); //cam mounted facing forward, upright
+        this.camOffset = new Transform3d(camOffsetTranslation, camOffsetRotation);
         aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
-        this.photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, camOofset);
+        this.photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, camOffset);
      }
 
      // Constructor 2: simple version
@@ -76,13 +75,6 @@ public class AprilCam {
         this(name,new Translation3d(), new Rotation3d());
     }
 
-    // //Singleton not needed if we want multiple Camera objects!
-    // public static AprilCam getInstance() {
-    //     if (instance == null) {
-    //       instance = new AprilCam(VisionConstants.FRONT_CAM_NAME);
-    //     }
-    //     return instance;
-    //   }
 
     // Updates the camera with the latest results (Needs to be called periodically!)
     // public void update() {

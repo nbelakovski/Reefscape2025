@@ -106,8 +106,6 @@ public final class Constants {
         new Translation2d(-WHEEL_BASE / 2, -TRACK_WIDTH / 2));
 
 
-    //TURN PID CONSTANTS
-    //public static final PIDF TURN_PID = new PIDF(0.16, 0, 2 * Math.PI, -1, 1, true);
     public static final double ANGLE_THRESHOLD = Units.degreesToRadians(5);
     public static final boolean TURN_INVERSION = true;
 
@@ -124,9 +122,56 @@ public final class Constants {
 
     public static final boolean kGyroReversed = false;
 
-    // public static final PIDConstants translationPID = new PIDConstants(0.05, 0, 0);
-    // public static final PIDConstants rotationPID = new PIDConstants(0.08, 0, 0);
+  }
 
+  public static final class SwerveAutoConstants {
+
+    public static final double kMaxSpeedMetersPerSecond = 3;
+    public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+    public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
+    public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
+
+    public static final double kPXController = 1;
+    public static final double kPYController = 1;
+    public static final double kPThetaController = 1;
+
+    // Constraint for the motion profiled robot angle controller
+    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
+        kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
+
+
+    public static final double DRIVE_TRANSLATE_P = 1.0;
+    public static final double DRIVE_TRANSLATE_I = 0;
+    public static final double DRIVE_TRANSLATE_D = 0;
+
+    public static final double DRIVE_TURN_P = 0.003;
+    public static final double DRIVE_TURN_I = 0;
+    public static final double DRIVE_TURN_D = 0;
+
+    //Old Drivetrain PID constants
+    //public static final PIDF TURN_PID = new PIDF(0.16, 0, 2 * Math.PI, -1, 1, true);<-- from ???
+    // public static final PIDConstants translationPID = new PIDConstants(0.05, 0, 0); <-- from Rev
+    // public static final PIDConstants rotationPID = new PIDConstants(0.08, 0, 0); <-- from Rev
+    
+    // from Rev SwerveModule Constants
+    // public static final double kDrivingP = 0.03;
+    // public static final double kDrivingI = 0;
+    // public static final double kDrivingD = 0;
+    // public static final double kDrivingFF = 1 / kDriveWheelFreeSpeedRps;
+    // public static final double kDrivingMinOutput = -1;
+    // public static final double kDrivingMaxOutput = 1;
+
+    // public static final double kTurningP = 1;
+    // public static final double kTurningI = 0;
+    // public static final double kTurningD = 0;
+    // public static final double kTurningFF = 0;
+    // public static final double kTurningMinOutput = -1;
+    // public static final double kTurningMaxOutput = 1;
+    
+    public static final PPHolonomicDriveController pathFollowerConfig = new PPHolonomicDriveController(
+      new PIDConstants(DRIVE_TRANSLATE_P, DRIVE_TRANSLATE_I, DRIVE_TRANSLATE_D), // Translation constants 
+      new PIDConstants(DRIVE_TURN_P, DRIVE_TURN_I, DRIVE_TURN_D) // Rotation constants 
+    );
   }
 
 
@@ -161,26 +206,11 @@ public static final class ModuleConstants {
   public static final double kTurningEncoderPositionPIDMinInput = -Math.PI; // radians
   public static final double kTurningEncoderPositionPIDMaxInput = Math.PI; // radians
 
-  public static final double kDrivingP = 0.03;
-  public static final double kDrivingI = 0;
-  public static final double kDrivingD = 0;
-  public static final double kDrivingFF = 1 / kDriveWheelFreeSpeedRps;
-  public static final double kDrivingMinOutput = -1;
-  public static final double kDrivingMaxOutput = 1;
-
-  public static final double kTurningP = 1;
-  public static final double kTurningI = 0;
-  public static final double kTurningD = 0;
-  public static final double kTurningFF = 0;
-  public static final double kTurningMinOutput = -1;
-  public static final double kTurningMaxOutput = 1;
-
   public static final IdleMode kDrivingMotorIdleMode = IdleMode.kBrake;
   public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
 
   public static final int kDrivingMotorCurrentLimit = 50; // amps
   public static final int kTurningMotorCurrentLimit = 40; // amps
-
 
   }
 
@@ -283,27 +313,7 @@ public static final class ModuleConstants {
 
   }
 
-  public static final class AutoConstants {
-    public static final double kMaxSpeedMetersPerSecond = 3;
-    public static final double kMaxAccelerationMetersPerSecondSquared = 3;
-    public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
-    public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
-
-    public static final double kPXController = 1;
-    public static final double kPYController = 1;
-    public static final double kPThetaController = 1;
-
-    // Constraint for the motion profiled robot angle controller
-    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
-        kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
-
-    public static final PPHolonomicDriveController pathFollowerConfig = new PPHolonomicDriveController(
-      new PIDConstants(1.0, 0, 0), // Translation constants 
-      new PIDConstants(.005, 0, 0) // Rotation constants 
-    );
-  }
-
-
+  
 
 
 }

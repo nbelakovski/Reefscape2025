@@ -39,7 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import frc.robot.Constants;
-import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.SwerveAutoConstants;
 import frc.robot.Constants.MechConstants;
 import frc.robot.Constants.ModuleConstants;
 import frc.robot.Constants.SwerveConstants;
@@ -119,7 +119,7 @@ public Command rotD2;
 
     this.driveOdometry = new SwerveDriveOdometry(
       SwerveConstants.DRIVE_KINEMATICS, 
-      getHeading(), 
+      getRobotHeading(), 
       getSwerveModulePos()
     );
 
@@ -131,7 +131,7 @@ public Command rotD2;
 
     this.poseEstimator =  new SwerveDrivePoseEstimator(
       SwerveConstants.DRIVE_KINEMATICS,
-      getHeading(),
+      getRobotHeading(),
       getSwerveModulePos(),
       new Pose2d(),
       stateStdDevs,
@@ -175,7 +175,7 @@ public Command rotD2;
         this::resetOdometry, 
         this::getSpeeds, 
         this::driveRobotRelative, 
-        AutoConstants.pathFollowerConfig,
+        SwerveAutoConstants.pathFollowerConfig,
         new RobotConfig(
           MechConstants.MASS, 
           MechConstants.MOI, 
@@ -378,7 +378,7 @@ rotD2 = rotationalSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
     //Store an array of speeds for each wheel
     //ChassisSpeeds speeds = new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotSpeedDelivered);
     ChassisSpeeds speeds = fieldCentric ? 
-      ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotSpeedDelivered, getHeading()) : 
+      ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotSpeedDelivered, getRobotHeading()) : 
       new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotSpeedDelivered);
 
 
@@ -454,14 +454,18 @@ rotD2 = rotationalSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
    *
    * @return the robot's heading in degrees, from -180 to 180
    */
-  public Rotation2d getHeading() {
+  public Rotation2d getRobotHeading() {
     //return Rotation2d.fromDegrees(navX.getAngle());
     return navX.getRotation2d();
     //return Rotation2d.fromDegrees(m_gyro.getAngle(IMUAxis.kZ)).getDegrees();
   }
 
- public double getHeadingRadians() {
-    return getHeading().getRadians();
+  public double getRobotAngleDegrees() {
+    return getRobotHeading().getDegrees();
+  }
+
+ public double getRobotAngleRadians() {
+    return getRobotHeading().getRadians();
   }
 
   // Resets the drive encoders to currently read a position of 0.
@@ -517,19 +521,19 @@ rotD2 = rotationalSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
   public void resetOdometry(Pose2d newPose) {
     //driveOdometry.resetPosition(getHeading(), getSwerveModulePos(), newPose);
     driveOdometry.resetPosition(
-        getHeading(),
+        getRobotHeading(),
         getSwerveModulePos(),
         newPose);
 
-    poseEstimator.resetPosition(getHeading(), getSwerveModulePos(), newPose);
+    poseEstimator.resetPosition(getRobotHeading(), getSwerveModulePos(), newPose);
   }
 
   public void updateOdometry() {
       driveOdometry.update(
-        getHeading(),
+        getRobotHeading(),
         getSwerveModulePos()
     );
-    poseEstimator.update(getHeading(), getSwerveModulePos());
+    poseEstimator.update(getRobotHeading(), getSwerveModulePos());
   }
 
   // public Field2d getField() {
@@ -541,13 +545,20 @@ rotD2 = rotationalSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
   }
 
   /**
-   * Returns the currently-estimated pose of the robot.
-   *
+   * Returns the currently-estimated pose of the robot relative to the FIELD
    * @return The pose.
    */
   public Pose2d getPose() {
     //return driveOdometry.getPoseMeters();
     return poseEstimator.getEstimatedPosition();
+  }
+
+  public double getFieldAngleDegrees(){
+    return getPose().getRotation().getDegrees();
+  }
+
+  public double getFieldAngleRadians(){
+    return getPose().getRotation().getRadians();
   }
 
 /* See {@link SwerveDrivePoseEstimator#addVisionMeasurement(Pose2d, double)}. */
@@ -567,8 +578,13 @@ rotD2 = rotationalSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
       modules[i].updateTelemetry();
     }
 
-    SmartDashboard.putNumber("Robot Angle", getHeading().getDegrees());
-    SmartDashboard.putNumber("Compass Heading", navX.getCompassHeading());
+    SmartDashboard.putNumber("NavX Compass Heading", navX.getCompassHeading());
+
+    SmartDashboard.putNumber("Robot Angle Degrees", getRobotAngleDegrees());
+    SmartDashboard.putNumber("Robot Angle Radians", getRobotAngleRadians());
+    SmartDashboard.putNumber("Field Angle Degrees", getFieldAngleDegrees());
+    SmartDashboard.putNumber("Field Angle Radians", getFieldAngleRadians());
+    
 
     SmartDashboard.putNumber("xOdometry", getPose().getX());
     SmartDashboard.putNumber("yOdometry", getPose().getY());

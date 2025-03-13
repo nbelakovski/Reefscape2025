@@ -20,7 +20,9 @@ public class DriveToPeg extends Command {
   private double rotSpeed;
   private double tagX;
   private double tagY;
+  private double xTolerance;
   private double yTolerance;
+  private double yToleranceInches;
   private double yOffset;
   
 
@@ -33,7 +35,9 @@ public class DriveToPeg extends Command {
     this.xSpeed = 0.4;
     this.ySpeed = 0.3;
     this.rotSpeed = 0.7;
-    this.yTolerance = 2 * 0.0254 ; //to score 4" coral (was 0.2)
+    this.xTolerance = 0.1;
+    this.yToleranceInches = 2;
+    this.yTolerance = yToleranceInches * 0.0254 ; //to score 4" coral (was 0.2)
     this.yOffset = 0.0; //was 0.7 at TH
 
     tagX = cam.getTagPose(tagID).getX();
@@ -52,33 +56,34 @@ public class DriveToPeg extends Command {
   @Override
   public void execute() {
 
-  if(Math.abs(drivetrain.getPose().getX() - tagX) > 0.1  ){
-    SmartDashboard.putString("DTP Execute", "NOT");
-
-    // if target is centered and not reached yet
-    if ((drivetrain.getPose().getY() < tagY + yTolerance || drivetrain.getPose().getY() > tagY - yTolerance)) {
-      drivetrain.setDrive(xSpeed, 0.0, 0.0);
-      SmartDashboard.putString("DTP", "Centered");
-    } 
+  if(Math.abs(drivetrain.getPose().getX() - tagX) > xTolerance  ){
+    SmartDashboard.putString("DTP X", "NOT");
 
     // if target is to the left and not reached yet
-    else if(drivetrain.getPose().getY() > tagY){
+    if(drivetrain.getPose().getY() > tagY){
       drivetrain.setDrive(xSpeed, -ySpeed, 0.0);
-      SmartDashboard.putString("DTP", "Left");
+      SmartDashboard.putString("DTP Y", "Left");
 
     }
     
     // if target is to the RIGHT and not reached yet
     else if(drivetrain.getPose().getY() < tagY){
       drivetrain.setDrive(xSpeed, ySpeed, 0.0);
-      SmartDashboard.putString("DTP", "Right");
-
+      SmartDashboard.putString("DTP Y", "Right");
     }
+
+    // if target is centered and not reached yet
+    else{      
+      drivetrain.setDrive(xSpeed, 0.0, 0.0);
+      SmartDashboard.putString("DTP Y", "Centered");
+    } 
+
+
   }
     // othewise stop!
     else {
       drivetrain.stopDrive();
-      SmartDashboard.putString("DTP Execute", "Reached");
+      SmartDashboard.putString("DTP X", "Reached");
 
     }
 
