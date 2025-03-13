@@ -14,8 +14,8 @@ import frc.robot.subsystems.Drivetrain;
 
 public class DriveToBranchPID extends Command {
 
-  private Drivetrain drivetrain;
-  private Camera cam;
+  private static Drivetrain drivetrain;
+  private static Camera cam;
   private int tagID;
   private String branchDirection;
 

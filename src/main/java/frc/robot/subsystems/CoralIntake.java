@@ -1,79 +1,70 @@
-//Created by Gabriel R
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
+// Created by Gabriel R
 
 package frc.robot.subsystems;
+
+
 import frc.robot.utils.Ports;
-import frc.robot.Constants;
 import frc.robot.Constants.MechConstants;
 import frc.robot.subsystems.LEDStrip.SubsystemPriority;
-
 import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.SerialPort;
-
 
 
 public class CoralIntake extends SubsystemBase {
-  /** Creates a new Intake. */
-  private SparkMax CoralIntakeMotor;
-  private SparkMaxConfig motorConfig;
+
   private static CoralIntake instance;
-  private Timer timer;
+  private SparkMax coralIntakeMotor;
+  private SparkMaxConfig motorConfig;
   private boolean coralInGap = false;
   private AnalogInput gapSensor;
   private double distance;
   
 
+  // CoralIntake Constructor
   private CoralIntake() {
-    CoralIntakeMotor = new SparkMax(Ports.LEFT_INTAKE_MOTOR_PORT, MotorType.kBrushless);
+
+    coralIntakeMotor = new SparkMax(Ports.LEFT_INTAKE_MOTOR_PORT, MotorType.kBrushless);
     motorConfig = new SparkMaxConfig();
+    coralIntakeMotor.configure(motorConfig, null, null);
     
     gapSensor = new AnalogInput(Ports.ANALOG_GAP_SENSOR_PORT);
   }
+  
+  // CoralIntake Singleton - ensures only 1 CoralIntake instance is constructed
   public static CoralIntake getInstance(){
     if(instance == null) {
       instance = new CoralIntake();
     }
     return instance;
   }
-  //
+
+
   public void eat(){
-    CoralIntakeMotor.set(MechConstants.CORAL_INTAKE_SPEED);
+    coralIntakeMotor.set(MechConstants.CORAL_INTAKE_SPEED);
   }
   public void spit(){
-    CoralIntakeMotor.set(-MechConstants.CORAL_INTAKE_SPEED);
+    coralIntakeMotor.set(-MechConstants.CORAL_INTAKE_SPEED);
   }
   public void stop(){
-    CoralIntakeMotor.set(0);
+    coralIntakeMotor.set(0);
   }
 
-  // public void changeSpeed(double newSpeed){
-  //   MechConstants.CORAL_INTAKE_SPEED = newSpeed;
-  // }
-
+  // Checks if coral is blocking the gap between intake & coral scorer
   public boolean isGapBlocked(){
-
     if(getDistance() > 950 && getDistance() < 1500){
       coralInGap = true;
     }
     else{
       coralInGap = false;
     }
-
     return coralInGap;
   }
 
+  // Gets the distance from sensor to coral stuck in gap
   public double getDistance(){
     distance = gapSensor.getValue();
     return distance;

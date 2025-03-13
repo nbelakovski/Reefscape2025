@@ -1,18 +1,13 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
+
 
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-
 // import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 // import com.pathplanner.lib.util.PIDConstants;
 // import com.pathplanner.lib.util.ReplanningConfig;
 import com.pathplanner.lib.util.*;
-
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
@@ -26,7 +21,6 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Mass;
 import edu.wpi.first.units.measure.MomentOfInertia;
-
 import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.KilogramSquareMeters;
 import frc.robot.utils.ModuleConfig;
@@ -271,7 +265,7 @@ public static final class ModuleConstants {
     public static final Mass MASS = Kilograms.of(63); //was 25kg = 55lbs, 63kg =140lb
     public static final MomentOfInertia MOI = KilogramSquareMeters.of(5); //was 0.2, Typical FRC robot will be between 3-8 Kg*m^2
 
-    public static final double JAW_CORAL_STOP_ANGLE = 260;
+    public static final double JAW_STARTING_ANGLE = 260;
     public static final double JAW_INTAKE_ANGLE = 160;
     // public static final double JAW_UP_ANGLE = 25;
     public static final double JAW_AUTO_ANGLE = 80;

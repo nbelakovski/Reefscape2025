@@ -1,21 +1,20 @@
 // Created by Gabriel R
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.commands.complex;
 
+
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.MechConstants;
 import frc.robot.subsystems.CoralIntake;
 import frc.robot.subsystems.CoralScorer;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class CoralInSafe extends Command {
 
-  private CoralIntake coralIntake;
-  private CoralScorer coralScorer;
+  private static CoralIntake coralIntake;
+  private static CoralScorer coralScorer;
   private boolean stop;
+
+
   /** Creates a new CoralIn. */
   public CoralInSafe() {
     coralIntake = CoralIntake.getInstance();
@@ -44,12 +43,10 @@ public class CoralInSafe extends Command {
       coralScorer.stop();
     }
     else{
-
       // coralScorer.changeSpeed(MechConstants.INTAKE_SPEED);
       coralIntake.eat();
       coralScorer.spitSlow();
     }
-    
   }
 
   // Called once the command ends or is interrupted.

@@ -14,6 +14,7 @@ public class SetJawAngle extends Command {
     private static AlgaeHandler handler;
     private PIDController controller;
 
+    
     /** Creates a new SetJawAngle. */
     public SetJawAngle(double desiredAngle) {
         // Use addRequirements() here to declare subsystem dependencies.

@@ -1,8 +1,5 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.subsystems;
+
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.ModuleConfig;
@@ -44,55 +41,57 @@ import frc.robot.Constants.MechConstants;
 import frc.robot.Constants.ModuleConstants;
 import frc.robot.Constants.SwerveConstants;
 
+
+
 public class Drivetrain extends SubsystemBase {
 
-private static Drivetrain instance;
+  private static Drivetrain instance;
 
-private final SwerveModule[] modules;
-private final List<SwerveModule> modulesNew;
-private final SwerveDriveKinematics driveKinematics;
-private final SwerveDriveOdometry driveOdometry;
+  private final SwerveModule[] modules;
+  private final List<SwerveModule> modulesList;
+  private final SwerveDriveKinematics driveKinematics;
+  private final SwerveDriveOdometry driveOdometry;
 
-private final SwerveModule frontL = new SwerveModule(SwerveConstants.SWERVE_FL);
-private final SwerveModule frontR = new SwerveModule(SwerveConstants.SWERVE_FR);
-private final SwerveModule backL = new SwerveModule(SwerveConstants.SWERVE_BL);
-private final SwerveModule backR = new SwerveModule(SwerveConstants.SWERVE_BR);
+  private final SwerveModule frontL = new SwerveModule(SwerveConstants.SWERVE_FL);
+  private final SwerveModule frontR = new SwerveModule(SwerveConstants.SWERVE_FR);
+  private final SwerveModule backL = new SwerveModule(SwerveConstants.SWERVE_BL);
+  private final SwerveModule backR = new SwerveModule(SwerveConstants.SWERVE_BR);
 
-public boolean fieldCentric;
+  public boolean fieldCentric;
 
-// The gyro sensor
-public AHRS navX;
+  // The gyro sensor
+  public AHRS navX;
 
-// Slew rate filter variables for controlling lateral acceleration
-private double m_currentRotation = 0.0;
-private double m_currentTranslationDir = 0.0;
-private double m_currentTranslationMag = 0.0;
+  // Slew rate filter variables for controlling lateral acceleration
+  private double m_currentRotation = 0.0;
+  private double m_currentTranslationDir = 0.0;
+  private double m_currentTranslationMag = 0.0;
 
-// private SlewRateLimiter m_magLimiter = new SlewRateLimiter(SwerveConstants.kMagnitudeSlewRate);
-// private SlewRateLimiter m_rotLimiter = new SlewRateLimiter(SwerveConstants.kRotationalSlewRate);
-private double m_prevTime = WPIUtilJNI.now() * 1e-6;
+  // private SlewRateLimiter m_magLimiter = new SlewRateLimiter(SwerveConstants.kMagnitudeSlewRate);
+  // private SlewRateLimiter m_rotLimiter = new SlewRateLimiter(SwerveConstants.kRotationalSlewRate);
+  private double m_prevTime = WPIUtilJNI.now() * 1e-6;
 
-//Fields that control 3 dimensions of drive motion
-private double xSpeed = 0.0;
-private double ySpeed = 0.0;
-private double rotSpeed = 0.0;
+  //Fields that control 3 dimensions of drive motion
+  private double xSpeed = 0.0;
+  private double ySpeed = 0.0;
+  private double rotSpeed = 0.0;
 
-private final SwerveDrivePoseEstimator poseEstimator;
+  private final SwerveDrivePoseEstimator poseEstimator;
 
-private final Field2d field;
+  private final Field2d field;
 
-public Command transQ1;
-public Command transQ2;
-public Command transD1;
-public Command transD2;
+  // SysID Commands
+  public Command transQ1;
+  public Command transQ2;
+  public Command transD1;
+  public Command transD2;
+  public Command rotQ1;
+  public Command rotQ2;
+  public Command rotD1;
+  public Command rotD2;
 
-public Command rotQ1;
-public Command rotQ2;
-public Command rotD1;
-public Command rotD2;
 
-
-  /** Creates a new Drivetrain. */
+  /** Drivetrain Constructor */
   private Drivetrain() {
 
     this.modules = new SwerveModule[4];
@@ -101,19 +100,16 @@ public Command rotD2;
     modules[2] = backL;
     modules[3] = backR;
 
-    modulesNew = new ArrayList<SwerveModule>();
-    modulesNew.add(frontL);
-    modulesNew.add(frontR);
-    modulesNew.add(backL);
-    modulesNew.add(backR);
-
-    this.navX = new AHRS(NavXComType.kMXP_SPI);
-    
-    field = new Field2d();
+    modulesList = new ArrayList<SwerveModule>();
+    modulesList.add(frontL);
+    modulesList.add(frontR);
+    modulesList.add(backL);
+    modulesList.add(backR);
     
     //assign the NavX to be our sensor for rotation
     //*****no worky figure out why*******
     //this.navX = new AHRS(SPI.Port.kMXP);
+    this.navX = new AHRS(NavXComType.kMXP_SPI);
 
     this.driveKinematics = SwerveConstants.DRIVE_KINEMATICS;
 
@@ -123,7 +119,8 @@ public Command rotD2;
       getSwerveModulePos()
     );
 
-    fieldCentric = true;
+    this.field = new Field2d();
+    this.fieldCentric = true;
     
 
     var stateStdDevs = VecBuilder.fill(0.1, 0.1, 0.1);
@@ -169,90 +166,87 @@ public Command rotD2;
     // try{
       //RobotConfig config = RobotConfig.fromGUISettings();
 
-      // Configure AutoBuilder
-      AutoBuilder.configure(
-        this::getPose, 
-        this::resetOdometry, 
-        this::getSpeeds, 
-        this::driveRobotRelative, 
-        SwerveAutoConstants.pathFollowerConfig,
-        new RobotConfig(
-          MechConstants.MASS, 
-          MechConstants.MOI, 
-          new ModuleConfig(
-            SwerveConstants.WHEEL_DIAMETER/2, 
-            SwerveConstants.TOP_SPEED, 
-            1.2, 
-            DCMotor.getNEO(1).withReduction(ModuleConstants.kDrivingMotorReduction), 
-            ModuleConstants.kDrivingMotorCurrentLimit, 
-            1), 
-          Constants.SwerveConstants.DRIVE_KINEMATICS.getModules()
-        ),
-        () -> {
-            // Boolean supplier that controls when the path will be mirrored for the red alliance
-            // This will flip the path being followed to the red side of the field.
-            // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+    // Configure AutoBuilder
+    AutoBuilder.configure(
+      this::getPose, 
+      this::resetOdometry, 
+      this::getSpeeds, 
+      this::driveRobotRelative, 
+      SwerveAutoConstants.pathFollowerConfig,
+      new RobotConfig(
+        MechConstants.MASS, 
+        MechConstants.MOI, 
+        new ModuleConfig(
+          SwerveConstants.WHEEL_DIAMETER/2, 
+          SwerveConstants.TOP_SPEED, 
+          1.2, 
+          DCMotor.getNEO(1).withReduction(ModuleConstants.kDrivingMotorReduction), 
+          ModuleConstants.kDrivingMotorCurrentLimit, 
+          1), 
+        Constants.SwerveConstants.DRIVE_KINEMATICS.getModules()
+      ),
+      () -> {
+          // Boolean supplier that controls when the path will be mirrored for the red alliance
+          // This will flip the path being followed to the red side of the field.
+          // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
-            var alliance = DriverStation.getAlliance();
-            if (alliance.isPresent()) {
-                return alliance.get() == DriverStation.Alliance.Red;
-            }
-            return false;
-        },
-        this
-      );
+          var alliance = DriverStation.getAlliance();
+          if (alliance.isPresent()) {
+              return alliance.get() == DriverStation.Alliance.Red;
+          }
+          return false;
+      },
+      this
+    );
     // }catch(Exception e){
     //   DriverStation.reportError("Failed to load PathPlanner config and configure AutoBuilder", e.getStackTrace());
     // }
     
+    // Create the SysId routines
+    var translationSysIdRoutine = new SysIdRoutine(
+      new SysIdRoutine.Config(),
+      new SysIdRoutine.Mechanism(
+        volts ->
+        modulesList.forEach(
+            m -> m.updateInputs(Rotation2d.fromRadians(0), volts.in(Volts))),
+        // (voltage) -> this.runVolts(voltage.in(Volts)),
+        null, // No log consumer, since data is recorded by URCL
+        this
+      )
+    );
+    var rotationalSysIdRoutine = new SysIdRoutine(
+      new SysIdRoutine.Config(),
+      new SysIdRoutine.Mechanism(
+        volts -> {
+          this.frontL.updateInputs(
+            Rotation2d.fromRadians((3 * Math.PI / 4) + SwerveConstants.FL_ANGULAR_OFFSET), volts.in(Volts));
+        this.frontR.updateInputs(
+            Rotation2d.fromRadians((Math.PI / 4) + SwerveConstants.FR_ANGULAR_OFFSET), volts.in(Volts));
+        this.backL.updateInputs(
+            Rotation2d.fromRadians((-3 * Math.PI / 4) + SwerveConstants.BL_ANGULAR_OFFSET), volts.in(Volts));
+        this.backR.updateInputs(
+            Rotation2d.fromRadians((-Math.PI / 4) + SwerveConstants.BR_ANGULAR_OFFSET), volts.in(Volts));
+        },
+        // (voltage) -> this.runVolts(voltage.in(Volts)),
+        null, // No log consumer, since data is recorded by URCL
+        this
+      )
+    );
 
+    // SysID methods below return Command objects
+    transQ1 = translationSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
+    transQ2 = translationSysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
+    transD1 = translationSysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
+    transD2 = translationSysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
 
-   // Create the SysId routine
-var translationSysIdRoutine = new SysIdRoutine(
-  new SysIdRoutine.Config(),
-  new SysIdRoutine.Mechanism(
-    volts ->
-    modulesNew.forEach(
-        m -> m.updateInputs(Rotation2d.fromRadians(0), volts.in(Volts))),
-    // (voltage) -> this.runVolts(voltage.in(Volts)),
-    null, // No log consumer, since data is recorded by URCL
-    this
-  )
-);
+    rotQ1 = rotationalSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
+    rotQ2 = rotationalSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
+    rotD1 = rotationalSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
+    rotD2 = rotationalSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
 
-var rotationalSysIdRoutine = new SysIdRoutine(
-  new SysIdRoutine.Config(),
-  new SysIdRoutine.Mechanism(
-    volts -> {
-      this.frontL.updateInputs(
-        Rotation2d.fromRadians((3 * Math.PI / 4) + SwerveConstants.FL_ANGULAR_OFFSET), volts.in(Volts));
-    this.frontR.updateInputs(
-        Rotation2d.fromRadians((Math.PI / 4) + SwerveConstants.FR_ANGULAR_OFFSET), volts.in(Volts));
-    this.backL.updateInputs(
-        Rotation2d.fromRadians((-3 * Math.PI / 4) + SwerveConstants.BL_ANGULAR_OFFSET), volts.in(Volts));
-    this.backR.updateInputs(
-        Rotation2d.fromRadians((-Math.PI / 4) + SwerveConstants.BR_ANGULAR_OFFSET), volts.in(Volts));
-    },
-    
-    // (voltage) -> this.runVolts(voltage.in(Volts)),
-    null, // No log consumer, since data is recorded by URCL
-    this
-  )
-);
-// The methods below return Command objects
-transQ1 = translationSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
-transQ2 = translationSysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
-transD1 = translationSysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
-transD2 = translationSysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
+  } //ends Drivetrain constructor
 
-rotQ1 = rotationalSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
-rotQ2 = rotationalSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
-rotD1 = rotationalSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
-rotD2 = rotationalSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
-
-
-  }
-
+  // Drivetrain Singleton - ensures only 1 instance of Drivetrain is constructed
   public static Drivetrain getInstance() {
     if (instance == null) {
       instance = new Drivetrain();
@@ -260,60 +254,33 @@ rotD2 = rotationalSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
     return instance;
   }
 
+  // Primary method to move drivetrain -- takes in 4 fields which can be set independently, called periodically
   public void drive() {
     move(this.xSpeed, this.ySpeed, this.rotSpeed, this.fieldCentric);
   }
 
-  //sets forward/backward motion of robot
+  // sets forward/backward motion of robot
   public void setXSpeed(double xSpeed){
     this.xSpeed = xSpeed;
   }
 
-  //sets strafing right/left speed of robot
+  // sets strafing right/left speed of robot
   public void setYSpeed(double ySpeed){
     this.ySpeed = ySpeed;
   }
 
-  //sets rotation right/left speed of robot
+  // sets rotation right/left speed of robot
   public void setRotSpeed(double rotSpeed){
     this.rotSpeed = rotSpeed;
   }
 
-
-
-
-
-  //sets whether driving is fieldcentric or not
+  // sets whether driving is fieldcentric or not
   public void setFieldCentric(boolean fieldCentric) {
     this.fieldCentric = fieldCentric;
   }  
   public boolean getFieldCentric() {
     return fieldCentric;
   }
-
-  public ChassisSpeeds getSpeeds() {
-    return driveKinematics.toChassisSpeeds(getModuleStates());
-  }
-
-  //method to help AutoBuilder do stuff
-  public void driveRobotRelative(ChassisSpeeds robotRelativeSpeeds) {
-
-    ChassisSpeeds speeds = ChassisSpeeds.discretize(robotRelativeSpeeds, 0.02);
-
-    //Store the states of each module
-    SwerveModuleState[] swerveModuleStates = driveKinematics.toSwerveModuleStates(speeds);
-    
-    //cleans up any weird speeds that may be too high after kinematics equation
-    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, SwerveConstants.TOP_SPEED);
-
-    // setting the state for each module as an array
-    for(int i = 0; i < modules.length; i++) {
-      modules[i].setDesiredState(swerveModuleStates[i]);
-    }
-
-  }
-
-
 
 
 
@@ -358,9 +325,9 @@ rotD2 = rotationalSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
     double xSpeedCommanded;
     double ySpeedCommanded;
 
-      xSpeedCommanded = xSpeed;
-      ySpeedCommanded = ySpeed;
-      m_currentRotation = rot;
+    xSpeedCommanded = xSpeed;
+    ySpeedCommanded = ySpeed;
+    m_currentRotation = rot;
 
     // Convert the commanded speeds into the correct units for the drivetrain
     double xSpeedDelivered = xSpeedCommanded * SwerveConstants.TOP_SPEED;
@@ -404,9 +371,31 @@ rotD2 = rotationalSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
     backR.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
   }
 
+  // Helps AutoBuilder do stuff
+  public void driveRobotRelative(ChassisSpeeds robotRelativeSpeeds) {
+
+    ChassisSpeeds speeds = ChassisSpeeds.discretize(robotRelativeSpeeds, 0.02);
+
+    //Store the states of each module
+    SwerveModuleState[] swerveModuleStates = driveKinematics.toSwerveModuleStates(speeds);
+    
+    //cleans up any weird speeds that may be too high after kinematics equation
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, SwerveConstants.TOP_SPEED);
+
+    // setting the state for each module as an array
+    for(int i = 0; i < modules.length; i++) {
+      modules[i].setDesiredState(swerveModuleStates[i]);
+    }
+
+  }
+
 
     
   //---------------SWERVEMODULE HELPER METHODS --------------//
+
+  public ChassisSpeeds getSpeeds() {
+    return driveKinematics.toChassisSpeeds(getModuleStates());
+  }
 
   /**
    * Sets the swerve ModuleStates.
@@ -599,12 +588,6 @@ rotD2 = rotationalSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
 
     SmartDashboard.putBoolean("fieldCentric", fieldCentric);
   }
-
-
-
-
-
-
 
 
 

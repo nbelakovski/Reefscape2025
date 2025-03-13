@@ -23,7 +23,7 @@ public class ElevatorJoystick extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    elevator.resetPosition();
+    elevator.zeroPosition();
     elevator.stop();
   }
 

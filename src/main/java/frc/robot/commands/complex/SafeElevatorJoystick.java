@@ -1,16 +1,15 @@
 package frc.robot.commands.complex;
 
-import java.util.function.Supplier;
 
+import java.util.function.Supplier;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.CoralIntake;
 import frc.robot.subsystems.Elevator;
 
 
 public class SafeElevatorJoystick extends Command {
 
-  private Elevator elevator;
+  private static Elevator elevator;
   private Supplier<Double> speedSupplier;
   
 
@@ -30,7 +29,6 @@ public class SafeElevatorJoystick extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
     if(elevator.coralGapStop()){
       elevator.stop();
     }
@@ -42,7 +40,6 @@ public class SafeElevatorJoystick extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-
     elevator.stop();
   }
 

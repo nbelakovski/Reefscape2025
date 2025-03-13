@@ -23,13 +23,12 @@ import frc.robot.commands.closed.SetJawAngle;
 import frc.robot.commands.complex.SwerveDrive;
 import frc.robot.subsystems.Drivetrain;
 
-// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
-// information, see:
-// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
+
 public class DriveDtoL4 extends SequentialCommandGroup {
 
-  public Drivetrain drivetrain;
+  public static Drivetrain drivetrain;
   
+
   public DriveDtoL4() {
     
     drivetrain = Drivetrain.getInstance();
@@ -78,9 +77,9 @@ public class DriveDtoL4 extends SequentialCommandGroup {
         new WaitCommand(3),
         new CoralScore(),
         new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L4)
-        
       )
-      
+    
     );
+
   }
 }

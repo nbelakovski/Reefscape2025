@@ -1,8 +1,5 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
+
 
 import frc.robot.Constants.*;
 import frc.robot.utils.*;
@@ -39,7 +36,7 @@ public class RobotContainer {
   private Camera cam = Camera.getInstance();
   private Drivetrain drivetrain = Drivetrain.getInstance();
   private AlgaeHandler algae = AlgaeHandler.getInstance();
-  private LEDStrip led;
+  private LEDStrip led = LEDStrip.getInstance();
 
   private SendableChooser<Command> autoChooser;
   private Command auto1 = new PathPlannerAuto("Auto1");
@@ -58,8 +55,6 @@ public class RobotContainer {
     
     // Configure the trigger bindings
     autoChooserInit();
-
-    led = new LEDStrip();
   }
 
   /**
@@ -95,21 +90,6 @@ public class RobotContainer {
     // new JoystickButton(driverController,Button.kY.value).whileTrue(new DriveToPegPID(cam.closestID, "STRAIGHT"));
 
 
-    //---------- CORAL INTAKE ----------//
-
-    // Driver - RT - Move Elevator in position to Intake + Spin Intake wheels
-    new TriggerButton(driverController, 3).whileTrue(new ElevatorIntakeCombo());        //RT 
-  
-
-    // Operator - LT - Intake Coral with sensors
-    new TriggerButton(operatorController, 2).whileTrue(new CoralInSafe());        //LT    
-    
-    // Operator - RB - Retract Coral if hanging too far out
-    //new TriggerButton(operatorController, 2).whileTrue(new CoralRetract());       //LT
-     new JoystickButton(operatorController, Button.kLeftBumper.value).whileTrue(new CoralRetract()); //LB
-     
-
-
     //---------- ELEVATOR ----------//
 
     //Driver - Y - Elevator to Intake Height
@@ -126,8 +106,16 @@ public class RobotContainer {
     new DPad(operatorController,0).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L3));
     new DPad(operatorController,90).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L4));
     
+    //---------- CORAL INTAKE/ SCORING ----------//
 
-    //---------- CORAL SCORE ----------//
+    // Driver - RT - Move Elevator in position to Intake + Spin Intake wheels
+    new TriggerButton(driverController, 3).whileTrue(new ElevatorIntakeCombo());        //RT 
+  
+    // Operator - LT - Intake Coral with sensors
+    new TriggerButton(operatorController, 2).whileTrue(new CoralInSafe());        //LT    
+    
+    // Operator - LB - Retract Coral if hanging too far out
+    new JoystickButton(operatorController, Button.kLeftBumper.value).whileTrue(new CoralRetract()); //LB
     
     //Operator - RT - Score Coral
     new TriggerButton(operatorController, 3).whileTrue(new CoralScore()); //RT
@@ -152,7 +140,7 @@ public class RobotContainer {
     //new JoystickButton(operatorController, Button.kA.value).whileTrue(new SetJawAngle(MechConstants.JAW_INTAKE_ANGLE).repeatedly());
 
     // Operator - B - Rotate Jaw to Starting/Coral Stop Angle
-    //new JoystickButton(operatorController, Button.kB.value).whileTrue(new SetJawAngle(MechConstants.JAW_CORAL_STOP_ANGLE).repeatedly());
+    // new JoystickButton(operatorController, Button.kB.value).whileTrue(new SetJawAngle(MechConstants.JAW_STARTING_ANGLE).repeatedly());
 
     //new JoystickButton(operatorController, Button.kRightBumper.value).whileTrue(new SetJawAngle(MechConstants.JAW_UP_ANGLE)); //RB
 
@@ -163,7 +151,6 @@ public class RobotContainer {
     //new DPad(driverController, 0).whileTrue(new SetJawAngle(MechConstants.JAW_INTAKE_ANGLE));
     //new DPad(driverController, 180).whileTrue(new SetJawAngle(MechConstants.JAW_CORAL_STOP_ANGLE));
 
- 
 
     //---------- ALGAE TONGUE ----------//
 
@@ -172,7 +159,6 @@ public class RobotContainer {
 
     // Operator - X - Spit out the Algae
     new JoystickButton(operatorController, Button.kX.value).whileTrue(new AlgaeSpit());
-
 
 
     //---------- SYSID  ----------//

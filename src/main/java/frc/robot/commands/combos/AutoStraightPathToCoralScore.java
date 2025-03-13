@@ -25,13 +25,12 @@ import frc.robot.commands.complex.SafeAlgaeJoystick;
 import frc.robot.commands.complex.SwerveDrive;
 import frc.robot.subsystems.Drivetrain;
 
-// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
-// information, see:
-// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
+
 public class AutoStraightPathToCoralScore extends SequentialCommandGroup {
 
-  public Drivetrain drivetrain;
+  public static Drivetrain drivetrain;
   
+
   public AutoStraightPathToCoralScore(int aprilTagId, double level) {
     
     drivetrain = Drivetrain.getInstance();

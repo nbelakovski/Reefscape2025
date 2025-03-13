@@ -12,9 +12,9 @@ import frc.robot.subsystems.Drivetrain;
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class DriveToPeg extends Command {
 
-  Drivetrain drivetrain;
-  Camera cam;
-  int tagID;
+  private static Drivetrain drivetrain;
+  private static Camera cam;
+  private int tagID;
   private double xSpeed;
   private double ySpeed;
   private double rotSpeed;
