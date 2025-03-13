@@ -189,9 +189,10 @@ public void autoChooserInit() {
     autoChooser.addOption("ERComboPath", ERComboPath);
     autoChooser.addOption("auto2", auto2);
     autoChooser.addOption("DrivetoDL4-old", new DriveDtoL4() );
-    autoChooser.addOption("drivetopeg", new DriveToPeg(21));
+    autoChooser.addOption("drivetopeg2", new DriveToPeg(21));
     autoChooser.addOption("straightToDL4-RED", new AutoStraightPathToCoralScore(21,4) );
     autoChooser.addOption("driveToBranch", new DriveToBranchPID(21, "RIGHT"));
+    
 
     // Table for AprilTag IDs
     // 9	Red Reef C --> (Blue 22)
@@ -210,7 +211,8 @@ public void autoChooserInit() {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return autoChooser.getSelected();
+    //return autoChooser.getSelected();
+    return new DriveToBranchPID(21, "RIGHT");
   }
 }
 

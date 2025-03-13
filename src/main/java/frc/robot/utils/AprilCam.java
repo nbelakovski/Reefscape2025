@@ -60,7 +60,7 @@ public class AprilCam {
     // Constructor 1
     public AprilCam(String name, Translation3d position, Rotation3d angle){
         this.camera = new PhotonCamera(name);
-        this.camOffsetTranslation = new Translation3d(-0.40, -0.15, 0.0); //cam mounted 13" back from front bumper, slightly right?
+        this.camOffsetTranslation = new Translation3d(-0.36, -0.03, 0.0); //cam mounted 13" back from front bumper, slightly right?
         this.camOffsetRotation = new Rotation3d(0,0,0); //cam mounted facing forward, upright
         this.camOffset = new Transform3d(camOffsetTranslation, camOffsetRotation);
         aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
