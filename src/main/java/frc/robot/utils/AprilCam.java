@@ -2,6 +2,7 @@ package frc.robot.utils;
 
 
 import frc.robot.Constants.VisionConstants;
+import frc.robot.Field;
 import frc.robot.Robot;
 
 import java.util.List;
@@ -18,8 +19,8 @@ import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 import org.photonvision.targeting.TargetCorner;
 
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
+// import edu.wpi.first.apriltag.AprilTagFieldLayout;
+// import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -49,7 +50,6 @@ public class AprilCam {
     Transform3d camOffset;
     Translation3d camOffsetTranslation;
     Rotation3d camOffsetRotation;
-    AprilTagFieldLayout aprilTagFieldLayout;
 
     // Simulation
     private PhotonCameraSim cameraSim;
@@ -63,8 +63,7 @@ public class AprilCam {
         this.camOffsetTranslation = new Translation3d(-0.36, -0.03, 0.0); //cam mounted 13" back from front bumper, slightly right?
         this.camOffsetRotation = new Rotation3d(0,0,0); //cam mounted facing forward, upright
         this.camOffset = new Transform3d(camOffsetTranslation, camOffsetRotation);
-        aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
-        this.photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, camOffset);
+        this.photonPoseEstimator = new PhotonPoseEstimator(Field.aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, camOffset);
      }
 
      // Constructor 2: simple version

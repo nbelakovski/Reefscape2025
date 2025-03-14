@@ -2,12 +2,11 @@ package frc.robot.subsystems;
 
 
 import frc.robot.Constants.VisionConstants;
+import frc.robot.Field;
 import frc.robot.utils.AprilCam;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.targeting.PhotonTrackedTarget;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -17,7 +16,6 @@ public class Camera extends SubsystemBase {
 
   private static Camera instance;
   public AprilCam cam;
-  AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
   public int closestID;
   Transform3d robotToCam;
   PhotonPoseEstimator photonPoseEstimator;
@@ -48,7 +46,7 @@ public class Camera extends SubsystemBase {
   }
 
   public  Pose3d getTagPose(int tagID){
-    return aprilTagFieldLayout.getTagPose(tagID).get();
+    return Field.aprilTagFieldLayout.getTagPose(tagID).get();
   }
 
   // public double getX(){
@@ -112,9 +110,9 @@ public class Camera extends SubsystemBase {
     //   SmartDashboard.putNumber("rot", 0);
     // }
     
-    SmartDashboard.putNumber("tag 21 pose x", aprilTagFieldLayout.getTagPose(21).get().getX());
-    SmartDashboard.putNumber("tag 21 pose y", aprilTagFieldLayout.getTagPose(21).get().getY());
-    SmartDashboard.putNumber("tag 21 angle", aprilTagFieldLayout.getTagPose(21).get().getRotation().getAngle());
+    SmartDashboard.putNumber("tag 21 pose x", Field.aprilTagFieldLayout.getTagPose(21).get().getX());
+    SmartDashboard.putNumber("tag 21 pose y", Field.aprilTagFieldLayout.getTagPose(21).get().getY());
+    SmartDashboard.putNumber("tag 21 angle", Field.aprilTagFieldLayout.getTagPose(21).get().getRotation().getAngle());
     SmartDashboard.putNumber("closest ID", closestID);
     
    

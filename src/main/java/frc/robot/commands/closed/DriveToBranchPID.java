@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.SwerveAutoConstants;
+import frc.robot.Field;
 import frc.robot.subsystems.Camera;
 import frc.robot.subsystems.Drivetrain;
 
@@ -26,6 +27,7 @@ public class DriveToBranchPID extends Command {
   private PIDController controllerY;
   private double setpointX;
   private double setpointY;
+  
 
   
   /** Creates a new DriveToBranchPID. */
@@ -33,37 +35,15 @@ public class DriveToBranchPID extends Command {
 
     this.tagID = tagID;
     this.branchDirection = branchDirection;
-
     SmartDashboard.putString("DTBPID Branch", branchDirection);
     SmartDashboard.putNumber("DTBPID Tag", tagID);
 
-    drivetrain = Drivetrain.getInstance(); 
-    cam = Camera.getInstance();
-    Pose3d tagPose = cam.getTagPose(tagID);
+    // Get desired pose at a specific branch
+    Pose3d targetPose = Field.getBranchPose(tagID, branchDirection);
 
-    //Establish starting X & Y values
+    //Record starting X & Y values
     startDistanceX = drivetrain.getPose().getX();
     startDistanceY = drivetrain.getPose().getY();
-
-    //Get the coordinate of tag on field
-    Translation3d tagTranslation = tagPose.getTranslation();
-    double tagAngle = tagPose.getRotation().getAngle();
-
-    //Create offset from tag to desired branch
-    Translation3d branchOffset = new Translation3d();
-    double branchOffsetDistanceInches = 6;
-    double branchOffsetDistance = branchOffsetDistanceInches * 0.0254;
-
-    if (branchDirection.equals("LEFT")){
-      branchOffset = new Translation3d(Math.cos(tagAngle) * branchOffsetDistance, Math.sin(tagAngle) * branchOffsetDistance, 0);
-    }  else  if (branchDirection.equals("RIGHT")){
-      branchOffset = new Translation3d(-Math.cos(tagAngle) * branchOffsetDistance, -Math.sin(tagAngle) * branchOffsetDistance, 0);
-    }
-
-    // Add tag and branch offset to get desired target coordinate --> target "Pose"
-    Translation3d targetCoordinate = branchOffset.plus(tagTranslation);
-    Rotation3d targetAngle = new Rotation3d(0,0,tagAngle);
-    Pose3d targetPose = new Pose3d(targetCoordinate, targetAngle);
 
     // Record the setpoints for X & Y Coordinates
     setpointX = targetPose.getX();
