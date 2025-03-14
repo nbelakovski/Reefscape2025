@@ -138,9 +138,17 @@ public final class Constants {
     public static final double DRIVE_TRANSLATE_I = 0;
     public static final double DRIVE_TRANSLATE_D = 0;
 
-    public static final double DRIVE_TURN_P = 0.03;
+    public static final double DRIVE_X_P = 0.7;
+    public static final double DRIVE_X_I = 0;
+    public static final double DRIVE_X_D = 0;
+
+    public static final double DRIVE_Y_P = 1.0;
+    public static final double DRIVE_Y_I = 0;
+    public static final double DRIVE_Y_D = 0;
+
+    public static final double DRIVE_TURN_P = 0.02;
     public static final double DRIVE_TURN_I = 0;
-    public static final double DRIVE_TURN_D = 0;
+    public static final double DRIVE_TURN_D = 0.0;
 
     //Old Drivetrain PID constants
     //public static final PIDF TURN_PID = new PIDF(0.16, 0, 2 * Math.PI, -1, 1, true);<-- from ???

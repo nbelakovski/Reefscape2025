@@ -85,9 +85,19 @@ public class RobotContainer {
     new JoystickButton(driverController,Button.kX.value).toggleOnTrue(new ToggleFieldCentric());
 
     // Driver - DPAD - Align to a Visible Branch on the Reef
-    // new JoystickButton(driverController,Button.kB.value).whileTrue(new DriveToPegPID(cam.closestID, "RIGHT"));
+    new DPad(driverController,180).whileTrue(new TurnToAnglePID(180));
+    new DPad(driverController,270).whileTrue(new TurnToAnglePID(90));
+    new DPad(driverController,0).whileTrue(new TurnToAnglePID(0));
+    new DPad(driverController,90).whileTrue(new TurnToAnglePID(270));
+
+
     // new JoystickButton(driverController,Button.kX.value).whileTrue(new DriveToPegPID(cam.closestID, "LEFT"));
     // new JoystickButton(driverController,Button.kY.value).whileTrue(new DriveToPegPID(cam.closestID, "STRAIGHT"));
+
+    
+    // Driver - A - Zero Angle of Field
+    new JoystickButton(driverController, Button.kA.value).toggleOnTrue(new ZeroHeading());
+
 
 
     //---------- ELEVATOR ----------//
@@ -129,8 +139,8 @@ public class RobotContainer {
     ));
 
     // Driver - DPAD - manually move Jaw up & down
-    new DPad(driverController, 0).whileTrue(new SafeAlgaeJoystick(() -> 0.5));
-    new DPad(driverController, 180).whileTrue(new SafeAlgaeJoystick(() -> -0.5));
+    // new DPad(driverController, 0).whileTrue(new SafeAlgaeJoystick(() -> 0.5));
+    // new DPad(driverController, 180).whileTrue(new SafeAlgaeJoystick(() -> -0.5));
 
     // Driver - ?? - Zero Angle of Algae Handler
     // new TriggerButton(driverController, 2).whileTrue(new ZeroAlgae());
@@ -192,7 +202,7 @@ public void autoChooserInit() {
     autoChooser.addOption("drivetopeg2", new DriveToPeg(21));
     autoChooser.addOption("straightToDL4-RED", new AutoStraightPathToCoralScore(21,4) );
     autoChooser.addOption("driveToBranch", new DriveToBranchPID(21, "LEFT"));
-    autoChooser.addOption("turntoangle", new TurnToAnglePID(45));
+    autoChooser.addOption("turntoangle", new TurnToAnglePID(0));
     
 
     // Table for AprilTag IDs

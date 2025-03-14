@@ -23,7 +23,7 @@ public class TurnToAnglePID extends Command {
     this.setpoint = angle;
 
     controllerTurn.setSetpoint(setpoint);
-    controllerTurn.setTolerance(0.5,1); //<--values from 2022
+    controllerTurn.setTolerance(0.1,1); //<--values from 2022
     controllerTurn.enableContinuousInput(-180, 180);
 
     addRequirements(drivetrain);
@@ -57,6 +57,7 @@ public class TurnToAnglePID extends Command {
     // drivetrain.drive();
 
     //SD stuff
+    SmartDashboard.putNumber("TTA targetAngle", setpoint);
     SmartDashboard.putNumber("TTA newRotSpeed", newRotSpeed);
     SmartDashboard.putNumber("TTA measurement",measurement);
   }
