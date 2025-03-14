@@ -134,11 +134,11 @@ public final class Constants {
         kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
 
 
-    public static final double DRIVE_TRANSLATE_P = 1.0;
+    public static final double DRIVE_TRANSLATE_P = 1;
     public static final double DRIVE_TRANSLATE_I = 0;
     public static final double DRIVE_TRANSLATE_D = 0;
 
-    public static final double DRIVE_TURN_P = 0.003;
+    public static final double DRIVE_TURN_P = 0.03;
     public static final double DRIVE_TURN_I = 0;
     public static final double DRIVE_TURN_D = 0;
 

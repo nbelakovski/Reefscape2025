@@ -191,7 +191,8 @@ public void autoChooserInit() {
     autoChooser.addOption("DrivetoDL4-old", new DriveDtoL4() );
     autoChooser.addOption("drivetopeg2", new DriveToPeg(21));
     autoChooser.addOption("straightToDL4-RED", new AutoStraightPathToCoralScore(21,4) );
-    autoChooser.addOption("driveToBranch", new DriveToBranchPID(21, "RIGHT"));
+    autoChooser.addOption("driveToBranch", new DriveToBranchPID(21, "LEFT"));
+    autoChooser.addOption("turntoangle", new TurnToAnglePID(45));
     
 
     // Table for AprilTag IDs
@@ -211,8 +212,8 @@ public void autoChooserInit() {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    //return autoChooser.getSelected();
-    return new DriveToBranchPID(21, "RIGHT");
+    return autoChooser.getSelected();
+    //return new DriveToBranchPID(21, "RIGHT");
   }
 }
 

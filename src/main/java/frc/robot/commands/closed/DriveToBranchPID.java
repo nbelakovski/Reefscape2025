@@ -33,6 +33,7 @@ public class DriveToBranchPID extends Command {
   /** Creates a new DriveToBranchPID. */
   public DriveToBranchPID(int tagID, String branchDirection) {
 
+    drivetrain = Drivetrain.getInstance();
     this.tagID = tagID;
     this.branchDirection = branchDirection;
     SmartDashboard.putString("DTBPID Branch", branchDirection);
@@ -50,8 +51,8 @@ public class DriveToBranchPID extends Command {
     setpointY = targetPose.getY();
 
     // Setup PID controllers for X & Y distances
-    controllerX = new PIDController(SwerveAutoConstants.DRIVE_TRANSLATE_P, SwerveAutoConstants.DRIVE_TRANSLATE_I, SwerveAutoConstants.DRIVE_TRANSLATE_D); //<--old values of 0.9, 0,0
-    controllerY = new PIDController(SwerveAutoConstants.DRIVE_TRANSLATE_P, SwerveAutoConstants.DRIVE_TRANSLATE_I, SwerveAutoConstants.DRIVE_TRANSLATE_D); //<--old values of 0.7, 0,0
+    controllerX = new PIDController(0.7, SwerveAutoConstants.DRIVE_TRANSLATE_I, SwerveAutoConstants.DRIVE_TRANSLATE_D); //<--old values of 0.9, 0,0
+    controllerY = new PIDController(1.0, SwerveAutoConstants.DRIVE_TRANSLATE_I, SwerveAutoConstants.DRIVE_TRANSLATE_D); //<--old values of 0.7, 0,0
     
     // Set setpoints for X & Y controllers
     controllerX.setSetpoint(setpointX);
@@ -59,7 +60,7 @@ public class DriveToBranchPID extends Command {
 
     // Set tolerances for X & Y controllers
     controllerX.setTolerance(0.05); //0.05m = 2 inches
-    controllerY.setTolerance(0.05);
+    controllerY.setTolerance(0.01);
 
 
     addRequirements(drivetrain);

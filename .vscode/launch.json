@@ -9,6 +9,13 @@
       "name": "Test",
       "request": "launch",
       "mainClass": "frc.robot.Test",
+      "projectName": "Reefscape2025-1"
+    },
+    {
+      "type": "java",
+      "name": "Test",
+      "request": "launch",
+      "mainClass": "frc.robot.Test",
       "projectName": "Reefscape2025"
     },
     {

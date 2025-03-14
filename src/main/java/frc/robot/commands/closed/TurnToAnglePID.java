@@ -23,7 +23,7 @@ public class TurnToAnglePID extends Command {
     this.setpoint = angle;
 
     controllerTurn.setSetpoint(setpoint);
-    controllerTurn.setTolerance(30,1); //<--values from 2022
+    controllerTurn.setTolerance(0.5,1); //<--values from 2022
     controllerTurn.enableContinuousInput(-180, 180);
 
     addRequirements(drivetrain);
