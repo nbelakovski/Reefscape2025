@@ -215,6 +215,7 @@ public void setTurnSetpoint(Rotation2d angle) {
     SmartDashboard.putNumber(config.NAME + " Angle Degrees", getPosition().angle.getDegrees());
     SmartDashboard.putNumber(config.NAME + " Angle Radians", getTurnRadians());
     SmartDashboard.putNumber(config.NAME + " Drive Position", getPosition().distanceMeters);
+    SmartDashboard.putNumber(config.NAME + "Drive Motor Voltage", driveMotor.getBusVoltage());
   }
 
 

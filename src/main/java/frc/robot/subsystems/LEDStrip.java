@@ -29,7 +29,7 @@ public class LEDStrip extends SubsystemBase {
     public static final double L2 = LEDColors.RED_HEARTBEAT;
     public static final double L3 = LEDColors.MEDIUM_HEARTBEAT;
     public static final double L4 = LEDColors.MEDIUM_HEARTBEAT_2;
-    public static final double INTAKE_HEIGHT = LEDColors.WHITE_HEARTBEAT;
+    public static final double INTAKE_HEIGHT = LEDColors.WHITE;
     public static final double MIN_HEIGHT = LEDColors.RED;
     public static final double MAX_HEIGHT = LEDColors.RED;
 
