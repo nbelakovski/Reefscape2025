@@ -73,7 +73,7 @@ public class RobotContainer {
 
     //---------- DRIVETRAIN ----------//
 
-    //Driver - LX & LY joysticks for Translation, RX joystick for Strafing
+   //Driver - LX & LY joysticks for Translation, RX joystick for Strafing, A to reset Robot NavX Heading
     Drivetrain.getInstance().setDefaultCommand(new SwerveDrive(
       () -> driverController.getRawAxis(1),
       () -> driverController.getRawAxis(0),
@@ -81,18 +81,24 @@ public class RobotContainer {
       () -> driverController.getAButton()
     ));
 
+    // Driver - B - Zero Angle of Field
+    // new JoystickButton(driverController, Button.kB.value).toggleOnTrue(new ZeroField());
+
     // Driver - X - Toggle FieldCentric on/off
     new JoystickButton(driverController,Button.kX.value).toggleOnTrue(new ToggleFieldCentric());
 
     // Driver - DPAD - Align to a Visible Branch on the Reef
     new DPad(driverController,180).whileTrue(new TurnToAnglePID(180));
-    new DPad(driverController,270).whileTrue(new TurnToAnglePID(90));
+    // new DPad(driverController,270).whileTrue(new TurnToAnglePID(90));
     new DPad(driverController,0).whileTrue(new TurnToAnglePID(0));
-    new DPad(driverController,90).whileTrue(new TurnToAnglePID(270));
+    // new DPad(driverController,90).whileTrue(new TurnToAnglePID(270));
 
+    // Driver - DPAD - Align to AprilTag Branch LEFT or RIGHT
+    // int tagID = 21;
+    int tagID = cam.closestID;
+    new DPad(driverController,270).whileTrue(new DriveToBranchPID(tagID,"LEFT"));
+    new DPad(driverController,90).whileTrue(new DriveToBranchPID(tagID,"RIGHT")); 
 
-    // new JoystickButton(driverController,Button.kX.value).whileTrue(new DriveToPegPID(cam.closestID, "LEFT"));
-    // new JoystickButton(driverController,Button.kY.value).whileTrue(new DriveToPegPID(cam.closestID, "STRAIGHT"));
 
 
     //---------- ELEVATOR ----------//

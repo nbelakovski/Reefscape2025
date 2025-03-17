@@ -63,13 +63,12 @@ public class Drivetrain extends SubsystemBase {
   public AHRS navX;
 
   // Slew rate filter variables for controlling lateral acceleration
-  private double m_currentRotation = 0.0;
-  private double m_currentTranslationDir = 0.0;
-  private double m_currentTranslationMag = 0.0;
-
+  // private double m_currentRotSpeed = 0.0;
+  // private double m_currentTranslationDir = 0.0;
+  // private double m_currentTranslationMag = 0.0;
   // private SlewRateLimiter m_magLimiter = new SlewRateLimiter(SwerveConstants.kMagnitudeSlewRate);
   // private SlewRateLimiter m_rotLimiter = new SlewRateLimiter(SwerveConstants.kRotationalSlewRate);
-  private double m_prevTime = WPIUtilJNI.now() * 1e-6;
+  // private double m_prevTime = WPIUtilJNI.now() * 1e-6;
 
   //Fields that control 3 dimensions of drive motion
   private double xSpeed = 0.0;
@@ -122,7 +121,6 @@ public class Drivetrain extends SubsystemBase {
     this.field = new Field2d();
     this.fieldCentric = true;
     
-
     var stateStdDevs = VecBuilder.fill(0.1, 0.1, 0.1);
     var visionStdDevs = VecBuilder.fill(1, 1, 1);
 
@@ -134,37 +132,12 @@ public class Drivetrain extends SubsystemBase {
       stateStdDevs,
       visionStdDevs);
 
-      
-    // try{
-    //   RobotConfig config = RobotConfig.fromGUISettings();
+    autoConfig();
+    sysIdConfig();
 
-    //   AutoBuilder.configure(
-    //   this::getPose, 
-    //   this::resetOdometry, 
-    //   this::getSpeeds,
-    //   (speeds, feedforwards) -> driveRobotRelative(speeds),
-    //   AutoConstants.pathFollowerConfig,
-    //   config, 
-    //   () -> {
-    //     // Boolean supplier that controls when the path will be mirrored for the red alliance
-    //     // This will flip the path being followed to the red side of the field.
-    //     // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+  }
 
-    //     var alliance = DriverStation.getAlliance();
-    //     if (alliance.isPresent()) {
-    //       return alliance.get() == DriverStation.Alliance.Red;
-    //     }
-    //     return false;
-    //   },
-    //   this
-    // );
-    // } catch (Exception e) {
-    //   // Handle exception as needed
-    //   e.printStackTrace();
-    // }
-
-    // try{
-      //RobotConfig config = RobotConfig.fromGUISettings();
+  private void autoConfig(){
 
     // Configure AutoBuilder
     AutoBuilder.configure(
@@ -198,9 +171,10 @@ public class Drivetrain extends SubsystemBase {
       },
       this
     );
-    // }catch(Exception e){
-    //   DriverStation.reportError("Failed to load PathPlanner config and configure AutoBuilder", e.getStackTrace());
-    // }
+   
+  }
+
+  private void sysIdConfig(){
     
     // Create the SysId routines
     var translationSysIdRoutine = new SysIdRoutine(
@@ -244,9 +218,8 @@ public class Drivetrain extends SubsystemBase {
     rotD1 = rotationalSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
     rotD2 = rotationalSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
 
-    
+  }
 
-  } //ends Drivetrain constructor
 
   // Drivetrain Singleton - ensures only 1 instance of Drivetrain is constructed
   public static Drivetrain getInstance() {
@@ -304,7 +277,6 @@ public class Drivetrain extends SubsystemBase {
     this.ySpeed = ySpeed;
     this.rotSpeed = rotSpeed;
     this.fieldCentric = fieldCentric;
-    //drive(xSpeed, ySpeed, rotSpeed, false);
   }
 
   public void stopDrive()
@@ -324,17 +296,14 @@ public class Drivetrain extends SubsystemBase {
    */
   public void move(double xSpeed, double ySpeed, double rot, boolean fieldcentric) {
 
-    double xSpeedCommanded;
-    double ySpeedCommanded;
-
-    xSpeedCommanded = xSpeed;
-    ySpeedCommanded = ySpeed;
-    m_currentRotation = rot;
+    double xSpeedCommanded = xSpeed;
+    double ySpeedCommanded = ySpeed;
+    double rotSpeedCommanded = rot;
 
     // Convert the commanded speeds into the correct units for the drivetrain
     double xSpeedDelivered = xSpeedCommanded * SwerveConstants.TOP_SPEED;
     double ySpeedDelivered = ySpeedCommanded * SwerveConstants.TOP_SPEED;
-    double rotSpeedDelivered = m_currentRotation * SwerveConstants.TOP_ANGULAR_SPEED;
+    double rotSpeedDelivered = rotSpeedCommanded * SwerveConstants.TOP_ANGULAR_SPEED;
 
     //var???
     //SwerveModuleState[] 
@@ -349,7 +318,6 @@ public class Drivetrain extends SubsystemBase {
     ChassisSpeeds speeds = fieldCentric ? 
       ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotSpeedDelivered, getRobotHeading()) : 
       new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotSpeedDelivered);
-
 
     //Store the states of each module
     SwerveModuleState[] swerveModuleStates = driveKinematics.toSwerveModuleStates(speeds);
@@ -412,15 +380,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   // method to return all the positions of the 4 modules
-  public SwerveModulePosition[] getSwerveModulePos() {
-    
-    // return new SwerveModulePosition[] {
-    //         frontLeft.getPosition(),
-    //         frontRight.getPosition(),
-    //         backLeft.getPosition(),
-    //         backRight.getPosition()
-    // };
-    
+  public SwerveModulePosition[] getSwerveModulePos() {  
     SwerveModulePosition[] modulePosition = new SwerveModulePosition[4];
     for(int i = 0; i < modules.length; i++) {
       modulePosition[i] = modules[i].getPosition();
@@ -466,9 +426,17 @@ public class Drivetrain extends SubsystemBase {
     }
   }
 
-  public void resetIMU() {
+  // Zeroes the heading of the robot
+  public void zeroRobotHeading() {
     navX.reset();
   }
+
+  public void zeroFieldAngle(){
+    
+  }
+  // public void resetIMU() {
+  //   navX.reset();
+  // }
 
   /**
    * Returns the turn rate of the robot.
@@ -523,9 +491,9 @@ public class Drivetrain extends SubsystemBase {
     poseEstimator.update(getRobotHeading(), getSwerveModulePos());
   }
 
-  // public Field2d getField() {
-  //   return field;
-  // }
+  public Field2d getField() {
+    return field;
+  }
 
   public SwerveDriveKinematics getKinematics() {
     return driveKinematics;
@@ -583,11 +551,8 @@ public class Drivetrain extends SubsystemBase {
 
     field.setRobotPose(getPose());
     SmartDashboard.putData("Odometry Field", field);
-
     SmartDashboard.putBoolean("fieldCentric", fieldCentric);
   }
-
-
 
 
 
