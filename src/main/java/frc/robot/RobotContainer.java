@@ -75,8 +75,8 @@ public class RobotContainer {
 
     //Driver - LX & LY joysticks for Translation, RX joystick for Strafing
     Drivetrain.getInstance().setDefaultCommand(new SwerveDrive(
-      () -> -driverController.getRawAxis(1),
-      () -> -driverController.getRawAxis(0),
+      () -> driverController.getRawAxis(1),
+      () -> driverController.getRawAxis(0),
       () -> -driverController.getRawAxis(4),
       () -> driverController.getAButton()
     ));

@@ -49,9 +49,9 @@ public final class Constants {
     // public static final double BL_SENSOR_OFFSET = 0.3813912; //from REV Hardware Client
 
     ///(New Robot)(Put new numbers)
-    public static final double FL_SENSOR_OFFSET = 0.6419245; //from REV Hardware Client
-    public static final double FR_SENSOR_OFFSET = 0.5287108; //from REV Hardware Client
-    public static final double BR_SENSOR_OFFSET = 0.0281878; //from REV Hardware Client
+    public static final double FL_SENSOR_OFFSET = 0.6419399; //from REV Hardware Client
+    public static final double FR_SENSOR_OFFSET = 0.0311315; //from REV Hardware Client
+    public static final double BR_SENSOR_OFFSET = 0.6507399; //from REV Hardware Client
     public static final double BL_SENSOR_OFFSET = 0.5267535; //from REV Hardware Client
 
     //(Old Robot)
@@ -64,9 +64,9 @@ public final class Constants {
     ///(New Robot)(Put new numbers)
     //Angular Offsets for the radian difference between the calibrated swerve and desired forward direction
     public static final double FL_ANGULAR_OFFSET = Math.PI / 2; //3 * Math.PI/2; //Math.PI / 2; //-Math.PI / 2;
-    public static final double FR_ANGULAR_OFFSET = 0; //3 * Math.PI/2;
-    public static final double BR_ANGULAR_OFFSET = 3 * Math.PI / 2; //Math.PI / 2;
-    public static final double BL_ANGULAR_OFFSET = 0; //Math.PI;
+    public static final double FR_ANGULAR_OFFSET = Math.PI; //3 * Math.PI/2;
+    public static final double BR_ANGULAR_OFFSET = Math.PI / 2; //Math.PI / 2;
+    public static final double BL_ANGULAR_OFFSET = Math.PI; //Math.PI;
     // public static final double FL_ANGULAR_OFFSET = 0; //Math.PI / 2; //-Math.PI / 2;
     // public static final double FR_ANGULAR_OFFSET = 0;
     // public static final double BR_ANGULAR_OFFSET = 0; //Math.PI / 2;
