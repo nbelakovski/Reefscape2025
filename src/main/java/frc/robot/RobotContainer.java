@@ -94,11 +94,6 @@ public class RobotContainer {
     // new JoystickButton(driverController,Button.kX.value).whileTrue(new DriveToPegPID(cam.closestID, "LEFT"));
     // new JoystickButton(driverController,Button.kY.value).whileTrue(new DriveToPegPID(cam.closestID, "STRAIGHT"));
 
-    
-    // Driver - A - Zero Angle of Field
-    new JoystickButton(driverController, Button.kA.value).toggleOnTrue(new ZeroHeading());
-
-
 
     //---------- ELEVATOR ----------//
 

@@ -464,14 +464,6 @@ public class Drivetrain extends SubsystemBase {
     }
   }
 
-  // Zeroes the heading of the robot
-  public void zeroHeading() {
-    navX.reset();
-  }
-
-  public void zeroFieldAngle(){
-    
-  }
   public void resetIMU() {
     navX.reset();
   }
