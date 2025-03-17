@@ -57,7 +57,7 @@ public class SwerveDrive extends Command {
       // yFilter.calculate(MathUtil.applyDeadband(ySpeed.get(), 0.1)),
     
       if(fieldReset.get()) {
-        drivetrain.resetIMU();
+        drivetrain.zeroRobotHeading();
       }
   }
 
