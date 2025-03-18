@@ -49,8 +49,8 @@ public final class Constants {
     // public static final double BL_SENSOR_OFFSET = 0.3813912; //from REV Hardware Client
 
     ///(New Robot)(Put new numbers)
-    public static final double FL_SENSOR_OFFSET = 0.6419399; //from REV Hardware Client
-    public static final double FR_SENSOR_OFFSET = 0.0311315; //from REV Hardware Client
+    public static final double FL_SENSOR_OFFSET = 0.1345434; //from REV Hardware Client
+    public static final double FR_SENSOR_OFFSET = 0.5278169; //from REV Hardware Client
     public static final double BR_SENSOR_OFFSET = 0.6507399; //from REV Hardware Client
     public static final double BL_SENSOR_OFFSET = 0.5267535; //from REV Hardware Client
 
@@ -152,7 +152,7 @@ public final class Constants {
     public static final double DRIVE_Y_I = 0;
     public static final double DRIVE_Y_D = 0;
 
-    public static final double DRIVE_TURN_P = 0.02;
+    public static final double DRIVE_TURN_P = 0.007;
     public static final double DRIVE_TURN_I = 0;
     public static final double DRIVE_TURN_D = 0.0;
 
