@@ -77,7 +77,7 @@ public class RobotContainer {
     Drivetrain.getInstance().setDefaultCommand(new SwerveDrive(
       () -> driverController.getRawAxis(1),
       () -> driverController.getRawAxis(0),
-      () -> -driverController.getRawAxis(4),
+      () ->  driverController.getRawAxis(4),
       () -> driverController.getAButton()
     ));
 
@@ -166,8 +166,8 @@ public class RobotContainer {
     //---------- ALGAE TONGUE ----------//
 
     // Operator - Y - Eat the Algae
-    new JoystickButton(operatorController, Button.kY.value).whileTrue(new AlgaeEat());
-
+    //new JoystickButton(operatorController, Button.kY.value).whileTrue(new AlgaeEat());
+    new JoystickButton(operatorController, Button.kY.value).whileTrue(new SetJawAngle(MechConstants.JAW_INTAKE_ANGLE).repeatedly());
     // Operator - X - Spit out the Algae
     new JoystickButton(operatorController, Button.kX.value).whileTrue(new AlgaeSpit());
 

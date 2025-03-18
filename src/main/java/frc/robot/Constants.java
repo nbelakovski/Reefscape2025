@@ -274,7 +274,7 @@ public static final class ModuleConstants {
     public static final MomentOfInertia MOI = KilogramSquareMeters.of(5); //was 0.2, Typical FRC robot will be between 3-8 Kg*m^2
 
     public static final double JAW_STARTING_ANGLE = 260;
-    public static final double JAW_INTAKE_ANGLE = 160;
+    public static final double JAW_INTAKE_ANGLE = 7.21;
     // public static final double JAW_UP_ANGLE = 25;
     public static final double JAW_AUTO_ANGLE = 80;
 
