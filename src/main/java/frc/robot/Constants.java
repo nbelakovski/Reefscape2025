@@ -63,8 +63,8 @@ public final class Constants {
 
     ///(New Robot)(Put new numbers)
     //Angular Offsets for the radian difference between the calibrated swerve and desired forward direction
-    public static final double FL_ANGULAR_OFFSET = Math.PI / 2; //3 * Math.PI/2; //Math.PI / 2; //-Math.PI / 2;
-    public static final double FR_ANGULAR_OFFSET = Math.PI; //3 * Math.PI/2;
+    public static final double FL_ANGULAR_OFFSET = 3 * Math.PI / 2; //3 * Math.PI/2; //Math.PI / 2; //-Math.PI / 2;
+    public static final double FR_ANGULAR_OFFSET = 0; //3 * Math.PI/2;
     public static final double BR_ANGULAR_OFFSET = Math.PI / 2; //Math.PI / 2;
     public static final double BL_ANGULAR_OFFSET = Math.PI; //Math.PI;
     // public static final double FL_ANGULAR_OFFSET = 0; //Math.PI / 2; //-Math.PI / 2;
@@ -73,11 +73,17 @@ public final class Constants {
     // public static final double BL_ANGULAR_OFFSET = 0; //Math.PI;
 
 
+    public static final boolean FL_INVERSION = true;
+    public static final boolean FR_INVERSION = true;
+    public static final boolean BR_INVERSION = true;
+    public static final boolean BL_INVERSION = true;
+
+
     //Constructor to hold all of the data to configure a SwerveModule
-    public static final ModuleConfig SWERVE_FL = new ModuleConfig("FL", Ports.SWERVE_DRIVE_FL, Ports.SWERVE_TURN_FL, FL_SENSOR_OFFSET, FL_ANGULAR_OFFSET, false);//2.9483314  +Math.PI /2);
-    public static final ModuleConfig SWERVE_FR = new ModuleConfig("FR", Ports.SWERVE_DRIVE_FR, Ports.SWERVE_TURN_FR, FR_SENSOR_OFFSET, FR_ANGULAR_OFFSET, false);
-    public static final ModuleConfig SWERVE_BL = new ModuleConfig("BL", Ports.SWERVE_DRIVE_BL, Ports.SWERVE_TURN_BL, BL_SENSOR_OFFSET, BL_ANGULAR_OFFSET, true); //0.6873395
-    public static final ModuleConfig SWERVE_BR = new ModuleConfig("BR", Ports.SWERVE_DRIVE_BR, Ports.SWERVE_TURN_BR, BR_SENSOR_OFFSET, BR_ANGULAR_OFFSET, true);
+    public static final ModuleConfig SWERVE_FL = new ModuleConfig("FL", Ports.SWERVE_DRIVE_FL, Ports.SWERVE_TURN_FL, FL_SENSOR_OFFSET, FL_ANGULAR_OFFSET, FL_INVERSION);//2.9483314  +Math.PI /2);
+    public static final ModuleConfig SWERVE_FR = new ModuleConfig("FR", Ports.SWERVE_DRIVE_FR, Ports.SWERVE_TURN_FR, FR_SENSOR_OFFSET, FR_ANGULAR_OFFSET, FR_INVERSION);
+    public static final ModuleConfig SWERVE_BL = new ModuleConfig("BL", Ports.SWERVE_DRIVE_BL, Ports.SWERVE_TURN_BL, BL_SENSOR_OFFSET, BL_ANGULAR_OFFSET, BL_INVERSION); //0.6873395
+    public static final ModuleConfig SWERVE_BR = new ModuleConfig("BR", Ports.SWERVE_DRIVE_BR, Ports.SWERVE_TURN_BR, BR_SENSOR_OFFSET, BR_ANGULAR_OFFSET, BR_INVERSION);
 
     // Chassis configuration
     public static final double TRACK_WIDTH = Units.inchesToMeters(25);

@@ -103,7 +103,7 @@ public class SwerveModule {
 
 
     // //flips the drive motor 
-     driveMotorConfig.inverted(true);
+     driveMotorConfig.inverted(config.DRIVE_INVERSION);
 
     double drivingFactor = ModuleConstants.kWheelDiameterMeters * Math.PI
             / ModuleConstants.kDrivingMotorReduction;

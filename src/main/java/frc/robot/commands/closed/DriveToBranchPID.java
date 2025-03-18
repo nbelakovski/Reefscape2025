@@ -94,8 +94,8 @@ public class DriveToBranchPID extends Command {
     double currentAngle = drivetrain.getFieldAngleDegrees();
     
     //calculating the X & Y speeds needed to strafe (field-centrically)
-    double xSpeed = -controllerX.calculate(currentDistanceX);
-    double ySpeed = -controllerY.calculate(currentDistanceY);
+    double xSpeed = controllerX.calculate(currentDistanceX);
+    double ySpeed = controllerY.calculate(currentDistanceY);
     double newRotSpeed = controllerTurn.calculate(currentAngle);
 
     //make robot move
