@@ -77,7 +77,7 @@ public class RobotContainer {
     Drivetrain.getInstance().setDefaultCommand(new SwerveDrive(
       () -> driverController.getRawAxis(1),
       () -> driverController.getRawAxis(0),
-      () ->  driverController.getRawAxis(4),
+      () -> driverController.getRawAxis(4),
       () -> driverController.getAButton()
     ));
 

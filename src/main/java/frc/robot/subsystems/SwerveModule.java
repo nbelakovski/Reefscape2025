@@ -103,7 +103,8 @@ public class SwerveModule {
 
 
     // //flips the drive motor 
-     driveMotorConfig.inverted(config.DRIVE_INVERSION);
+    driveMotorConfig.inverted(config.DRIVE_INVERSION);
+    //driveMotorConfig.encoder.inverted(true);
 
     double drivingFactor = SwerveModuleConstants.WHEEL_DIAMETER_METERS * Math.PI
             / SwerveModuleConstants.DRIVE_GEAR_REDUCTION;

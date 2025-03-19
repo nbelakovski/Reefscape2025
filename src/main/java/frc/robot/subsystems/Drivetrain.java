@@ -47,7 +47,7 @@ public class Drivetrain extends SubsystemBase {
   private final SwerveModule[] modules;
   private final List<SwerveModule> modulesList;
   private final SwerveDriveKinematics driveKinematics;
-  private final SwerveDriveOdometry driveOdometry;
+  // private final SwerveDriveOdometry driveOdometry;
 
   private final SwerveModule frontL = new SwerveModule(SwerveConstants.SWERVE_FL);
   private final SwerveModule frontR = new SwerveModule(SwerveConstants.SWERVE_FR);
@@ -110,11 +110,11 @@ public class Drivetrain extends SubsystemBase {
 
     this.driveKinematics = SwerveConstants.DRIVE_KINEMATICS;
 
-    this.driveOdometry = new SwerveDriveOdometry(
-      SwerveConstants.DRIVE_KINEMATICS, 
-      getRobotHeading(), 
-      getSwerveModulePos()
-    );
+    // this.driveOdometry = new SwerveDriveOdometry(
+    //   SwerveConstants.DRIVE_KINEMATICS, 
+    //   getRobotHeading(), 
+    //   getSwerveModulePos()
+    // );
 
     this.field = new Field2d();
     this.fieldCentric = true;
@@ -320,7 +320,7 @@ public class Drivetrain extends SubsystemBase {
     //Store an array of speeds for each wheel
     //ChassisSpeeds speeds = new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotSpeedDelivered);
     ChassisSpeeds speeds = fieldCentric ? 
-      ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotSpeedDelivered, getRobotHeading()) : 
+      ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotSpeedDelivered, getPose().getRotation()) : 
       new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotSpeedDelivered);
 
     //Store the states of each module
@@ -387,7 +387,8 @@ public class Drivetrain extends SubsystemBase {
   public SwerveModulePosition[] getSwerveModulePos() {  
     SwerveModulePosition[] modulePosition = new SwerveModulePosition[4];
     for(int i = 0; i < modules.length; i++) {
-      modulePosition[i] = modules[i].getPosition();
+      SwerveModulePosition currentPos = modules[i].getPosition();
+      modulePosition[i] = new SwerveModulePosition(-currentPos.distanceMeters, currentPos.angle);
     }
     return modulePosition;
   }
@@ -463,14 +464,14 @@ public class Drivetrain extends SubsystemBase {
 
 
     //---------------ODOMETRY METHODS --------------//
-  public SwerveDriveOdometry getOdometry() {
+  // public SwerveDriveOdometry getOdometry() {
 
-    // Pose3d p3 = new Pose3d();
-    // p3.get
-    // Pose2D = 
-    // driveOdometry.resetPosition(getHeading(), null, getPose());
-    return driveOdometry;
-  }
+  //   // Pose3d p3 = new Pose3d();
+  //   // p3.get
+  //   // Pose2D = 
+  //   // driveOdometry.resetPosition(getHeading(), null, getPose());
+  //   return driveOdometry;
+  // }
 
    /**
    * Resets the odometry to the specified pose.
@@ -479,19 +480,19 @@ public class Drivetrain extends SubsystemBase {
    */
   public void resetOdometry(Pose2d newPose) {
     //driveOdometry.resetPosition(getHeading(), getSwerveModulePos(), newPose);
-    driveOdometry.resetPosition(
-        getRobotHeading(),
-        getSwerveModulePos(),
-        newPose);
+    // driveOdometry.resetPosition(
+    //     getRobotHeading(),
+    //     getSwerveModulePos(),
+    //     newPose);
 
     poseEstimator.resetPosition(getRobotHeading(), getSwerveModulePos(), newPose);
   }
 
   public void updateOdometry() {
-      driveOdometry.update(
-        getRobotHeading(),
-        getSwerveModulePos()
-    );
+    // driveOdometry.update(
+    //     getRobotHeading(),
+    //     getSwerveModulePos()
+    // );
     poseEstimator.update(getRobotHeading(), getSwerveModulePos());
   }
 
@@ -545,9 +546,9 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putNumber("Field Angle Radians", getFieldAngleRadians());
     
 
-    SmartDashboard.putNumber("xOdometry", getPose().getX());
-    SmartDashboard.putNumber("yOdometry", getPose().getY());
-    SmartDashboard.putNumber("rotOdometry", getPose().getRotation().getDegrees());
+    SmartDashboard.putNumber("PoseX", getPose().getX());
+    SmartDashboard.putNumber("PoseY", getPose().getY());
+    SmartDashboard.putNumber("PoseAngle", getPose().getRotation().getDegrees());
 
     SmartDashboard.putNumber("xspeed", xSpeed);
     SmartDashboard.putNumber("yspeed", ySpeed);

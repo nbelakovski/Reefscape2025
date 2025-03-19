@@ -18,9 +18,9 @@ public class LEDStrip extends SubsystemBase {
     public static final double ENABLED = LEDColors.OCEAN_COLOR_WAVES;
 
     // Intake/Coral Colors 
-    public static final double IN_SCORER = LEDColors.FOREST_BPM;
+    public static final double IN_SCORER = LEDColors.BLUE_STROBE;
     public static final double IN_GAP = LEDColors.RED_LARSON_SCANNER;
-    public static final double IN_GAP_SCORER = LEDColors.RED_LARSON_SCANNER;
+    public static final double IN_GAP_SCORER = LEDColors.RED_STROBE;
     public static final double INTAKING = LEDColors.WHITE_HEARTBEAT;
     public static final double HAVE_ALGAE = LEDColors.YELLOW; //random colors
 

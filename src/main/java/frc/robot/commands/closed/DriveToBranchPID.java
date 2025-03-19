@@ -89,14 +89,19 @@ public class DriveToBranchPID extends Command {
   public void execute() {
 
     //measure current coordinats
-    double currentDistanceX = drivetrain.getPose().getX();
-    double currentDistanceY = drivetrain.getPose().getY();
+    double currentX = drivetrain.getPose().getX();
+    double currentY = drivetrain.getPose().getY();
     double currentAngle = drivetrain.getFieldAngleDegrees();
     
     //calculating the X & Y speeds needed to strafe (field-centrically)
-    double xSpeed = controllerX.calculate(currentDistanceX);
-    double ySpeed = controllerY.calculate(currentDistanceY);
+    double xSpeed = controllerX.calculate(currentX);
+    double ySpeed = controllerY.calculate(currentY);
     double newRotSpeed = controllerTurn.calculate(currentAngle);
+
+    // Set to 0 for isolation testing
+    xSpeed=0;
+    ySpeed=0;
+    // newRotSpeed=0;
 
     //make robot move
     drivetrain.setDrive(xSpeed, ySpeed, newRotSpeed, true);
@@ -129,6 +134,7 @@ public class DriveToBranchPID extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return controllerX.atSetpoint() && controllerY.atSetpoint() && controllerTurn.atSetpoint();
+    // return controllerX.atSetpoint() && controllerY.atSetpoint() && controllerTurn.atSetpoint();
+    return false;
   }
 }

@@ -52,8 +52,8 @@ public final class Constants {
     public static final double BL_ANGULAR_OFFSET = 0;
  
     // Determine if specific modules need to be inverted
-    public static final boolean FL_INVERSION = false;
-    public static final boolean FR_INVERSION = false;
+    public static final boolean FL_INVERSION = true;
+    public static final boolean FR_INVERSION = true;
     public static final boolean BR_INVERSION = false;
     public static final boolean BL_INVERSION = false;
 
@@ -204,7 +204,7 @@ public final class Constants {
     public static final double INTAKE_HEIGHT = 2.5;
     public static final double ELEVATOR_L1 = 3;
     public static final double ELEVATOR_L2 = 11.7;
-    public static final double ELEVATOR_L3 = 24;
+    public static final double ELEVATOR_L3 = 26;
     public static final double ELEVATOR_L4 = 46;
  
     public static final double ELEVATOR_PROCESSOR = 0;
