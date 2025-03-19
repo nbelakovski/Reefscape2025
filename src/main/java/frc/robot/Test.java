@@ -2,6 +2,7 @@ package frc.robot;
 
 
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.util.Units;
 
 
 public class Test {
@@ -22,6 +23,11 @@ public class Test {
         System.out.println("setpointX\t" + targetPose.getX());
         System.out.println("setpointY\t" + targetPose.getY());
         System.out.println("setpointAngle\t" + Math.toDegrees(targetPose.getRotation().getZ()));
+
+        System.out.println("3 inches in meters: "+Units.inchesToMeters(3));
+        System.out.println("Gear Ratio: " + Constants.SwerveModuleConstants.DRIVE_GEAR_RATIO);
+        System.out.println("Gear Reduction: " + Constants.SwerveModuleConstants.DRIVE_GEAR_REDUCTION);
+        
 
     }
 

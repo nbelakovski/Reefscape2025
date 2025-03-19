@@ -18,7 +18,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants.ModuleConstants;
+import frc.robot.Constants.SwerveModuleConstants;
 import frc.robot.utils.ModuleConfig;
 
 public class SwerveModule {
@@ -105,10 +105,10 @@ public class SwerveModule {
     // //flips the drive motor 
      driveMotorConfig.inverted(config.DRIVE_INVERSION);
 
-    double drivingFactor = ModuleConstants.kWheelDiameterMeters * Math.PI
-            / ModuleConstants.kDrivingMotorReduction;
+    double drivingFactor = SwerveModuleConstants.WHEEL_DIAMETER_METERS * Math.PI
+            / SwerveModuleConstants.DRIVE_GEAR_REDUCTION;
     double turningFactor = 2 * Math.PI;
-    double drivingVelocityFeedForward = 1 / ModuleConstants.kDriveWheelFreeSpeedRps;
+    double drivingVelocityFeedForward = 1 / SwerveModuleConstants.kDriveWheelFreeSpeedRps;
 
     driveMotorConfig
             .idleMode(IdleMode.kBrake)

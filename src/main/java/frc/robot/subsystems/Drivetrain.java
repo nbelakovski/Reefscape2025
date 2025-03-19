@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.ModuleConfig;
+import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.studica.frc.AHRS;
@@ -36,11 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import frc.robot.Constants;
-import frc.robot.Constants.SwerveAutoConstants;
-import frc.robot.Constants.MechConstants;
-import frc.robot.Constants.ModuleConstants;
-import frc.robot.Constants.SwerveConstants;
-
+import frc.robot.Constants.*;
 
 
 public class Drivetrain extends SubsystemBase {
@@ -78,6 +75,7 @@ public class Drivetrain extends SubsystemBase {
   private final SwerveDrivePoseEstimator poseEstimator;
 
   private final Field2d field;
+
 
   // SysID Commands
   public Command transQ1;
@@ -137,6 +135,12 @@ public class Drivetrain extends SubsystemBase {
 
   }
 
+  //Path Planner Drive Controller
+  public final PPHolonomicDriveController pathFollowerConfig = new PPHolonomicDriveController(
+    new PIDConstants(SwerveAutoConstants.DRIVE_TRANSLATE_P, SwerveAutoConstants.DRIVE_TRANSLATE_I, SwerveAutoConstants.DRIVE_TRANSLATE_D), // Translation constants 
+    new PIDConstants(SwerveAutoConstants.DRIVE_TURN_P, SwerveAutoConstants.DRIVE_TURN_I, SwerveAutoConstants.DRIVE_TURN_D) // Rotation constants 
+  );
+
   private void autoConfig(){
 
     // Configure AutoBuilder
@@ -145,16 +149,16 @@ public class Drivetrain extends SubsystemBase {
       this::resetOdometry, 
       this::getSpeeds, 
       this::driveRobotRelative, 
-      SwerveAutoConstants.pathFollowerConfig,
+      pathFollowerConfig,
       new RobotConfig(
-        MechConstants.MASS, 
-        MechConstants.MOI, 
+        RobotConstants.MASS, 
+        RobotConstants.MOI, 
         new ModuleConfig(
-          SwerveConstants.WHEEL_DIAMETER/2, 
+          SwerveModuleConstants.WHEEL_DIAMETER_METERS/2, 
           SwerveConstants.TOP_SPEED, 
           1.2, 
-          DCMotor.getNEO(1).withReduction(ModuleConstants.kDrivingMotorReduction), 
-          ModuleConstants.kDrivingMotorCurrentLimit, 
+          DCMotor.getNEO(1).withReduction(SwerveModuleConstants.DRIVE_GEAR_REDUCTION), 
+          SwerveModuleConstants.kDrivingMotorCurrentLimit, 
           1), 
         Constants.SwerveConstants.DRIVE_KINEMATICS.getModules()
       ),
@@ -444,7 +448,7 @@ public class Drivetrain extends SubsystemBase {
    * @return The turn rate of the robot, in degrees per second
    */
   public double getTurnRate() {
-    return navX.getVelocityZ() * (SwerveConstants.kGyroReversed ? -1.0 : 1.0);
+    return navX.getVelocityZ() * (SwerveConstants.TURN_INVERSION ? -1.0 : 1.0);
     //return m_gyro.getRate(IMUAxis.kZ) * (SwerveConstants.kGyroReversed ? -1.0 : 1.0);
   }
 
