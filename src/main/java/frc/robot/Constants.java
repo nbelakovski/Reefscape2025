@@ -103,7 +103,7 @@ public final class Constants {
     public static final double DRIVE_TRANSLATE_I = 0;
     public static final double DRIVE_TRANSLATE_D = 0;
 
-    public static final double DRIVE_X_P = 0.7;
+    public static final double DRIVE_X_P = 1.0;
     public static final double DRIVE_X_I = 0;
     public static final double DRIVE_X_D = 0;
 

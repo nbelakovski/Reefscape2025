@@ -68,9 +68,9 @@ public class DriveToBranchPID extends Command {
     controllerTurn.setSetpoint(setpointTurn);
 
     // Set tolerances for X & Y controllers
-    controllerX.setTolerance(0.05); //0.05m = 2 inches
-    controllerY.setTolerance(0.01);
-    controllerTurn.setTolerance(0.1,1); //<--values from 2022
+    controllerX.setTolerance(0.001); //0.05m = 2 inches
+    controllerY.setTolerance(0.010);
+    controllerTurn.setTolerance(0.100,1); //<--values from 2022
 
     addRequirements(drivetrain);
   }
@@ -95,13 +95,13 @@ public class DriveToBranchPID extends Command {
     
     //calculating the X & Y speeds needed to strafe (field-centrically)
     double xSpeed = controllerX.calculate(currentX);
-    double ySpeed = controllerY.calculate(currentY);
+    double ySpeed = -controllerY.calculate(currentY);
     double newRotSpeed = controllerTurn.calculate(currentAngle);
 
     // Set to 0 for isolation testing
-    xSpeed=0;
+    // xSpeed=0;
     ySpeed=0;
-    // newRotSpeed=0;
+    newRotSpeed=0;
 
     //make robot move
     drivetrain.setDrive(xSpeed, ySpeed, newRotSpeed, true);
@@ -119,6 +119,10 @@ public class DriveToBranchPID extends Command {
     SmartDashboard.putNumber("DTBPID SetpointY", setpointY);
     SmartDashboard.putNumber("DTBPID  targetAngle", setpointTurn);
 
+    SmartDashboard.putBoolean("AutoXatsp",controllerX.atSetpoint());
+    SmartDashboard.putBoolean("AutoYatsp",controllerY.atSetpoint());
+    SmartDashboard.putBoolean("AutoTurnatsp",controllerTurn.atSetpoint());
+    
 
   }
 
