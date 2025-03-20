@@ -58,9 +58,9 @@ public class DriveToBranchPID extends Command {
     setpointTurn = targetPose.getRotation().getAngle()*180/Math.PI;
 
     // Setup PID controllers for X & Y distances
-    controllerX = new PIDController(SwerveAutoConstants.DRIVE_X_D, SwerveAutoConstants.DRIVE_X_I, SwerveAutoConstants.DRIVE_X_D); //<--old values of 0.9, 0,0
-    controllerY = new PIDController(SwerveAutoConstants.DRIVE_Y_P, SwerveAutoConstants.DRIVE_Y_I, SwerveAutoConstants.DRIVE_Y_D); //<--old values of 0.7, 0,0
-    controllerTurn = new PIDController(Constants.SwerveAutoConstants.DRIVE_TURN_P, Constants.SwerveAutoConstants.DRIVE_TURN_I, Constants.SwerveAutoConstants.DRIVE_TURN_D);
+    controllerX = new PIDController(SwerveAutoConstants.X_P, SwerveAutoConstants.X_I, SwerveAutoConstants.X_D);
+    controllerY = new PIDController(SwerveAutoConstants.Y_P, SwerveAutoConstants.Y_I, SwerveAutoConstants.Y_D); 
+    controllerTurn = new PIDController(SwerveAutoConstants.TURN_P, SwerveAutoConstants.TURN_I, SwerveAutoConstants.TURN_D);
 
     // Set setpoints for X & Y controllers
     controllerX.setSetpoint(setpointX);
@@ -68,10 +68,9 @@ public class DriveToBranchPID extends Command {
     controllerTurn.setSetpoint(setpointTurn);
 
     // Set tolerances for X & Y controllers
-    controllerX.setTolerance(0.001); //0.05m = 2 inches
-    controllerY.setTolerance(0.010);
-    controllerTurn.setTolerance(0.100,1); //<--values from 2022
-
+    controllerX.setTolerance(SwerveAutoConstants.X_TOL);
+    controllerY.setTolerance(SwerveAutoConstants.Y_TOL);
+    controllerTurn.setTolerance(SwerveAutoConstants.TURN_TOL,SwerveAutoConstants.TURN_DERIV_TOL);
     addRequirements(drivetrain);
   }
 

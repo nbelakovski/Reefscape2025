@@ -137,8 +137,8 @@ public class Drivetrain extends SubsystemBase {
 
   //Path Planner Drive Controller
   public final PPHolonomicDriveController pathFollowerConfig = new PPHolonomicDriveController(
-    new PIDConstants(SwerveAutoConstants.DRIVE_TRANSLATE_P, SwerveAutoConstants.DRIVE_TRANSLATE_I, SwerveAutoConstants.DRIVE_TRANSLATE_D), // Translation constants 
-    new PIDConstants(SwerveAutoConstants.DRIVE_TURN_P, SwerveAutoConstants.DRIVE_TURN_I, SwerveAutoConstants.DRIVE_TURN_D) // Rotation constants 
+    new PIDConstants(SwerveAutoConstants.TRANSLATE_P, SwerveAutoConstants.TRANSLATE_I, SwerveAutoConstants.TRANSLATE_D), // Translation constants 
+    new PIDConstants(SwerveAutoConstants.TURN_P, SwerveAutoConstants.TURN_I, SwerveAutoConstants.TURN_D) // Rotation constants 
   );
 
   private void autoConfig(){

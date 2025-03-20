@@ -4,7 +4,7 @@ package frc.robot.commands.closed;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
+import frc.robot.Constants.SwerveAutoConstants;
 import frc.robot.subsystems.Drivetrain;
 
 
@@ -19,11 +19,11 @@ public class TurnToAnglePID extends Command {
   public TurnToAnglePID(double angle) {
 
     drivetrain = Drivetrain.getInstance();
-    controllerTurn = new PIDController(Constants.SwerveAutoConstants.DRIVE_TURN_P, Constants.SwerveAutoConstants.DRIVE_TURN_I, Constants.SwerveAutoConstants.DRIVE_TURN_D);
+    controllerTurn = new PIDController(SwerveAutoConstants.TURN_P, SwerveAutoConstants.TURN_I, SwerveAutoConstants.TURN_D);
     this.setpoint = angle;
 
     controllerTurn.setSetpoint(setpoint);
-    controllerTurn.setTolerance(0.1,1); //<--values from 2022
+    controllerTurn.setTolerance(SwerveAutoConstants.TURN_TOL, SwerveAutoConstants.TURN_DERIV_TOL); //<--values from 2022
     controllerTurn.enableContinuousInput(-180, 180);
 
     addRequirements(drivetrain);
