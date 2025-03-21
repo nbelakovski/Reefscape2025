@@ -351,11 +351,18 @@ public class Drivetrain extends SubsystemBase {
     //         : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
     // SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, SwerveConstants.TOP_SPEED);
 
-    //Store an array of speeds for each wheel
-    //ChassisSpeeds speeds = new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotSpeedDelivered);
-    ChassisSpeeds speeds = fieldCentric ? 
-      ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotSpeedDelivered, getPose().getRotation()) : 
-      new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotSpeedDelivered);
+    //Store an array of speeds for each wheel. By default do robot centric speeds but if fieldCentric use fromFieldRelativeSpeeds
+    ChassisSpeeds speeds = new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotSpeedDelivered);
+    if (fieldCentric) {
+      var rotation = getPose().getRotation();
+      var allianceOptional = DriverStation.getAlliance();
+      if (allianceOptional.isPresent() && allianceOptional.get() == DriverStation.Alliance.Red) {
+        // Flip the rotation if our driverstation is red alliance so that driving is "driver centric"
+        rotation = rotation.rotateBy(Rotation2d.fromDegrees(180));
+      }
+      speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotSpeedDelivered, rotation);
+
+    }
 
     //Store the states of each module
     SwerveModuleState[] swerveModuleStates = driveKinematics.toSwerveModuleStates(speeds);
