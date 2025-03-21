@@ -598,6 +598,7 @@ public class Drivetrain extends SubsystemBase {
     field.setRobotPose(getPose());
     SmartDashboard.putData("Odometry Field", field);
     SmartDashboard.putBoolean("fieldCentric", fieldCentric);
+    SmartDashboard.putNumber("FL distanceMeters", frontL.getPosition().distanceMeters);
   }
 
 
