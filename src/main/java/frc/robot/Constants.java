@@ -72,6 +72,10 @@ public final class Constants {
     // Distance from center of any wheel to center of robot geometry
     public static final double DISTANCE_TO_CENTER = Math.sqrt(Math.pow(WHEEL_BASE/2, 2) + Math.pow(TRACK_WIDTH/2, 2));
 
+    //Bumper thickness
+    public static final double BUMPER_WIDTH = Units.inchesToMeters(3); //0.0635 meters 
+
+
     // public static final double FREE_SPIN_METER = 5.28; //???
 
     // Distance between front and back wheels on robot
@@ -103,10 +107,10 @@ public final class Constants {
     public static final double TRANSLATE_I = 0;
     public static final double TRANSLATE_D = 0;
 
-    public static final double X_P = 0.7;
+    public static final double X_P = 1;
     public static final double X_I = 0;
     public static final double X_D = 0;
-    public static final double X_TOL = Units.inchesToMeters(1); //0.025m
+    public static final double X_TOL = Units.inchesToMeters(0.5); //0.025m
 
     public static final double Y_P = 1.0;
     public static final double Y_I = 0;
@@ -163,7 +167,7 @@ public final class Constants {
     // This changes the drive speed of the module (a pinion gear with more teeth will result in a
     // robot that drives faster).
     public static final double DRIVE_MOTOR_PINION_GEAR_TEETH = 14;
-    public static final double SPUR_GEAR_TEETH = 20; //20 teeth, but has a diameter used for a normal 22t gear
+    public static final double SPUR_GEAR_TEETH = 22; //22 teeth, but has a diameter used for a normal 22t gear
 
     // Invert the turning encoder, since the output shaft rotates in the opposite direction of
     // the steering motor in the MAXSwerve Module.

@@ -2,6 +2,7 @@ package frc.robot.utils;
 
 
 import frc.robot.Constants.VisionConstants;
+import frc.robot.Constants;
 import frc.robot.Field;
 import frc.robot.Robot;
 
@@ -30,6 +31,7 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -60,7 +62,10 @@ public class AprilCam {
     // Constructor 1
     public AprilCam(String name, Translation3d position, Rotation3d angle){
         this.camera = new PhotonCamera(name);
-        this.camOffsetTranslation = new Translation3d(-0.36, -0.03, 0.0); //cam mounted 13" back from front bumper, slightly right?
+        double CAM_X_OFFSET = -(0.254 + Constants.SwerveConstants.BUMPER_WIDTH); 
+        double CAM_Y_OFFSET = -0.048;  
+        
+        this.camOffsetTranslation = new Translation3d(CAM_X_OFFSET, CAM_Y_OFFSET, 0.0); //cam mounted 13" back from front bumper, slightly right?
         this.camOffsetRotation = new Rotation3d(0,0,0); //cam mounted facing forward, upright
         this.camOffset = new Transform3d(camOffsetTranslation, camOffsetRotation);
         this.photonPoseEstimator = new PhotonPoseEstimator(Field.aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, camOffset);
