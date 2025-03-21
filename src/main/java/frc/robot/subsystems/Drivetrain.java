@@ -122,11 +122,45 @@ public class Drivetrain extends SubsystemBase {
     var stateStdDevs = VecBuilder.fill(0.1, 0.1, 0.1);
     var visionStdDevs = VecBuilder.fill(1, 1, 1);
 
+    // Set our initial location and orientation based on alliance/location
+    // Location 1 is by the blue barge (either alliance)
+    // location 2 is in the middle (either alliance)
+    // location 3 is by the red barge (either alliance)
+    var initialPose = new Pose2d();
+    var locationOptional = DriverStation.getLocation();
+    var allianceOptional = DriverStation.getAlliance();
+    if (locationOptional.isPresent() && allianceOptional.isPresent()) {
+      var location = locationOptional.get();
+      var alliance = allianceOptional.get();
+      var BLUE_STARTING_LINE = 7.56;
+      var RED_STARTING_LINE = 9.99;
+      var TAG_21_Y_VALUE = 4.0259;
+      if (location== 1 && alliance== DriverStation.Alliance.Blue) {
+        initialPose = new Pose2d(BLUE_STARTING_LINE, 6.5, Rotation2d.fromDegrees(180));
+      }
+      else if (location== 2 && alliance== DriverStation.Alliance.Blue) {
+        initialPose = new Pose2d(BLUE_STARTING_LINE, TAG_21_Y_VALUE, Rotation2d.fromDegrees(180));
+      }
+      else if (location== 3 && alliance== DriverStation.Alliance.Blue) {
+        initialPose = new Pose2d(BLUE_STARTING_LINE, 1.5, Rotation2d.fromDegrees(180));
+      }
+      else if (location== 1 && alliance== DriverStation.Alliance.Red) {
+        initialPose = new Pose2d(RED_STARTING_LINE, 6.5);
+      }
+      else if (location== 2 && alliance== DriverStation.Alliance.Red) {
+        initialPose = new Pose2d(RED_STARTING_LINE, TAG_21_Y_VALUE);
+      }
+      else if (location== 3 && alliance== DriverStation.Alliance.Red) {
+        initialPose = new Pose2d(RED_STARTING_LINE, 1.5);
+      }
+    }
+
+  
     this.poseEstimator =  new SwerveDrivePoseEstimator(
       SwerveConstants.DRIVE_KINEMATICS,
       getRobotHeading(),
       getSwerveModulePos(),
-      new Pose2d(),
+      initialPose,
       stateStdDevs,
       visionStdDevs);
 
