@@ -58,8 +58,8 @@ public class DriveToBranchPID extends Command {
     setpointTurn = targetPose.getRotation().getAngle()*180/Math.PI;
 
     // Setup PID controllers for X & Y distances
-    controllerX = new PIDController(SwerveAutoConstants.X_P, SwerveAutoConstants.X_I, SwerveAutoConstants.X_D);
-    controllerY = new PIDController(SwerveAutoConstants.Y_P, SwerveAutoConstants.Y_I, SwerveAutoConstants.Y_D); 
+    controllerX = new PIDController(0.25, 0, 0.1);
+    controllerY = new PIDController(0.25, 0, 0.1); 
     controllerTurn = new PIDController(SwerveAutoConstants.TURN_P, SwerveAutoConstants.TURN_I, SwerveAutoConstants.TURN_D);
 
     // Set setpoints for X & Y controllers

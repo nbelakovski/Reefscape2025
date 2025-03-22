@@ -167,7 +167,7 @@ public final class Constants {
     // This changes the drive speed of the module (a pinion gear with more teeth will result in a
     // robot that drives faster).
     public static final double DRIVE_MOTOR_PINION_GEAR_TEETH = 14;
-    public static final double SPUR_GEAR_TEETH = 22; //22 teeth, but has a diameter used for a normal 22t gear
+    public static final double SPUR_GEAR_TEETH = 20; //22 teeth, but has a diameter used for a normal 22t gear
 
     // Invert the turning encoder, since the output shaft rotates in the opposite direction of
     // the steering motor in the MAXSwerve Module.
@@ -255,7 +255,7 @@ public final class Constants {
 
     // The standard deviations of our vision estimated poses, which affect correction rate
     // (Fake values. Experiment and determine estimation noise on an actual robot.)
-    public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
+    public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(2, 2, 4);
     public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
 
   }
