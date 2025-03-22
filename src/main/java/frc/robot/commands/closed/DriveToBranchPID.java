@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Constants.SwerveAutoConstants;
-import frc.robot.Field;
+import frc.robot.FieldConstants;
 import frc.robot.subsystems.Camera;
 import frc.robot.subsystems.Drivetrain;
 
@@ -41,11 +41,11 @@ public class DriveToBranchPID extends Command {
     drivetrain = Drivetrain.getInstance();
     this.tagID = tagID;
     this.branchDirection = branchDirection;
-    SmartDashboard.putString("DTBPID Branch", branchDirection);
-    SmartDashboard.putNumber("DTBPID Tag", tagID);
+    SmartDashboard.putString("DTB Branch", branchDirection);
+    SmartDashboard.putNumber("DTB Tag", tagID);
 
     // Get desired pose at a specific branch
-    Pose3d targetPose = Field.getBranchPose(tagID, branchDirection);
+    Pose3d targetPose = FieldConstants.getBranchPose(tagID, branchDirection);
 
     //Record starting X & Y values
     startDistanceX = drivetrain.getPose().getX();
@@ -106,23 +106,22 @@ public class DriveToBranchPID extends Command {
     drivetrain.setDrive(xSpeed, ySpeed, newRotSpeed, true);
 
     //SD stuff
-    SmartDashboard.putNumber("DTBPID xSpeed", xSpeed);
-    SmartDashboard.putNumber("DTBPID ySpeed", ySpeed);
-    SmartDashboard.putNumber("DTBPID newRotSpeed", newRotSpeed);
+    SmartDashboard.putNumber("DTB xSpeed", xSpeed);
+    SmartDashboard.putNumber("DTB ySpeed", ySpeed);
+    SmartDashboard.putNumber("DTB newRotSpeed", newRotSpeed);
 
-    SmartDashboard.putNumber("DTBPID startX", startDistanceX);
-    SmartDashboard.putNumber("DTBPID startY", startDistanceY);
-    SmartDashboard.putNumber("DTBPID startTurn", startAngle);
+    SmartDashboard.putNumber("DTB startX", startDistanceX);
+    SmartDashboard.putNumber("DTB startY", startDistanceY);
+    SmartDashboard.putNumber("DTB startTurn", startAngle);
 
-    SmartDashboard.putNumber("DTBPID SetpointX", setpointX);
-    SmartDashboard.putNumber("DTBPID SetpointY", setpointY);
-    SmartDashboard.putNumber("DTBPID  targetAngle", setpointTurn);
+    SmartDashboard.putNumber("DTB SetpointX", setpointX);
+    SmartDashboard.putNumber("DTB SetpointY", setpointY);
+    SmartDashboard.putNumber("DTB SetpointAngle", setpointTurn);
 
-    SmartDashboard.putBoolean("AutoXatsp",controllerX.atSetpoint());
-    SmartDashboard.putBoolean("AutoYatsp",controllerY.atSetpoint());
-    SmartDashboard.putBoolean("AutoTurnatsp",controllerTurn.atSetpoint());
+    SmartDashboard.putBoolean("DTB Xatsp",controllerX.atSetpoint());
+    SmartDashboard.putBoolean("DTB Yatsp",controllerY.atSetpoint());
+    SmartDashboard.putBoolean("DTB Turnatsp",controllerTurn.atSetpoint());
     
-
   }
 
   // Called once the command ends or is interrupted.

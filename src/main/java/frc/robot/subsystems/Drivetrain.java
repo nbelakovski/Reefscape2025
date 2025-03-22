@@ -16,7 +16,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
@@ -38,6 +37,7 @@ import java.util.List;
 
 import frc.robot.Constants;
 import frc.robot.Constants.*;
+import frc.robot.FieldConstants;
 
 
 public class Drivetrain extends SubsystemBase {
@@ -47,7 +47,6 @@ public class Drivetrain extends SubsystemBase {
   private final SwerveModule[] modules;
   private final List<SwerveModule> modulesList;
   private final SwerveDriveKinematics driveKinematics;
-  // private final SwerveDriveOdometry driveOdometry;
 
   private final SwerveModule frontL = new SwerveModule(SwerveConstants.SWERVE_FL);
   private final SwerveModule frontR = new SwerveModule(SwerveConstants.SWERVE_FR);
@@ -110,57 +109,18 @@ public class Drivetrain extends SubsystemBase {
 
     this.driveKinematics = SwerveConstants.DRIVE_KINEMATICS;
 
-    // this.driveOdometry = new SwerveDriveOdometry(
-    //   SwerveConstants.DRIVE_KINEMATICS, 
-    //   getRobotHeading(), 
-    //   getSwerveModulePos()
-    // );
-
     this.field = new Field2d();
     this.fieldCentric = true;
     
     var stateStdDevs = VecBuilder.fill(0.1, 0.1, 0.1);
     var visionStdDevs = VecBuilder.fill(1, 1, 1);
 
-    // Set our initial location and orientation based on alliance/location
-    // Location 1 is by the blue barge (either alliance)
-    // location 2 is in the middle (either alliance)
-    // location 3 is by the red barge (either alliance)
-    var initialPose = new Pose2d();
-    var locationOptional = DriverStation.getLocation();
-    var allianceOptional = DriverStation.getAlliance();
-    if (locationOptional.isPresent() && allianceOptional.isPresent()) {
-      var location = locationOptional.get();
-      var alliance = allianceOptional.get();
-      var BLUE_STARTING_LINE = 7.56;
-      var RED_STARTING_LINE = 9.99;
-      var TAG_21_Y_VALUE = 4.0259;
-      if (location== 1 && alliance== DriverStation.Alliance.Blue) {
-        initialPose = new Pose2d(BLUE_STARTING_LINE, 6.5, Rotation2d.fromDegrees(180));
-      }
-      else if (location== 2 && alliance== DriverStation.Alliance.Blue) {
-        initialPose = new Pose2d(BLUE_STARTING_LINE, TAG_21_Y_VALUE, Rotation2d.fromDegrees(180));
-      }
-      else if (location== 3 && alliance== DriverStation.Alliance.Blue) {
-        initialPose = new Pose2d(BLUE_STARTING_LINE, 1.5, Rotation2d.fromDegrees(180));
-      }
-      else if (location== 1 && alliance== DriverStation.Alliance.Red) {
-        initialPose = new Pose2d(RED_STARTING_LINE, 6.5);
-      }
-      else if (location== 2 && alliance== DriverStation.Alliance.Red) {
-        initialPose = new Pose2d(RED_STARTING_LINE, TAG_21_Y_VALUE);
-      }
-      else if (location== 3 && alliance== DriverStation.Alliance.Red) {
-        initialPose = new Pose2d(RED_STARTING_LINE, 1.5);
-      }
-    }
 
-  
     this.poseEstimator =  new SwerveDrivePoseEstimator(
       SwerveConstants.DRIVE_KINEMATICS,
       getRobotHeading(),
       getSwerveModulePos(),
-      initialPose,
+      FieldConstants.getInitialPose(),
       stateStdDevs,
       visionStdDevs);
 
@@ -180,7 +140,7 @@ public class Drivetrain extends SubsystemBase {
     // Configure AutoBuilder
     AutoBuilder.configure(
       this::getPose, 
-      this::resetOdometry, 
+      this::resetPose, 
       this::getSpeeds, 
       this::driveRobotRelative, 
       pathFollowerConfig,
@@ -343,7 +303,6 @@ public class Drivetrain extends SubsystemBase {
     double ySpeedDelivered = ySpeedCommanded * SwerveConstants.TOP_SPEED;
     double rotSpeedDelivered = rotSpeedCommanded * SwerveConstants.TOP_ANGULAR_SPEED;
 
-    //var???
     //SwerveModuleState[] 
     // var swerveModuleStates = SwerveConstants.DRIVE_KINEMATICS.toSwerveModuleStates(
     //     fieldcentric
@@ -361,7 +320,6 @@ public class Drivetrain extends SubsystemBase {
         rotation = rotation.rotateBy(Rotation2d.fromDegrees(180));
       }
       speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotSpeedDelivered, rotation);
-
     }
 
     //Store the states of each module
@@ -504,36 +462,16 @@ public class Drivetrain extends SubsystemBase {
 
 
 
-    //---------------ODOMETRY METHODS --------------//
-  // public SwerveDriveOdometry getOdometry() {
-
-  //   // Pose3d p3 = new Pose3d();
-  //   // p3.get
-  //   // Pose2D = 
-  //   // driveOdometry.resetPosition(getHeading(), null, getPose());
-  //   return driveOdometry;
-  // }
-
+    //---------------POSE ESTIMATION METHODS --------------//
    /**
-   * Resets the odometry to the specified pose.
-   *
-   * @param pose The pose to which to set the odometry.
+   * Resets the poseEstimator to the specified pose.
+   * @param pose The pose to which to set the poseEstimator
    */
-  public void resetOdometry(Pose2d newPose) {
-    //driveOdometry.resetPosition(getHeading(), getSwerveModulePos(), newPose);
-    // driveOdometry.resetPosition(
-    //     getRobotHeading(),
-    //     getSwerveModulePos(),
-    //     newPose);
-
+  public void resetPose(Pose2d newPose) {
     poseEstimator.resetPosition(getRobotHeading(), getSwerveModulePos(), newPose);
   }
 
-  public void updateOdometry() {
-    // driveOdometry.update(
-    //     getRobotHeading(),
-    //     getSwerveModulePos()
-    // );
+  public void updatePose() {
     poseEstimator.update(getRobotHeading(), getSwerveModulePos());
   }
 
@@ -550,7 +488,6 @@ public class Drivetrain extends SubsystemBase {
    * @return The pose.
    */
   public Pose2d getPose() {
-    //return driveOdometry.getPoseMeters();
     return poseEstimator.getEstimatedPosition();
   }
 
@@ -562,23 +499,34 @@ public class Drivetrain extends SubsystemBase {
     return getPose().getRotation().getRadians();
   }
 
-/* See {@link SwerveDrivePoseEstimator#addVisionMeasurement(Pose2d, double)}. */
-  public void addVisionMeasurement(Pose2d visionMeasurement, double timestampSeconds) {
-    poseEstimator.addVisionMeasurement(visionMeasurement, timestampSeconds);
-}
+  /* See {@link SwerveDrivePoseEstimator#addVisionMeasurement(Pose2d, double)}. */
+    public void addVisionMeasurement(Pose2d visionMeasurement, double timestampSeconds) {
+      poseEstimator.addVisionMeasurement(visionMeasurement, timestampSeconds);
+  }
 
-/* See {@link SwerveDrivePoseEstimator#addVisionMeasurement(Pose2d, double, Matrix)}. */
-    public void addVisionMeasurement(
-            Pose2d visionMeasurement, double timestampSeconds, Matrix<N3, N1> stdDevs) {
-        poseEstimator.addVisionMeasurement(visionMeasurement, timestampSeconds, stdDevs);
-    }
+  /* See {@link SwerveDrivePoseEstimator#addVisionMeasurement(Pose2d, double, Matrix)}. */
+  public void addVisionMeasurement(
+        Pose2d visionMeasurement, double timestampSeconds, Matrix<N3, N1> stdDevs) {
+    poseEstimator.addVisionMeasurement(visionMeasurement, timestampSeconds, stdDevs);
+  }
 
 
- public void updateTelemetry() {
+
+ public void updateModuleTelemetry() {
     for(int i = 0; i < modules.length; i++) {
       modules[i].updateTelemetry();
     }
+  }
 
+
+  // This method will be called once per scheduler run
+  @Override
+  public void periodic() {
+
+    updatePose();
+    updateModuleTelemetry();
+    drive();
+    
     SmartDashboard.putNumber("NavX Compass Heading", navX.getCompassHeading());
 
     SmartDashboard.putNumber("Robot Angle Degrees", getRobotAngleDegrees());
@@ -596,20 +544,8 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putNumber("rotspeed", rotSpeed);
 
     field.setRobotPose(getPose());
-    SmartDashboard.putData("Odometry Field", field);
+    SmartDashboard.putData("PoseEstimator Field", field);
     SmartDashboard.putBoolean("fieldCentric", fieldCentric);
     SmartDashboard.putNumber("FL distanceMeters", frontL.getPosition().distanceMeters);
-  }
-
-
-
-
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-    updateOdometry();
-    updateTelemetry();
-    drive();
-    //poseEstimator.update(getHeading(), getSwerveModulePos());
   }
 }

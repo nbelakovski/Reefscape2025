@@ -2,7 +2,7 @@ package frc.robot.subsystems;
 
 
 import frc.robot.Constants.VisionConstants;
-import frc.robot.Field;
+import frc.robot.FieldConstants;
 import frc.robot.utils.AprilCam;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.targeting.PhotonTrackedTarget;
@@ -46,7 +46,7 @@ public class Camera extends SubsystemBase {
   }
 
   public  Pose3d getTagPose(int tagID){
-    return Field.aprilTagFieldLayout.getTagPose(tagID).get();
+    return FieldConstants.aprilTagFieldLayout.getTagPose(tagID).get();
   }
 
   // public double getX(){
@@ -110,9 +110,9 @@ public class Camera extends SubsystemBase {
     //   SmartDashboard.putNumber("rot", 0);
     // }
     
-    SmartDashboard.putNumber("tag 21 pose x", Field.aprilTagFieldLayout.getTagPose(21).get().getX());
-    SmartDashboard.putNumber("tag 21 pose y", Field.aprilTagFieldLayout.getTagPose(21).get().getY());
-    SmartDashboard.putNumber("tag 21 angle", Field.aprilTagFieldLayout.getTagPose(21).get().getRotation().getAngle());
+    SmartDashboard.putNumber("tag 21 pose x", FieldConstants.aprilTagFieldLayout.getTagPose(21).get().getX());
+    SmartDashboard.putNumber("tag 21 pose y", FieldConstants.aprilTagFieldLayout.getTagPose(21).get().getY());
+    SmartDashboard.putNumber("tag 21 angle", FieldConstants.aprilTagFieldLayout.getTagPose(21).get().getRotation().getAngle());
     SmartDashboard.putNumber("closest ID", closestID);
     
    

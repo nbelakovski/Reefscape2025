@@ -3,7 +3,7 @@ package frc.robot.utils;
 
 import frc.robot.Constants.VisionConstants;
 import frc.robot.Constants;
-import frc.robot.Field;
+import frc.robot.FieldConstants;
 import frc.robot.Robot;
 
 import java.util.List;
@@ -68,7 +68,7 @@ public class AprilCam {
         this.camOffsetTranslation = new Translation3d(CAM_X_OFFSET, CAM_Y_OFFSET, 0.0); //cam mounted 13" back from front bumper, slightly right?
         this.camOffsetRotation = new Rotation3d(0,0,0); //cam mounted facing forward, upright
         this.camOffset = new Transform3d(camOffsetTranslation, camOffsetRotation);
-        this.photonPoseEstimator = new PhotonPoseEstimator(Field.aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, camOffset);
+        this.photonPoseEstimator = new PhotonPoseEstimator(FieldConstants.aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, camOffset);
      }
 
      // Constructor 2: simple version
