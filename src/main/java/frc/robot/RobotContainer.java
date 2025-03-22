@@ -106,7 +106,7 @@ public class RobotContainer {
     //Driver - Y - Elevator to Intake Height
     new JoystickButton(driverController, Button.kY.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.INTAKE_HEIGHT));
 
-    //Operator - LY joystick - Manually move Elevator
+    //Operator - RY joystick - Manually move Elevator
     Elevator.getInstance().setDefaultCommand(new SafeElevatorJoystick(
       () -> operatorController.getRawAxis(5)
     ));
@@ -134,7 +134,7 @@ public class RobotContainer {
 
     //---------- ALGAE JAW ----------//
     
-    // Operator - RY joystick - manually move Jaw up & down
+    // Operator - LY joystick - manually move Jaw up & down
     AlgaeHandler.getInstance().setDefaultCommand(new SafeAlgaeJoystick(
       () -> operatorController.getRawAxis(1)
     ));
@@ -148,10 +148,10 @@ public class RobotContainer {
 
 
     // Operator - A - Rotate jaw to Intake Angle
-    //new JoystickButton(operatorController, Button.kA.value).whileTrue(new SetJawAngle(MechConstants.JAW_INTAKE_ANGLE).repeatedly());
+    new JoystickButton(operatorController, Button.kA.value).whileTrue(new SetJawAngle(MechConstants.JAW_INTAKE_ANGLE).repeatedly());
 
     //Operator - B - Go to L4, Algae score angle, and spit algae 
-    new JoystickButton(operatorController, Button.kB.value).whileTrue(new ElevatorSpitCombo(46).repeatedly());
+    new JoystickButton(operatorController, Button.kB.value).whileTrue(new ElevatorSpitCombo(ElevatorConstants.ELEVATOR_L4).repeatedly());
     
     // Operator - B - Rotate Jaw to Starting/Coral Stop Angle
     // new JoystickButton(operatorController, Button.kB.value).whileTrue(new SetJawAngle(MechConstants.JAW_STARTING_ANGLE).repeatedly());
@@ -169,8 +169,9 @@ public class RobotContainer {
     //---------- ALGAE TONGUE ----------//
 
     // Operator - Y - Eat the Algae
+    new JoystickButton(operatorController, Button.kY.value).whileTrue(new ElevatorJawCombo(ElevatorConstants.ELEVATOR_L2).repeatedly()); //11.7
     //new JoystickButton(operatorController, Button.kY.value).whileTrue(new AlgaeEat());
-    new JoystickButton(operatorController, Button.kY.value).whileTrue(new ElevatorJawCombo(11.7).repeatedly());
+
     // Operator - X - Spit out the Algae
     new JoystickButton(operatorController, Button.kX.value).whileTrue(new AlgaeSpit());
 
