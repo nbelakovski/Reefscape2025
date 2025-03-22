@@ -122,11 +122,45 @@ public class Drivetrain extends SubsystemBase {
     var stateStdDevs = VecBuilder.fill(0.1, 0.1, 0.1);
     var visionStdDevs = VecBuilder.fill(1, 1, 1);
 
+    // Set our initial location and orientation based on alliance/location
+    // Location 1 is by the blue barge (either alliance)
+    // location 2 is in the middle (either alliance)
+    // location 3 is by the red barge (either alliance)
+    var initialPose = new Pose2d();
+    var locationOptional = DriverStation.getLocation();
+    var allianceOptional = DriverStation.getAlliance();
+    if (locationOptional.isPresent() && allianceOptional.isPresent()) {
+      var location = locationOptional.get();
+      var alliance = allianceOptional.get();
+      var BLUE_STARTING_LINE = 7.56;
+      var RED_STARTING_LINE = 9.99;
+      var TAG_21_Y_VALUE = 4.0259;
+      if (location== 1 && alliance== DriverStation.Alliance.Blue) {
+        initialPose = new Pose2d(BLUE_STARTING_LINE, 6.5, Rotation2d.fromDegrees(180));
+      }
+      else if (location== 2 && alliance== DriverStation.Alliance.Blue) {
+        initialPose = new Pose2d(BLUE_STARTING_LINE, TAG_21_Y_VALUE, Rotation2d.fromDegrees(180));
+      }
+      else if (location== 3 && alliance== DriverStation.Alliance.Blue) {
+        initialPose = new Pose2d(BLUE_STARTING_LINE, 1.5, Rotation2d.fromDegrees(180));
+      }
+      else if (location== 1 && alliance== DriverStation.Alliance.Red) {
+        initialPose = new Pose2d(RED_STARTING_LINE, 6.5);
+      }
+      else if (location== 2 && alliance== DriverStation.Alliance.Red) {
+        initialPose = new Pose2d(RED_STARTING_LINE, TAG_21_Y_VALUE);
+      }
+      else if (location== 3 && alliance== DriverStation.Alliance.Red) {
+        initialPose = new Pose2d(RED_STARTING_LINE, 1.5);
+      }
+    }
+
+  
     this.poseEstimator =  new SwerveDrivePoseEstimator(
       SwerveConstants.DRIVE_KINEMATICS,
       getRobotHeading(),
       getSwerveModulePos(),
-      new Pose2d(),
+      initialPose,
       stateStdDevs,
       visionStdDevs);
 
@@ -317,11 +351,18 @@ public class Drivetrain extends SubsystemBase {
     //         : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
     // SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, SwerveConstants.TOP_SPEED);
 
-    //Store an array of speeds for each wheel
-    //ChassisSpeeds speeds = new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotSpeedDelivered);
-    ChassisSpeeds speeds = fieldCentric ? 
-      ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotSpeedDelivered, getPose().getRotation()) : 
-      new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotSpeedDelivered);
+    //Store an array of speeds for each wheel. By default do robot centric speeds but if fieldCentric use fromFieldRelativeSpeeds
+    ChassisSpeeds speeds = new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotSpeedDelivered);
+    if (fieldCentric) {
+      var rotation = getPose().getRotation();
+      var allianceOptional = DriverStation.getAlliance();
+      if (allianceOptional.isPresent() && allianceOptional.get() == DriverStation.Alliance.Red) {
+        // Flip the rotation if our driverstation is red alliance so that driving is "driver centric"
+        rotation = rotation.rotateBy(Rotation2d.fromDegrees(180));
+      }
+      speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotSpeedDelivered, rotation);
+
+    }
 
     //Store the states of each module
     SwerveModuleState[] swerveModuleStates = driveKinematics.toSwerveModuleStates(speeds);
@@ -557,6 +598,7 @@ public class Drivetrain extends SubsystemBase {
     field.setRobotPose(getPose());
     SmartDashboard.putData("Odometry Field", field);
     SmartDashboard.putBoolean("fieldCentric", fieldCentric);
+    SmartDashboard.putNumber("FL distanceMeters", frontL.getPosition().distanceMeters);
   }
 
 
