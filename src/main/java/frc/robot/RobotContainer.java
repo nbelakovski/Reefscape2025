@@ -108,7 +108,7 @@ public class RobotContainer {
 
     //Operator - LY joystick - Manually move Elevator
     Elevator.getInstance().setDefaultCommand(new SafeElevatorJoystick(
-      () -> operatorController.getRawAxis(1)
+      () -> operatorController.getRawAxis(5)
     ));
 
     //Operator - DPAD - Elevator to L1, L2, L3, L4 heights
@@ -136,7 +136,7 @@ public class RobotContainer {
     
     // Operator - RY joystick - manually move Jaw up & down
     AlgaeHandler.getInstance().setDefaultCommand(new SafeAlgaeJoystick(
-      () -> operatorController.getRawAxis(5)
+      () -> operatorController.getRawAxis(1)
     ));
 
     // Driver - DPAD - manually move Jaw up & down
@@ -150,6 +150,9 @@ public class RobotContainer {
     // Operator - A - Rotate jaw to Intake Angle
     //new JoystickButton(operatorController, Button.kA.value).whileTrue(new SetJawAngle(MechConstants.JAW_INTAKE_ANGLE).repeatedly());
 
+    //Operator - B - Go to L4, Algae score angle, and spit algae 
+    new JoystickButton(operatorController, Button.kB.value).whileTrue(new ElevatorSpitCombo(46).repeatedly());
+    
     // Operator - B - Rotate Jaw to Starting/Coral Stop Angle
     // new JoystickButton(operatorController, Button.kB.value).whileTrue(new SetJawAngle(MechConstants.JAW_STARTING_ANGLE).repeatedly());
 
