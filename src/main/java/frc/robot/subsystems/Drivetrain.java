@@ -13,6 +13,7 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -32,6 +33,8 @@ import static edu.wpi.first.units.Units.Volts;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.photonvision.EstimatedRobotPose;
 
 import frc.robot.Constants;
 import frc.robot.Constants.*;
@@ -459,7 +462,7 @@ public class Drivetrain extends SubsystemBase {
     poseEstimator.resetPosition(getRobotHeading(), getSwerveModulePos(), newPose);
   }
 
-  public void updatePose() {
+  public void updatePoseFromOdometry() {
     poseEstimator.update(getRobotHeading(), getSwerveModulePos());
   }
 
@@ -488,10 +491,10 @@ public class Drivetrain extends SubsystemBase {
   }
 
   
-  /* See {@link SwerveDrivePoseEstimator#addVisionMeasurement(Pose2d, double)}. */
-  public void addVisionMeasurement(Pose2d visionMeasurement, double timestampSeconds) {
-    poseEstimator.addVisionMeasurement(visionMeasurement, timestampSeconds);
-  }
+  // /* See {@link SwerveDrivePoseEstimator#addVisionMeasurement(Pose2d, double)}. */
+  // public void addVisionMeasurement(Pose2d visionMeasurement, double timestampSeconds) {
+  //   poseEstimator.addVisionMeasurement(visionMeasurement, timestampSeconds);
+  // }
 
   /* See {@link SwerveDrivePoseEstimator#addVisionMeasurement(Pose2d, double, Matrix)}. */
   public void addVisionMeasurement(
@@ -506,11 +509,42 @@ public class Drivetrain extends SubsystemBase {
   }
 
 
+
+   // Updates pose estimate based on 2 cameras (used by Vision class)
+  public void updateEstimates(EstimatedRobotPose estimatedPose1, Matrix<N3, N1> standardDev1, EstimatedRobotPose estimatedPose2, Matrix<N3, N1> standardDev2) {
+    
+    Pose3d estimate1 = new Pose3d();
+    Pose3d estimate2 = new Pose3d();
+    
+    estimate1 = estimatedPose1.estimatedPose;
+    estimate2 = estimatedPose2.estimatedPose;
+
+    poseEstimator.addVisionMeasurement(
+      estimate1.toPose2d(),
+      estimatedPose1.timestampSeconds,
+      standardDev1
+    );
+
+    poseEstimator.addVisionMeasurement(
+      estimate2.toPose2d(),
+      estimatedPose2.timestampSeconds,
+      standardDev2
+    );
+
+    field.getObject("Cam 1 Est Pose").setPose(estimate1.toPose2d());
+    field.getObject("Cam 2 Est Pose").setPose(estimate2.toPose2d());
+
+  }
+
+
+
+
+
   // This method will be called once per scheduler run
   @Override
   public void periodic() {
 
-    updatePose();
+    updatePoseFromOdometry();
     updateModuleTelemetry();
     drive();
     

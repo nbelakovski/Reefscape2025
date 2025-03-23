@@ -2,7 +2,6 @@ package frc.robot.utils;
 
 
 import frc.robot.Constants.VisionConstants;
-import frc.robot.Constants;
 import frc.robot.FieldConstants;
 import frc.robot.Robot;
 
@@ -15,96 +14,51 @@ import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.simulation.PhotonCameraSim;
 import org.photonvision.simulation.VisionSystemSim;
-import org.photonvision.targeting.MultiTargetPNPResult;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
-import org.photonvision.targeting.TargetCorner;
 
-// import edu.wpi.first.apriltag.AprilTagFieldLayout;
-// import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 /** Add your docs here. */
 public class AprilCam {
 
     private PhotonCamera camera;
-    private List<PhotonPipelineResult> results;
-    private PhotonTrackedTarget desiredTarget;
+    private Transform3d camOffset;
     private PhotonPoseEstimator photonPoseEstimator;
+    private List<PhotonPipelineResult> results;
+    private PhotonPipelineResult lastResult;
+
+    private PhotonTrackedTarget desiredTarget;
     private List<PhotonTrackedTarget> targets;
     public int closestID;
-
-    Transform3d camOffset;
-    Translation3d camOffsetTranslation;
-    Rotation3d camOffsetRotation;
-    
-    private double xOffset;
-    private double yOffset;
-    private double zOffset;
-    private double rollOffset;
-    private double pitchOffset;
-    private double yawOffset;
 
     // Simulation
     private PhotonCameraSim cameraSim;
     private VisionSystemSim visionSim;
-    private Matrix<N3, N1> curStdDevs;
+    private Matrix<N3, N1> currentSDs;
     
     
     // Constructor 1
-    public AprilCam(String name, Translation3d position, Rotation3d angle, double xOffset, double yOffset){
+    public AprilCam(String name, Translation3d pos, Rotation3d angle){
         this.camera = new PhotonCamera(name);
-
-        this.xOffset = xOffset;
-        this.yOffset = yOffset;
-        this.zOffset = 0;
-        this.rollOffset = 0;
-        this.pitchOffset = 0;
-        this.yawOffset = 0;
-        
-        this.camOffsetTranslation = new Translation3d(xOffset, yOffset, zOffset); // is cam mounted at center? how far back from front of bumper?
-        this.camOffsetRotation = new Rotation3d(rollOffset, pitchOffset, yawOffset); // is cam mounted facing forward, upright?
-        this.camOffset = new Transform3d(camOffsetTranslation, camOffsetRotation);
+        this.camOffset = new Transform3d(pos, angle);
         this.photonPoseEstimator = new PhotonPoseEstimator(FieldConstants.aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, camOffset);
      }
 
      // Constructor 2: simple version
     public AprilCam(String name) {
-        this(name,new Translation3d(), new Rotation3d(), 0,0);
+        this(name,new Translation3d(), new Rotation3d());
     }
 
-
-    // Updates the camera with the latest results (Needs to be called periodically!)
-    // public void update() {
-    //     result = new PhotonPipelineResult();
-        // SmartDashboard.putBoolean("photon result", camera.getAllUnreadResults().isEmpty());
-        // SmartDashboard.putNumber("photon result size", camera.getAllUnreadResults().size());
-        //SmartDashboard.putString("pipeline", camera.getAllUnreadResults().get(0).toString());
-    
-        // if(camera.getAllUnreadResults().size() != 0) {
-        //     SmartDashboard.putBoolean("is run", true);
-
-        //     //this.result = camera.getAllUnreadResults().get(0);
-        // }
-        //var result = camera.getLatestResult();  // Query the latest result from PhotonVision //photonvision code  
-        //this.result = camera.getAllUnreadResults().get(0); //old code
-        //this.result = camera.getLatestResult();
-    //}
 
     public void update() {
         this.results = camera.getAllUnreadResults();
@@ -235,53 +189,13 @@ public class AprilCam {
     // Check out this page: https://docs.photonvision.org/en/latest/docs/examples/poseest.html
     // Here is the example Vision class from PhotonVision: https://github.com/PhotonVision/photonvision/blob/main/photonlib-java-examples/poseest/src/main/java/frc/robot/Vision.java
  
-    // Note: Line 68 
-    // Gets the AprilTag Locations:
-    // visionSim.addAprilTags(kTagLayout);
-
-
-    // Note: Lines 64-73
-    // During periodic execution, we read back camera results. If we see AprilTags in the image, we calculate the camera-measured pose of the robot and pass it to the Drivetrain.
-
-    // // Correct pose estimate with vision measurements
-    // var visionEst = vision.getEstimatedGlobalPose();
-    // visionEst.ifPresent(
-    //         est -> {
-    //             // Change our trust in the measurement based on the tags we can see
-    //             var estStdDevs = vision.getEstimationStdDevs();
-
-    //             drivetrain.addVisionMeasurement(
-    //                     est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
-    //         });
-
-
-
-
-    //OLD CODE 
-    // public Optional<EstimatedRobotPose> getEstimatedGlobalPose() {
-
-    //     return photonPoseEstimator.update(result);
-    // }
-
-    // public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
-
-    //     // only matters for CLOSEST_TO_REFERENCE_POSE strategy
-    //     photonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
-
-    //     return photonPoseEstimator.update(result);
-    // }
-
-    // public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
-    //     photonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
-    //     return photonPoseEstimator.update(result);
-    // }
-
+   
     /**
      * The latest estimated robot pose on the field from vision data. This may be empty. This should
      * only be called once per loop.
      *
      * <p>Also includes updates for the standard deviations, which can (optionally) be retrieved with
-     * {@link getEstimationStdDevs}
+     * {@link getEstimationSDs}
      *
      * @return An {@link EstimatedRobotPose} with an estimated pose, estimate timestamp, and targets
      *     used for estimation.
@@ -295,7 +209,7 @@ public class AprilCam {
 
         for (var change : this.results) {
             visionEst = photonPoseEstimator.update(change);
-            updateEstimationStdDevs(visionEst, change.getTargets());
+            updateEstimationSDs(visionEst, change.getTargets());
             targets = change.getTargets();
 
             updateClosestID(targets);
@@ -303,50 +217,66 @@ public class AprilCam {
         }
         return visionEst;
     }
+
+
     /*
      * Calculates new standard deviations This algorithm is a heuristic that creates dynamic standard
      * deviations based on number of tags, estimation strategy, and distance from the tags.
-     *
+     * Uses higher weights for reef tags!
+     * This should only be used when there are targets visible
      * @param estimatedPose The estimated pose to guess standard deviations for.
      * @param targets All targets in this camera frame
      */
-     private void updateEstimationStdDevs(Optional<EstimatedRobotPose> estimatedPose, List<PhotonTrackedTarget> targets) {
+    private void updateEstimationSDs(Optional<EstimatedRobotPose> estimatedPose, List<PhotonTrackedTarget> targets) {
+
+        // No pose input. Default to single-tag std devs
         if (estimatedPose.isEmpty()) {
-            // No pose input. Default to single-tag std devs
-            curStdDevs = VisionConstants.kSingleTagStdDevs;
-
-        } else {
-            // Pose present. Start running Heuristic
-            var estStdDevs = VisionConstants.kSingleTagStdDevs;
+            currentSDs = VisionConstants.SINGLE_TAG_SD;
+        } 
+        
+        // Pose present. Start running Heuristic
+        else {
+            var estimatedSDs = VisionConstants.SINGLE_TAG_SD;
             int numTags = 0;
-            double avgDist = 0;
+            double totalDistance = 0;
+            double totalWeight = 0;
 
-            // Precalculation - see how many tags we found, and calculate an average-distance metric
-            for (var tgt : targets) {
-                var tagPose = photonPoseEstimator.getFieldTags().getTagPose(tgt.getFiducialId());
+            // Loop through all the targets to find difference in distance from current pose & how important that tag is
+            for (var target : targets) {
+                // Pose3d tagPose = FieldConstants.getTagPose(target.getFiducialId());
+                // if(tagPose != null){
+                var tagPose = photonPoseEstimator.getFieldTags().getTagPose(target.getFiducialId());
                 if (tagPose.isEmpty()) continue;
                 numTags++;
-                avgDist +=
-                        tagPose
-                                .get()
-                                .toPose2d()
-                                .getTranslation()
-                                .getDistance(estimatedPose.get().estimatedPose.toPose2d().getTranslation());
+                totalDistance += tagPose.get().toPose2d().getTranslation().getDistance(estimatedPose.get().estimatedPose.toPose2d().getTranslation());
+                totalWeight += FieldConstants.TAG_WEIGHTS[target.getFiducialId() - 1]; 
             }
 
+            // Use the single tag standard deviations if no tags visible
             if (numTags == 0) {
-                // No tags visible. Default to single-tag std devs
-                curStdDevs = VisionConstants.kSingleTagStdDevs;
-            } else {
-                // One or more tags visible, run the full heuristic.
-                avgDist /= numTags;
-                // Decrease std devs if multiple targets are visible
-                if (numTags > 1) estStdDevs = VisionConstants.kMultiTagStdDevs;
-                // Increase std devs based on (average) distance
-                if (numTags == 1 && avgDist > 4)
-                    estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-                else estStdDevs = estStdDevs.times(1 + (avgDist * avgDist / 30));
-                curStdDevs = estStdDevs;
+                currentSDs = VisionConstants.SINGLE_TAG_SD;
+            } 
+            
+            // One or more tags visible, run the full heuristic.
+            else {
+
+                // Calculate the average distance changes were
+                double avgDist = totalDistance /numTags;
+                double avgWeight = totalWeight /numTags;
+
+                // Decrease standard deviations if multiple targets are visible
+                if (numTags > 1) estimatedSDs = VisionConstants.MULTI_TAG_SD;
+                
+                // Increase standard deviations based on average distance
+                if (numTags == 1 && avgDist > 4){
+                    estimatedSDs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+                } else {
+                    estimatedSDs = estimatedSDs.times(1 + (avgDist * avgDist / 30));
+                }
+
+                // Weight reef tags higher
+                estimatedSDs = estimatedSDs.times(avgWeight);
+                currentSDs = estimatedSDs;
             }
         }
     }
@@ -358,8 +288,8 @@ public class AprilCam {
      * edu.wpi.first.math.estimator.SwerveDrivePoseEstimator SwerveDrivePoseEstimator}. This should
      * only be used when there are targets visible.
      */
-    public Matrix<N3, N1> getEstimationStdDevs() {
-        return curStdDevs;
+    public Matrix<N3, N1> getEstimationSDs() {
+        return currentSDs;
     }
     /** A Field2d for visualizing our robot and objects on the field. */
     public Field2d getSimDebugField() {

@@ -1,19 +1,19 @@
 package frc.robot;
 
 
+
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+
+import com.pathplanner.lib.util.*;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-// import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-// import com.pathplanner.lib.util.PIDConstants;
-// import com.pathplanner.lib.util.ReplanningConfig;
-import com.pathplanner.lib.util.*;
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.HolonomicDriveController;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -249,15 +249,23 @@ public final class Constants {
   public static class VisionConstants{
 
     //Camera Name
-    public static final String CAM1_NAME = "Arducam_OV9782_USB_Camera"; //"Arducam_OV9782_USB_Camera";
-    public static double CAM1_X_OFFSET = -(0.254 + SwerveConstants.BUMPER_WIDTH); //cam mounted 13" back from front bumper, slightly right?
-    public static double CAM1_Y_OFFSET = -0.048;  
+    public static final String CAM1_NAME = "Arducam_OV9782_USB_Camera";
+    public static double CAM1_X_OFFSET = -(0.254 + SwerveConstants.BUMPER_WIDTH); //cam mounted 12.5" back from front bumper
+    public static double CAM1_Y_OFFSET = -0.048;
+    public static Translation3d CAM1_POSITION_OFFSET = new Translation3d(CAM1_X_OFFSET, CAM1_Y_OFFSET,0.0); // is cam mounted at center? how far back from front of bumper?
+    public static Rotation3d CAM1_ANGLE_OFFSET = new Rotation3d(0,0,0); // is cam mounted facing forward, upright? 
+
+    public static final String CAM2_NAME = "Arducam_OV9782_USB_Camera_2"; 
+    public static double CAM2_X_OFFSET = CAM1_X_OFFSET;
+    public static double CAM2_Y_OFFSET = -0.048;
+    public static Translation3d CAM2_POSITION_OFFSET = new Translation3d(CAM1_X_OFFSET, CAM1_Y_OFFSET,0.0); // is cam mounted at center? how far back from front of bumper?
+    public static Rotation3d CAM2_ANGLE_OFFSET = new Rotation3d(0,0,0); // is cam mounted facing forward, upright? 
 
 
     // The standard deviations of our vision estimated poses, which affect correction rate
     // (Fake values. Experiment and determine estimation noise on an actual robot.)
-    public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(2, 2, 4);
-    public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
+    public static final Matrix<N3, N1> SINGLE_TAG_SD = VecBuilder.fill(2, 2, 4);
+    public static final Matrix<N3, N1> MULTI_TAG_SD = VecBuilder.fill(0.5, 0.5, 1);
 
   }
 

@@ -1,9 +1,8 @@
 package frc.robot;
 
-import java.util.Arrays;
+
 import java.util.Optional;
 import java.util.OptionalInt;
-
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
@@ -21,6 +20,8 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 public class FieldConstants {
 
     public static AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
+    public static int[] reefTags = {6, 7, 8, 9, 10, 11, 17, 18, 19, 20, 21, 22};
+    public static final double[] TAG_WEIGHTS = { 0.25, 0.25, 0.25, 0.25, 0.25, 1, 1, 1, 1, 1, 1, 0.25, 0.25, 0.25, 0.25, 0.25, 1, 1, 1, 1, 1, 1};
 
     // See dimensions in CAD model: https://cad.onshape.com/documents/73436e28519cd6ef4a2eaa1e/w/658277bde6080a5805de078e/e/42ebe4fcf42b8b1c992b38c2
     public static double FIELD_LENGTH_X = 17.548;
@@ -61,7 +62,6 @@ public class FieldConstants {
         // System.out.println("tagX\t"+tagPose.getX());
         // System.out.println("tagY\t"+tagPose.getY());
         
-
         //Get the coordinate of tag on field
         Translation3d tagTranslation = tagPose.getTranslation();
         double tagAngle = tagPose.getRotation().getAngle();
@@ -89,8 +89,6 @@ public class FieldConstants {
         // System.out.println("targetAngle\t"+targetAngle.getZ());
         
         return targetPose;
-   
-
     }
 
 

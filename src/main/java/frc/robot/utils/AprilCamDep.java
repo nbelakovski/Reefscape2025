@@ -189,11 +189,11 @@ public class AprilCamDep {
     private void updateEstimationStdDevs(Optional<EstimatedRobotPose> estimatedPose, List<PhotonTrackedTarget> targets) {
         if (estimatedPose.isEmpty()) {
             // No pose input. Default to single-tag std devs
-            curStdDevs = VisionConstants.kSingleTagStdDevs;
+            curStdDevs = VisionConstants.SINGLE_TAG_SD;
 
         } else {
             // Pose present. Start running Heuristic
-            var estStdDevs = VisionConstants.kSingleTagStdDevs;
+            var estStdDevs = VisionConstants.SINGLE_TAG_SD;
             int numTags = 0;
             double avgDist = 0;
 
@@ -212,12 +212,12 @@ public class AprilCamDep {
 
             if (numTags == 0) {
                 // No tags visible. Default to single-tag std devs
-                curStdDevs = VisionConstants.kSingleTagStdDevs;
+                curStdDevs = VisionConstants.SINGLE_TAG_SD;
             } else {
                 // One or more tags visible, run the full heuristic.
                 avgDist /= numTags;
                 // Decrease std devs if multiple targets are visible
-                if (numTags > 1) estStdDevs = VisionConstants.kMultiTagStdDevs;
+                if (numTags > 1) estStdDevs = VisionConstants.MULTI_TAG_SD;
                 // Increase std devs based on (average) distance
                 if (numTags == 1 && avgDist > 4)
                     estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
