@@ -52,6 +52,13 @@ public class AprilCam {
     Transform3d camOffset;
     Translation3d camOffsetTranslation;
     Rotation3d camOffsetRotation;
+    
+    private double xOffset;
+    private double yOffset;
+    private double zOffset;
+    private double rollOffset;
+    private double pitchOffset;
+    private double yawOffset;
 
     // Simulation
     private PhotonCameraSim cameraSim;
@@ -60,20 +67,25 @@ public class AprilCam {
     
     
     // Constructor 1
-    public AprilCam(String name, Translation3d position, Rotation3d angle){
+    public AprilCam(String name, Translation3d position, Rotation3d angle, double xOffset, double yOffset){
         this.camera = new PhotonCamera(name);
-        double CAM_X_OFFSET = -(0.254 + Constants.SwerveConstants.BUMPER_WIDTH); 
-        double CAM_Y_OFFSET = -0.048;  
+
+        this.xOffset = xOffset;
+        this.yOffset = yOffset;
+        this.zOffset = 0;
+        this.rollOffset = 0;
+        this.pitchOffset = 0;
+        this.yawOffset = 0;
         
-        this.camOffsetTranslation = new Translation3d(CAM_X_OFFSET, CAM_Y_OFFSET, 0.0); //cam mounted 13" back from front bumper, slightly right?
-        this.camOffsetRotation = new Rotation3d(0,0,0); //cam mounted facing forward, upright
+        this.camOffsetTranslation = new Translation3d(xOffset, yOffset, zOffset); // is cam mounted at center? how far back from front of bumper?
+        this.camOffsetRotation = new Rotation3d(rollOffset, pitchOffset, yawOffset); // is cam mounted facing forward, upright?
         this.camOffset = new Transform3d(camOffsetTranslation, camOffsetRotation);
         this.photonPoseEstimator = new PhotonPoseEstimator(FieldConstants.aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, camOffset);
      }
 
      // Constructor 2: simple version
     public AprilCam(String name) {
-        this(name,new Translation3d(), new Rotation3d());
+        this(name,new Translation3d(), new Rotation3d(), 0,0);
     }
 
 
@@ -96,6 +108,13 @@ public class AprilCam {
 
     public void update() {
         this.results = camera.getAllUnreadResults();
+
+        // SmartDashboard.putNumber("X", getX());
+        // SmartDashboard.putNumber("Y", getY());
+        // SmartDashboard.putNumber("Z", getZ());
+        // for (int i = 0; i < getTargets().size(); i++) {
+        //   SmartDashboard.putString("id" + i, getTargets().get(i).toString());
+        // }
     }
 
     // --------------------- GETTING TARGETS -------------------)------------ //
@@ -121,7 +140,6 @@ public class AprilCam {
                 closestDistance = currentDistance;
                 closestID = t.fiducialId;
             }
-
         }
         this.closestID = closestID;
     }

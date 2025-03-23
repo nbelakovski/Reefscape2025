@@ -1,19 +1,50 @@
 package frc.robot;
 
 import java.util.Arrays;
+import java.util.Optional;
+import java.util.OptionalInt;
 
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Inches;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+
 
 public class FieldConstants {
 
     public static AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
+
+    // See dimensions in CAD model: https://cad.onshape.com/documents/73436e28519cd6ef4a2eaa1e/w/658277bde6080a5805de078e/e/42ebe4fcf42b8b1c992b38c2
+    public static double FIELD_LENGTH_X = 17.548;
+    public static double FIELD_WIDTH_Y = 8.052;
+    public static double BLUE_CENTER_CAGE_Y = 6.169;
+    public static double RED_CENTER_CAGE_Y = 1.883;
+    public static double FIELD_CENTER_Y = FIELD_WIDTH_Y/2; //4.026
+    public static double BLUE_STARTING_LINE = 6.742; //front of bumper when back edge of bumper is on back edge of starting line
+    public static double RED_STARTING_LINE = FIELD_LENGTH_X - BLUE_STARTING_LINE;
+    public static double BLUE_AUTO_ANGLE = 180;
+    public static double RED_AUTO_ANGLE = 0;
+
+    public static final Translation2d fieldCenter = new Translation2d(FIELD_LENGTH_X/2, FIELD_WIDTH_Y/2);
+    public static final Pose2d blueCoralStationLeft = new Pose2d(Inches.of(33.526), Inches.of(291.176), Rotation2d.fromDegrees(90 - 144.011));
+    public static final Pose2d blueCoralStationRight = new Pose2d(Inches.of(33.526), Inches.of(25.824), Rotation2d.fromDegrees(144.011 - 90));
+    public static final Pose2d blueBargeSideAuto = new Pose2d(BLUE_STARTING_LINE, BLUE_CENTER_CAGE_Y, Rotation2d.fromDegrees(BLUE_AUTO_ANGLE));
+    public static final Pose2d blueCenterAuto = new Pose2d(BLUE_STARTING_LINE, FIELD_CENTER_Y, Rotation2d.fromDegrees(BLUE_AUTO_ANGLE));
+    public static final Pose2d blueProcessorSideAuto = new Pose2d(BLUE_STARTING_LINE, RED_CENTER_CAGE_Y, Rotation2d.fromDegrees(BLUE_AUTO_ANGLE));
+    public static final Pose2d redCoralStationLeft = blueCoralStationLeft.rotateAround(fieldCenter, new Rotation2d(Degrees.of(180)) );
+    public static final Pose2d redCoralStationRight = blueCoralStationRight.rotateAround(fieldCenter, new Rotation2d(Degrees.of(180)) );
+    public static final Pose2d redBargeSideAuto = new Pose2d(RED_STARTING_LINE, RED_CENTER_CAGE_Y, Rotation2d.fromDegrees(RED_AUTO_ANGLE));
+    public static final Pose2d redCenterAuto = new Pose2d(RED_STARTING_LINE, FIELD_CENTER_Y, Rotation2d.fromDegrees(RED_AUTO_ANGLE));
+    public static final Pose2d redProcessorSideAuto = new Pose2d(RED_STARTING_LINE, BLUE_CENTER_CAGE_Y, Rotation2d.fromDegrees(RED_AUTO_ANGLE));
+
 
     public static Pose3d getTagPose(int tagID){
         return aprilTagFieldLayout.getTagPose(tagID).get();
@@ -63,65 +94,44 @@ public class FieldConstants {
     }
 
 
-
+    // Set our initial location and orientation based on alliance/location
+    // Location 1 is Left Side (Barge)
+    // location 2 is in the Middle
+    // location 3 is Right Side (Processor)
     public static Pose2d getInitialPose(){
 
-        var initialPose = new Pose2d();
-        // Set our initial location and orientation based on alliance/location
-        // Location 1 is Left Side (Same color barge)
-        // location 2 is in the Middle (either alliance)
-        // location 3 is Right Side/Processor (Opposite color barge)
-        var locationOptional = DriverStation.getLocation();
-        var allianceOptional = DriverStation.getAlliance();
-        
-        if (locationOptional.isPresent() && allianceOptional.isPresent()) {
+        Optional<Alliance> allianceOptional = DriverStation.getAlliance();
+        Alliance alliance = null;
+        if (allianceOptional.isPresent()) {
+            alliance = allianceOptional.get();
+        }    
 
-            int location = locationOptional.getAsInt();
-            var alliance = allianceOptional.get();
-
-            // See dimensions in CAD model: https://cad.onshape.com/documents/73436e28519cd6ef4a2eaa1e/w/658277bde6080a5805de078e/e/42ebe4fcf42b8b1c992b38c2
-            double FIELD_LENGTH_X = 17.548;
-            double FIELD_WIDTH_Y = 8.052;
-            double BLUE_CENTER_CAGE_Y = 6.169;
-            double RED_CENTER_CAGE_Y = 1.883;
-            double FIELD_CENTER_Y = FIELD_WIDTH_Y/2; //4.026
-            double BLUE_STARTING_LINE = 6.742; //front of bumper when back edge of bumper is on back edge of starting line
-            double RED_STARTING_LINE = FIELD_LENGTH_X - BLUE_STARTING_LINE;
-            double BLUE_AUTO_ANGLE = 180;
-            double RED_AUTO_ANGLE = 0;
-
-
-            if (location == 1 && alliance == DriverStation.Alliance.Blue) {
-                initialPose = new Pose2d(BLUE_STARTING_LINE, BLUE_CENTER_CAGE_Y, Rotation2d.fromDegrees(BLUE_AUTO_ANGLE));
-            }
-            else if (location == 2 && alliance == DriverStation.Alliance.Blue) {
-                initialPose = new Pose2d(BLUE_STARTING_LINE, FIELD_CENTER_Y, Rotation2d.fromDegrees(BLUE_AUTO_ANGLE));
-            }
-            else if (location == 3 && alliance == DriverStation.Alliance.Blue) {
-                initialPose = new Pose2d(BLUE_STARTING_LINE, RED_CENTER_CAGE_Y, Rotation2d.fromDegrees(BLUE_AUTO_ANGLE));
-            }
-            else if (location == 1 && alliance == DriverStation.Alliance.Red) {
-                initialPose = new Pose2d(RED_STARTING_LINE, RED_CENTER_CAGE_Y, Rotation2d.fromDegrees(RED_AUTO_ANGLE));
-            }
-            else if (location == 2 && alliance == DriverStation.Alliance.Red) {
-                initialPose = new Pose2d(RED_STARTING_LINE, FIELD_CENTER_Y, Rotation2d.fromDegrees(RED_AUTO_ANGLE));
-            }
-            else if (location == 3 && alliance == DriverStation.Alliance.Red) {
-                initialPose = new Pose2d(RED_STARTING_LINE, BLUE_CENTER_CAGE_Y, Rotation2d.fromDegrees(RED_AUTO_ANGLE));
-            }
+        OptionalInt locationOptional = DriverStation.getLocation();
+        int location = -1;        
+        if(locationOptional.isPresent()){
+            location = locationOptional.getAsInt();
         }
 
-        return initialPose;
+        return getInitialPose(alliance, location);
+    }
+    
+    public static Pose2d getInitialPose(Alliance alliance, int location){
+        
+        if (location == 1 && alliance == DriverStation.Alliance.Blue) { return blueBargeSideAuto; }
+        else if (location == 2 && alliance == DriverStation.Alliance.Blue) { return blueCenterAuto; }
+        else if (location == 3 && alliance == DriverStation.Alliance.Blue) { return blueProcessorSideAuto; }
+        else if (location == 1 && alliance == DriverStation.Alliance.Red) { return redBargeSideAuto; }
+        else if (location == 2 && alliance == DriverStation.Alliance.Red) { return redCenterAuto; }
+        else if (location == 3 && alliance == DriverStation.Alliance.Red) { return redProcessorSideAuto; }
+
+        return new Pose2d();
     }
 
     // Returns the nearest reef apriltag from an input pose
-    // public static pose2d nearestReefApriltag(Pose2d pose) {
-    //   return Arrays.stream(Face.values())
-    //       .filter(
-    //           face -> face.pose().minus(pose.nearest(poseList())).getTranslation().getNorm() < 1e-4)
-    //       .findFirst()
-    //       .orElse(AB);
-    // }
+    public static Pose2d nearestReefApriltag(Pose2d currentRobotPose) {
+    
+        return new Pose2d();
+    }
 
     
 }

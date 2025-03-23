@@ -6,14 +6,14 @@ package frc.robot.commands.closed;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Camera;
+import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Drivetrain;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class DriveToPeg extends Command {
 
   private static Drivetrain drivetrain;
-  private static Camera cam;
+  private static Vision vision;
   private int tagID;
   private double xSpeed;
   private double ySpeed;
@@ -30,7 +30,7 @@ public class DriveToPeg extends Command {
   public DriveToPeg(int tagID) {
     
     drivetrain = Drivetrain.getInstance();
-    cam = Camera.getInstance();
+    vision = Vision.getInstance();
     this.tagID = tagID;
     this.xSpeed = 0.4;
     this.ySpeed = 0.3;
@@ -40,10 +40,10 @@ public class DriveToPeg extends Command {
     this.yTolerance = yToleranceInches * 0.0254 ; //to score 4" coral (was 0.2)
     this.yOffset = 0.0; //was 0.7 at TH
 
-    tagX = cam.getTagPose(tagID).getX();
-    tagY = cam.getTagPose(tagID).getY();
+    tagX = vision.getTagPose(tagID).getX();
+    tagY = vision.getTagPose(tagID).getY();
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(drivetrain, cam);
+    addRequirements(drivetrain, vision);
   }
 
   // Called when the command is initially scheduled.

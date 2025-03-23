@@ -28,8 +28,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-
-import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.Volts;
 
 import java.util.ArrayList;
@@ -150,7 +148,7 @@ public class Drivetrain extends SubsystemBase {
         new ModuleConfig(
           SwerveModuleConstants.WHEEL_DIAMETER_METERS/2, 
           SwerveConstants.TOP_SPEED, 
-          1.2, 
+          SwerveModuleConstants.WHEEL_COEFFICIENT_OF_FRICTION, 
           DCMotor.getNEO(1).withReduction(SwerveModuleConstants.DRIVE_GEAR_REDUCTION), 
           SwerveModuleConstants.kDrivingMotorCurrentLimit, 
           1), 
@@ -255,8 +253,6 @@ public class Drivetrain extends SubsystemBase {
     return fieldCentric;
   }
 
-
-
   /**
    * Making a drive function to make the speed for drive a fraction of total
    * @author Aiden Sing
@@ -270,18 +266,16 @@ public class Drivetrain extends SubsystemBase {
     this.rotSpeed = rotSpeed;
   }
 
-   public void setDrive(double xSpeed, double ySpeed, double rotSpeed, boolean fieldCentric) {
+  public void setDrive(double xSpeed, double ySpeed, double rotSpeed, boolean fieldCentric) {
     this.xSpeed = xSpeed;
     this.ySpeed = ySpeed;
     this.rotSpeed = rotSpeed;
     this.fieldCentric = fieldCentric;
   }
 
-  public void stopDrive()
-  {
+  public void stopDrive() {
     setDrive(0.0,0.0,0.0);
   }
-
 
   /**
    * Method to drive the robot using joystick info.
@@ -430,17 +424,11 @@ public class Drivetrain extends SubsystemBase {
     }
   }
 
-  // Zeroes the heading of the robot
+  // Zeroes the heading of the robot, previously called resetIMU()
   public void zeroRobotHeading() {
     navX.reset();
   }
 
-  public void zeroFieldAngle(){
-    
-  }
-  // public void resetIMU() {
-  //   navX.reset();
-  // }
 
   /**
    * Returns the turn rate of the robot.
@@ -499,20 +487,19 @@ public class Drivetrain extends SubsystemBase {
     return getPose().getRotation().getRadians();
   }
 
+  
   /* See {@link SwerveDrivePoseEstimator#addVisionMeasurement(Pose2d, double)}. */
-    public void addVisionMeasurement(Pose2d visionMeasurement, double timestampSeconds) {
-      poseEstimator.addVisionMeasurement(visionMeasurement, timestampSeconds);
+  public void addVisionMeasurement(Pose2d visionMeasurement, double timestampSeconds) {
+    poseEstimator.addVisionMeasurement(visionMeasurement, timestampSeconds);
   }
 
   /* See {@link SwerveDrivePoseEstimator#addVisionMeasurement(Pose2d, double, Matrix)}. */
   public void addVisionMeasurement(
-        Pose2d visionMeasurement, double timestampSeconds, Matrix<N3, N1> stdDevs) {
+    Pose2d visionMeasurement, double timestampSeconds, Matrix<N3, N1> stdDevs) {
     poseEstimator.addVisionMeasurement(visionMeasurement, timestampSeconds, stdDevs);
   }
 
-
-
- public void updateModuleTelemetry() {
+  public void updateModuleTelemetry() {
     for(int i = 0; i < modules.length; i++) {
       modules[i].updateTelemetry();
     }

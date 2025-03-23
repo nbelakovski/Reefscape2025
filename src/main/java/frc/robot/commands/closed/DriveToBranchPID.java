@@ -10,14 +10,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Constants.SwerveAutoConstants;
 import frc.robot.FieldConstants;
-import frc.robot.subsystems.Camera;
+import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Drivetrain;
 
 
 public class DriveToBranchPID extends Command {
 
   private static Drivetrain drivetrain;
-  private static Camera cam;
+  private static Vision vision;
   private int tagID;
   private String branchDirection;
 

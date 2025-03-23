@@ -176,6 +176,7 @@ public final class Constants {
     // Calculations required for driving motor conversion factors and feed forward
     public static final double kNeoFreeSpeedRpm = 5676;
     public static final double kDrivingMotorFreeSpeedRps = kNeoFreeSpeedRpm / 60;
+    public static final double WHEEL_COEFFICIENT_OF_FRICTION = 1.5;  //from REV spiky tread on carpet
     public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(3); //0.0762;
     public static final double WHEEL_CIRCUMFERENCE_METERS = WHEEL_DIAMETER_METERS * Math.PI;
 
@@ -248,10 +249,10 @@ public final class Constants {
   public static class VisionConstants{
 
     //Camera Name
-    public static final String FRONT_CAM_NAME = "Arducam_OV9782_USB_Camera"; //"Arducam_OV9782_USB_Camera";
+    public static final String CAM1_NAME = "Arducam_OV9782_USB_Camera"; //"Arducam_OV9782_USB_Camera";
+    public static double CAM1_X_OFFSET = -(0.254 + SwerveConstants.BUMPER_WIDTH); //cam mounted 13" back from front bumper, slightly right?
+    public static double CAM1_Y_OFFSET = -0.048;  
 
-    // The layout of the AprilTags on the field
-    // public static final AprilTagFieldLayout kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
 
     // The standard deviations of our vision estimated poses, which affect correction rate
     // (Fake values. Experiment and determine estimation noise on an actual robot.)

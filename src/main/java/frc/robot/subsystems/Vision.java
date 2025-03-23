@@ -4,99 +4,76 @@ package frc.robot.subsystems;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.FieldConstants;
 import frc.robot.utils.AprilCam;
-import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.targeting.PhotonTrackedTarget;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
-public class Camera extends SubsystemBase {
+public class Vision extends SubsystemBase {
 
-  private static Camera instance;
-  public AprilCam cam;
+  private static Vision instance;
+  public AprilCam cam1;
   public int closestID;
-  Transform3d robotToCam;
-  PhotonPoseEstimator photonPoseEstimator;
   Drivetrain drivetrain = Drivetrain.getInstance();
 
   // Camera Constructor
-  private Camera() {
-    this.cam = new AprilCam(VisionConstants.FRONT_CAM_NAME);
-    // this.robotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0,0,0)); //Cam mounted facing forward, half a meter forward of center, half a meter up from center.
-    // this.photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, robotToCam);
-    //cam.update();
+  private Vision() {
+    
+    this.cam1 = new AprilCam(
+      VisionConstants.CAM1_NAME, 
+      new Translation3d(), 
+      new Rotation3d(), 
+      VisionConstants.CAM1_X_OFFSET, 
+      VisionConstants.CAM1_Y_OFFSET
+    );
+    cam1.update();
+
   }
 
   // Camera Singleton - ensures only one Camera instance is constructed
-  public static Camera getInstance(){
+  public static Vision getInstance(){
     if(instance == null){
-      instance = new Camera();
+      instance = new Vision();
     }
       return instance;
   }
   
   public PhotonTrackedTarget getDesiredTarget(int target) {
-    return cam.getDesiredTarget(target);
+    return cam1.getDesiredTarget(target);
   }
 
   public double getXDesired(PhotonTrackedTarget target) {
-    return cam.getXDesired(target);
+    return cam1.getXDesired(target);
   }
 
   public  Pose3d getTagPose(int tagID){
     return FieldConstants.aprilTagFieldLayout.getTagPose(tagID).get();
   }
-
-  // public double getX(){
-  //   return cam.getXBest();
-  // }
-
-  // public double getYDesired(PhotonTrackedTarget target) {
-  //   return cam.getYDesired(target);
-  // }
-
-  // public double getY(){
-  //   return cam.getYBest();
-  // }
-
-  // public double getZ(){
-  //   return cam.getZBest();
-  // }
-  // public boolean hasTarget() {
-  //   return cam.hasTarget();
-  // }
   
   public int getClosestID(){
-    return cam.closestID;
-  }
-    
+    return cam1.closestID;
+  }  
 
+
+  // This method will be called once per scheduler run
   @Override
   public void periodic() {
 
-    cam.update();
+    cam1.update();
 
-  
-    // This method will be called once per scheduler run
     // Correct pose estimate with vision measurements
-    var visionEst = cam.getEstimatedGlobalPose(drivetrain.getPose());
+    var visionEst = cam1.getEstimatedGlobalPose(drivetrain.getPose());
     visionEst.ifPresent(
-            est -> {
+              est -> {
                 // Change our trust in the measurement based on the tags we can see
-                var estStdDevs = cam.getEstimationStdDevs();
+                var estStdDevs = cam1.getEstimationStdDevs();
 
                 drivetrain.addVisionMeasurement(
                         est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
             });
-
-    // SmartDashboard.putNumber("X", getX());
-    // SmartDashboard.putNumber("Y", getY());
-    // SmartDashboard.putNumber("Z", getZ());
-    // for (int i = 0; i < cam.getTargets().size(); i++) {
-    //   SmartDashboard.putString("id" + i, cam.getTargets().get(i).toString());
-    // }
 
     if(visionEst.isPresent()) {
       SmartDashboard.putNumber("pose X", visionEst.get().estimatedPose.getX());
@@ -104,18 +81,11 @@ public class Camera extends SubsystemBase {
       SmartDashboard.putNumber("rot", visionEst.get().estimatedPose.getRotation().getAngle());
       SmartDashboard.putNumber("tag x", getXDesired(getDesiredTarget(closestID)));
     }
-    // else {
-    //   SmartDashboard.putNumber("pose X", 0);
-    //   SmartDashboard.putNumber("pose Y", 0);
-    //   SmartDashboard.putNumber("rot", 0);
-    // }
     
     SmartDashboard.putNumber("tag 21 pose x", FieldConstants.aprilTagFieldLayout.getTagPose(21).get().getX());
     SmartDashboard.putNumber("tag 21 pose y", FieldConstants.aprilTagFieldLayout.getTagPose(21).get().getY());
     SmartDashboard.putNumber("tag 21 angle", FieldConstants.aprilTagFieldLayout.getTagPose(21).get().getRotation().getAngle());
     SmartDashboard.putNumber("closest ID", closestID);
-    
-   
     
   }
 }
