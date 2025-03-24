@@ -16,7 +16,7 @@ public class Vision extends SubsystemBase {
 
   private static Vision instance;
   public AprilCam cam1;
-  public int closestID;
+  public int closestId;
   Drivetrain drivetrain = Drivetrain.getInstance();
 
   // Camera Constructor
@@ -49,12 +49,14 @@ public class Vision extends SubsystemBase {
     return cam1.getXDesired(target);
   }
 
-  public  Pose3d getTagPose(int tagID){
-    return FieldConstants.aprilTagFieldLayout.getTagPose(tagID).get();
+  public  Pose3d getTagPose(int tagId){
+    return FieldConstants.aprilTagFieldLayout.getTagPose(tagId).get();
   }
   
-  public int getClosestID(){
-    return cam1.closestID;
+  public int getClosestId(){
+    // return cam1.closestId;
+    closestId = FieldConstants.getNearestReefTag(new Pose3d(drivetrain.getPose()));
+    return closestId;
   }  
 
 
@@ -79,13 +81,14 @@ public class Vision extends SubsystemBase {
       SmartDashboard.putNumber("pose X", visionEst.get().estimatedPose.getX());
       SmartDashboard.putNumber("pose Y", visionEst.get().estimatedPose.getY());
       SmartDashboard.putNumber("rot", visionEst.get().estimatedPose.getRotation().getAngle());
-      SmartDashboard.putNumber("tag x", getXDesired(getDesiredTarget(closestID)));
+      SmartDashboard.putNumber("tag x", getXDesired(getDesiredTarget(closestId)));
     }
     
     SmartDashboard.putNumber("tag 21 pose x", FieldConstants.aprilTagFieldLayout.getTagPose(21).get().getX());
     SmartDashboard.putNumber("tag 21 pose y", FieldConstants.aprilTagFieldLayout.getTagPose(21).get().getY());
     SmartDashboard.putNumber("tag 21 angle", FieldConstants.aprilTagFieldLayout.getTagPose(21).get().getRotation().getAngle());
-    SmartDashboard.putNumber("closest ID", closestID);
+
+    SmartDashboard.putNumber("closest Id", closestId);
     
   }
 }

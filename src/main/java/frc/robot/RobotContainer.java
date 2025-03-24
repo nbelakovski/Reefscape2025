@@ -10,6 +10,8 @@ import frc.robot.commands.complex.*;
 import frc.robot.commands.combos.*;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -33,17 +35,12 @@ public class RobotContainer {
   private static final XboxController sysIdController = new XboxController(2);
   private static final XboxController testController = new XboxController(3);
 
-  private Vision cam = Vision.getInstance();
+  private Vision vision = Vision.getInstance();
   private Drivetrain drivetrain = Drivetrain.getInstance();
   private AlgaeHandler algae = AlgaeHandler.getInstance();
   private LEDStrip led = LEDStrip.getInstance();
 
   private SendableChooser<Command> autoChooser;
-  private Command auto1 = new PathPlannerAuto("Auto1");
-  private Command oneMeter = new PathPlannerAuto("one meter");
-  private Command testing = new PathPlannerAuto("testing");
-  private Command ERComboPath = new PathPlannerAuto("ERComboPath");
-  private Command auto2 = new PathPlannerAuto("auto2");
 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -91,8 +88,8 @@ public class RobotContainer {
     // new DPad(driverController,90).whileTrue(new TurnToAnglePID(270));
 
     // Driver - DPAD - Align to AprilTag Branch LEFT or RIGHT
-    int tagID = 21;
-    // int tagID = cam.closestID;
+    int tagID = vision.getClosestId();
+    // int tagID = 21;
     new DPad(driverController,270).whileTrue(new DriveToBranchPID(tagID,"LEFT"));
     new DPad(driverController,90).whileTrue(new DriveToBranchPID(tagID,"RIGHT")); 
 
@@ -193,19 +190,20 @@ public class RobotContainer {
 
 public void autoChooserInit() {
 
-    autoChooser.setDefaultOption("one meter", oneMeter);
+    autoChooser.setDefaultOption("PP-one meter", new PathPlannerAuto("one meter"));
 
-    autoChooser.addOption("Auto 1", auto1);
-    //autoChooser.addOption("one meter", oneMeter);
-    autoChooser.addOption("testing", testing);
-    autoChooser.addOption("ERComboPath", ERComboPath);
-    autoChooser.addOption("auto2", auto2);
-    autoChooser.addOption("DrivetoDL4-old", new DriveDtoL4() );
-    autoChooser.addOption("drivetopeg2", new DriveToPeg(21));
+    //autoChooser.addOption("one meter", new PathPlannerAuto("one meter"));
+    autoChooser.addOption("PP-Auto1", new PathPlannerAuto("Auto1"));
+    autoChooser.addOption("PP-Auto2", new PathPlannerAuto("Auto2"));
+    autoChooser.addOption("PP-ERComboPath", new PathPlannerAuto("ERComboPath"));
+
+    autoChooser.addOption("driveToBranch-Closest-LEFT", new DriveToBranchPID(vision.getClosestId(), "LEFT"));
+    autoChooser.addOption("driveToBranch-21-LEFT", new DriveToBranchPID(21, "LEFT"));
     autoChooser.addOption("straightToDL4-RED", new AutoStraightPathToCoralScore(21,4) );
-    autoChooser.addOption("driveToBranch", new DriveToBranchPID(21, "LEFT"));
-    autoChooser.addOption("turntoangle", new TurnToAnglePID(0));
-    
+    // autoChooser.addOption("DrivetoDL4-old", new DriveDtoL4() );
+    autoChooser.addOption("turntoangle", new TurnToAnglePID(90));
+    autoChooser.addOption("testing", new PathPlannerAuto("testing"));
+
 
     // Table for AprilTag IDs
     // 9	Red Reef C --> (Blue 22)
@@ -215,8 +213,9 @@ public void autoChooserInit() {
     // 21	Blue Reef D --> (Red 10)
     // 20	Blue Reef E --> (Red 11)
 
-
 }
+
+
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *

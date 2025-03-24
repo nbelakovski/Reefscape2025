@@ -113,12 +113,11 @@ public class Drivetrain extends SubsystemBase {
     var stateStdDevs = VecBuilder.fill(0.1, 0.1, 0.1);
     var visionStdDevs = VecBuilder.fill(1, 1, 1);
 
-
     this.poseEstimator =  new SwerveDrivePoseEstimator(
       SwerveConstants.DRIVE_KINEMATICS,
       getRobotHeading(),
       getSwerveModulePos(),
-      FieldConstants.getRobotPoseInitial(),
+      FieldConstants.getRobotPoseInitialFMS().toPose2d(),
       stateStdDevs,
       visionStdDevs);
 
@@ -127,15 +126,15 @@ public class Drivetrain extends SubsystemBase {
 
   }
 
-  //Path Planner Drive Controller
+  //PathPlanner Drive Controller
   public final PPHolonomicDriveController pathFollowerConfig = new PPHolonomicDriveController(
     new PIDConstants(SwerveAutoConstants.TRANSLATE_P, SwerveAutoConstants.TRANSLATE_I, SwerveAutoConstants.TRANSLATE_D), // Translation constants 
     new PIDConstants(SwerveAutoConstants.TURN_P, SwerveAutoConstants.TURN_I, SwerveAutoConstants.TURN_D) // Rotation constants 
   );
 
+  // Configure AutoBuilder for PathPlanner
   private void autoConfig(){
 
-    // Configure AutoBuilder
     AutoBuilder.configure(
       this::getPose, 
       this::resetPose, 

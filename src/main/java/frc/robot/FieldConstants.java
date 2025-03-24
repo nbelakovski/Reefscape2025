@@ -38,17 +38,13 @@ public class FieldConstants {
 
     public static final Translation2d fieldCenter = new Translation2d(FIELD_LENGTH_X/2, FIELD_WIDTH_Y/2);
 
-    // Field Element Poses
-    public static final Pose2d blueCoralStationLeft = new Pose2d(Inches.of(33.526), Inches.of(291.176), Rotation2d.fromDegrees(-54.0));
-    public static final Pose2d blueCoralStationRight = new Pose2d(Inches.of(33.526), Inches.of(25.824), Rotation2d.fromDegrees(54.0));
-    
     // Center-of-Robot Poses from AUTO Starting Positions
-    public static final Pose2d blueBargeSideAutoPose = new Pose2d(BLUE_STARTING_X, BLUE_CENTER_CAGE_Y, Rotation2d.fromDegrees(BLUE_AUTO_ANGLE));
-    public static final Pose2d blueCenterAutoPose = new Pose2d(BLUE_STARTING_X, FIELD_CENTER_Y, Rotation2d.fromDegrees(BLUE_AUTO_ANGLE));
-    public static final Pose2d blueProcessorSideAutoPose = new Pose2d(BLUE_STARTING_X, RED_CENTER_CAGE_Y, Rotation2d.fromDegrees(BLUE_AUTO_ANGLE));
-    public static final Pose2d redBargeSideAutoPose = new Pose2d(RED_STARTING_X, RED_CENTER_CAGE_Y, Rotation2d.fromDegrees(RED_AUTO_ANGLE));
-    public static final Pose2d redCenterAutoPose = new Pose2d(RED_STARTING_X, FIELD_CENTER_Y, Rotation2d.fromDegrees(RED_AUTO_ANGLE));
-    public static final Pose2d redProcessorSideAutoPose = new Pose2d(RED_STARTING_X, BLUE_CENTER_CAGE_Y, Rotation2d.fromDegrees(RED_AUTO_ANGLE));
+    public static final Pose3d blueBargeSideAutoPose = new Pose3d(new Pose2d(BLUE_STARTING_X, BLUE_CENTER_CAGE_Y, Rotation2d.fromDegrees(BLUE_AUTO_ANGLE)));
+    public static final Pose3d blueCenterAutoPose = new Pose3d( new Pose2d(BLUE_STARTING_X, FIELD_CENTER_Y, Rotation2d.fromDegrees(BLUE_AUTO_ANGLE)));
+    public static final Pose3d blueProcessorSideAutoPose = new Pose3d( new Pose2d(BLUE_STARTING_X, RED_CENTER_CAGE_Y, Rotation2d.fromDegrees(BLUE_AUTO_ANGLE)));
+    public static final Pose3d redBargeSideAutoPose = new Pose3d( new Pose2d(RED_STARTING_X, RED_CENTER_CAGE_Y, Rotation2d.fromDegrees(RED_AUTO_ANGLE)));
+    public static final Pose3d redCenterAutoPose = new Pose3d( new Pose2d(RED_STARTING_X, FIELD_CENTER_Y, Rotation2d.fromDegrees(RED_AUTO_ANGLE)));
+    public static final Pose3d redProcessorSideAutoPose = new Pose3d(new Pose2d(RED_STARTING_X, BLUE_CENTER_CAGE_Y, Rotation2d.fromDegrees(RED_AUTO_ANGLE)));
 
     // Center-of-Robot Poses facing CORAL STATION
     public static final Pose3d blueCoralStationLeftPose = getRobotPoseToCoralStation(Alliance.Blue,"LEFT");
@@ -59,14 +55,6 @@ public class FieldConstants {
 
     //--------------- ROBOT CENTER POSE METHODS ------------------//
 
-    // Returns the Pose2d of the center of the robot when facing a specific field element
-    // public static Pose2d getRobotPoseFacingElement(Pose2d fieldElementPose){
-    //     Pose3d element3d = new Pose3d(fieldElementPose);
-    //     Pose3d robotPose3d = getRobotPoseFacingElement(element3d);
-    //     Pose2d robotPose2d = new Pose2d(robotPose3d.getX(),robotPose3d.getY(),new Rotation2d(robotPose3d.getRotation().getAngle()));
-    //     return robotPose2d;
-    // }
-    
     // Returns a robot's center pose to a specific branch
     public static Pose3d getRobotPoseToBranch(int tagID, String branchDirection){
         Pose3d branchPose = getBranchPose(tagID, branchDirection);
@@ -75,7 +63,7 @@ public class FieldConstants {
         return centerOfRobotPose;
     }
 
-    // Returns a robot's center pose to a specific branch
+    // Returns a robot's center pose to a specific coral station
     public static Pose3d getRobotPoseToCoralStation(Alliance alliance, String stationDirection){
         Pose3d coralStationPose = getCoralStationPose(alliance, stationDirection);
         // System.out.print("\n\nCoral Station Pose:");
@@ -127,11 +115,11 @@ public class FieldConstants {
         return centerPose;
     }
     
-    // Get our initial Pose based on the location and orientation based on alliance/location
+    // Gets our initial Pose based on the FMS alliance/location
     // Location 1 is Left Side (Barge)
     // location 2 is in the Middle
     // location 3 is Right Side (Processor)
-    public static Pose2d getRobotPoseInitial(){
+    public static Pose3d getRobotPoseInitialFMS(){
 
         Optional<Alliance> allianceOptional = DriverStation.getAlliance();
         Alliance alliance = null;
@@ -149,7 +137,7 @@ public class FieldConstants {
     }
     
     // Returns the Robot center's pose given specific starting positions
-    public static Pose2d getRobotPoseInitial(Alliance alliance, int location){
+    public static Pose3d getRobotPoseInitial(Alliance alliance, int location){
         
         if (location == 1 && alliance == DriverStation.Alliance.Blue) { return blueBargeSideAutoPose; }
         else if (location == 2 && alliance == DriverStation.Alliance.Blue) { return blueCenterAutoPose; }
@@ -158,7 +146,7 @@ public class FieldConstants {
         else if (location == 2 && alliance == DriverStation.Alliance.Red) { return redCenterAutoPose; }
         else if (location == 3 && alliance == DriverStation.Alliance.Red) { return redProcessorSideAutoPose; }
 
-        return new Pose2d();
+        return new Pose3d();
     }
 
     //--------------- FIELD ELEMENT POSE METHODS ------------------//
@@ -228,9 +216,24 @@ public class FieldConstants {
     //--------------- TAG ID METHODS ------------------//
 
     // Returns the nearest reef apriltag from an input pose
-    public static Pose2d getNearestReefTag(Pose2d currentRobotPose) {
-    
-        return new Pose2d();
+    public static int getNearestReefTag(Pose3d currentRobotPose) {
+
+        double minDistance = 3.0;
+        int closestTag = -1;
+
+        for(int reefTag: REEF_TAGS){
+            
+            Pose3d reefFacePose = aprilTagFieldLayout.getTagPose(reefTag).get();
+            double dx = reefFacePose.getX() - currentRobotPose.getX();
+            double dy = reefFacePose.getY() - currentRobotPose.getY();
+            double distance = Math.sqrt(Math.pow(dx,2)+Math.pow(dy,2));
+
+            if(distance < minDistance){
+                minDistance = distance;
+                closestTag = reefTag;
+            }
+        }
+        return closestTag;
     }
 
     // See AprilTag field map: https://firstfrc.blob.core.windows.net/frc2025/FieldAssets/Apriltag_Images_and_User_Guide.pdf

@@ -47,7 +47,7 @@ public class AprilCam {
     private PhotonTrackedTarget desiredTarget;
     private PhotonPoseEstimator photonPoseEstimator;
     private List<PhotonTrackedTarget> targets;
-    public int closestID;
+    public int closestId;
 
     Transform3d camOffset;
     Translation3d camOffsetTranslation;
@@ -113,7 +113,7 @@ public class AprilCam {
         // SmartDashboard.putNumber("Y", getY());
         // SmartDashboard.putNumber("Z", getZ());
         // for (int i = 0; i < getTargets().size(); i++) {
-        //   SmartDashboard.putString("id" + i, getTargets().get(i).toString());
+        //   SmartDashboard.putString("Id" + i, getTargets().get(i).toString());
         // }
     }
 
@@ -129,8 +129,8 @@ public class AprilCam {
         return targets;
     }
 
-    public void updateClosestID(List<PhotonTrackedTarget> help) {
-        int closestID = -1;
+    public void updateClosestVisibleId(List<PhotonTrackedTarget> help) {
+        int closestId = -1;
         double closestDistance = 100;
 
         for(PhotonTrackedTarget t: help) {
@@ -138,10 +138,10 @@ public class AprilCam {
             
             if(currentDistance < closestDistance) {
                 closestDistance = currentDistance;
-                closestID = t.fiducialId;
+                closestId = t.fiducialId;
             }
         }
-        this.closestID = closestID;
+        this.closestId = closestId;
     }
 
     // Gets the current "best" target
@@ -150,13 +150,13 @@ public class AprilCam {
     // }
 
     // Gets a target object for a specific AprilTag
-    public PhotonTrackedTarget getDesiredTarget(int desiredTargetID){
+    public PhotonTrackedTarget getDesiredTarget(int desiredTargetId){
 
         //look at each target in the arraylist of targets
         for (PhotonTrackedTarget t: getTargets())
         {
-            //look for the target with the desired ID
-            if (t.getFiducialId() == desiredTargetID)
+            //look for the target with the desired Id
+            if (t.getFiducialId() == desiredTargetId)
             {
                 return t;
             }
@@ -166,9 +166,9 @@ public class AprilCam {
     }
 
     // Checks if a desired AprilTag is visible
-    // public boolean hasDesiredTarget(int desiredTargetID) {
+    // public boolean hasDesiredTarget(int desiredTargetId) {
     //     ///use the getDesiredTarget method to see if it returns null (not correct target) or not
-    //     if (getDesiredTarget(desiredTargetID)!= null)
+    //     if (getDesiredTarget(desiredTargetId)!= null)
     //     {
     //         return true;
     //     }
@@ -183,7 +183,7 @@ public class AprilCam {
     // double skew = target.getSkew(); //not available for AprilTags
     // Transform2d pose = target.getCameraToTarget();
     // List<TargetCorner> corners = target.getCorners();
-    // int targetID = target.getFiducialId();
+    // int targetId = target.getfiducialId();
     // double poseAmbiguity = target.getPoseAmbiguity();
     // Transform3d bestCameraToTarget = target.getBestCameraToTarget();
     // Transform3d alternateCameraToTarget = target.getAlternateCameraToTarget();
@@ -298,7 +298,7 @@ public class AprilCam {
             updateEstimationStdDevs(visionEst, change.getTargets());
             targets = change.getTargets();
 
-            updateClosestID(targets);
+            updateClosestVisibleId(targets);
 
         }
         return visionEst;
@@ -368,12 +368,12 @@ public class AprilCam {
     }
 
     
-    //method that gets the ID of the "best" target, generally not used by our robot
+    //method that gets the Id of the "best" target, generally not used by our robot
     // public String getAllTargets(){
 
     //     Optional<MultiTargetPNPResult> target = result.getMultiTagResult();
 
-    //     return target.get().fiducialIDsUsed.toString();
+    //     return target.get().fiducialIdsUsed.toString();
     // }
 
    
