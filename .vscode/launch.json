@@ -6,18 +6,12 @@
   "configurations": [
     {
       "type": "java",
-      "name": "Test",
+      "name": "TestCalculations",
       "request": "launch",
-      "mainClass": "frc.robot.Test",
-      "projectName": "Reefscape2025-1"
-    },
-    {
-      "type": "java",
-      "name": "Test",
-      "request": "launch",
-      "mainClass": "frc.robot.Test",
+      "mainClass": "frc.robot.TestCalculations",
       "projectName": "Reefscape2025"
     },
+
     {
       "type": "java",
       "name": "Main",

@@ -118,7 +118,7 @@ public class Drivetrain extends SubsystemBase {
       SwerveConstants.DRIVE_KINEMATICS,
       getRobotHeading(),
       getSwerveModulePos(),
-      FieldConstants.getInitialPose(),
+      FieldConstants.getRobotPoseInitial(),
       stateStdDevs,
       visionStdDevs);
 

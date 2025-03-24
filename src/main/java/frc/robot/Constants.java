@@ -3,17 +3,16 @@ package frc.robot;
 
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-// import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-// import com.pathplanner.lib.util.PIDConstants;
-// import com.pathplanner.lib.util.ReplanningConfig;
 import com.pathplanner.lib.util.*;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.HolonomicDriveController;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -63,27 +62,15 @@ public final class Constants {
     public static final ModuleConfig SWERVE_BL = new ModuleConfig("BL", Ports.SWERVE_DRIVE_BL, Ports.SWERVE_TURN_BL, BL_SENSOR_OFFSET, BL_ANGULAR_OFFSET, BL_INVERSION);
     public static final ModuleConfig SWERVE_BR = new ModuleConfig("BR", Ports.SWERVE_DRIVE_BR, Ports.SWERVE_TURN_BR, BR_SENSOR_OFFSET, BR_ANGULAR_OFFSET, BR_INVERSION);
 
-    // Distance between centers of left and right wheels on robot
-    public static final double TRACK_WIDTH = Units.inchesToMeters(25);
-
-    // Distance between centers of front and back wheels on robot
-    public static final double WHEEL_BASE = Units.inchesToMeters(25);
-
-    // Distance from center of any wheel to center of robot geometry
-    public static final double DISTANCE_TO_CENTER = Math.sqrt(Math.pow(WHEEL_BASE/2, 2) + Math.pow(TRACK_WIDTH/2, 2));
-
-    //Bumper thickness
-    public static final double BUMPER_WIDTH = Units.inchesToMeters(3); //0.0635 meters 
-
 
     // public static final double FREE_SPIN_METER = 5.28; //???
 
     // Distance between front and back wheels on robot
     public static final SwerveDriveKinematics DRIVE_KINEMATICS = new SwerveDriveKinematics(
-        new Translation2d(WHEEL_BASE / 2, TRACK_WIDTH / 2),
-        new Translation2d(WHEEL_BASE / 2, -TRACK_WIDTH / 2),
-        new Translation2d(-WHEEL_BASE / 2, TRACK_WIDTH / 2),
-        new Translation2d(-WHEEL_BASE / 2, -TRACK_WIDTH / 2)
+        new Translation2d(RobotConstants.WHEEL_BASE / 2, RobotConstants.TRACK_WIDTH / 2),
+        new Translation2d(RobotConstants.WHEEL_BASE / 2, -RobotConstants.TRACK_WIDTH / 2),
+        new Translation2d(-RobotConstants.WHEEL_BASE / 2, RobotConstants.TRACK_WIDTH / 2),
+        new Translation2d(-RobotConstants.WHEEL_BASE / 2, -RobotConstants.TRACK_WIDTH / 2)
     );
 
     // Is NavX rotation values backwards?
@@ -242,16 +229,49 @@ public final class Constants {
   }
 
   public static class RobotConstants{
+   
+    //Robot Chassis Width
+    public static final double CHASSIS_WIDTH = Units.inchesToMeters(28);  
+
+    //Bumper thickness
+    public static final double BUMPER_WIDTH = Units.inchesToMeters(3); //0.0635 meters 
+
+    //Overall Robot's Width including bumpers
+    public static final double ROBOT_OVERALL_WIDTH = BUMPER_WIDTH*2 + CHASSIS_WIDTH;
+
+    // Distance from front of bumper to center of robot
+    public static final double BUMPER_TO_ROBOT_CENTER_DISTANCE = ROBOT_OVERALL_WIDTH/2;
+
+    // Distance between centers of left and right wheels on robot
+    public static final double TRACK_WIDTH = Units.inchesToMeters(25);
+
+    // Distance between centers of front and back wheels on robot
+    public static final double WHEEL_BASE = Units.inchesToMeters(25);
+
+    // Distance from center of any wheel to center of robot geometry
+    public static final double WHEEL_TO_CENTER_DISTANCE = Math.sqrt(Math.pow(WHEEL_BASE/2, 2) + Math.pow(TRACK_WIDTH/2, 2));
+
+    // Weight of Robot
     public static final Mass MASS = Kilograms.of(63); //was 25kg = 55lbs, 63kg =140lb
-    public static final MomentOfInertia MOI = KilogramSquareMeters.of(5); //was 0.2, Typical FRC robot will be between 3-8 Kg*m^2
+    
+    // Moment of Inertia of the Robot, Typical FRC robot will be between 3-8 Kg*m^2
+    public static final MomentOfInertia MOI = KilogramSquareMeters.of(5);
   }
 
   public static class VisionConstants{
 
     //Camera Name
-    public static final String CAM1_NAME = "Arducam_OV9782_USB_Camera"; //"Arducam_OV9782_USB_Camera";
-    public static double CAM1_X_OFFSET = -(0.254 + SwerveConstants.BUMPER_WIDTH); //cam mounted 13" back from front bumper, slightly right?
-    public static double CAM1_Y_OFFSET = -0.048;  
+    public static final String CAM1_NAME = "Arducam_OV9782_USB_Camera";
+    public static double CAM1_X_OFFSET = -(0.254 + RobotConstants.BUMPER_WIDTH); //cam mounted 12.5" back from front bumper
+    public static double CAM1_Y_OFFSET = -0.048;
+    public static Translation3d CAM1_POSITION_OFFSET = new Translation3d(CAM1_X_OFFSET, CAM1_Y_OFFSET,0.0); // is cam mounted at center? how far back from front of bumper?
+    public static Rotation3d CAM1_ANGLE_OFFSET = new Rotation3d(0,0,0); // is cam mounted facing forward, upright? 
+
+    public static final String CAM2_NAME = "Arducam_OV9782_USB_Camera_2"; 
+    public static double CAM2_X_OFFSET = CAM1_X_OFFSET;
+    public static double CAM2_Y_OFFSET = -0.048;
+    public static Translation3d CAM2_POSITION_OFFSET = new Translation3d(CAM1_X_OFFSET, CAM1_Y_OFFSET,0.0); // is cam mounted at center? how far back from front of bumper?
+    public static Rotation3d CAM2_ANGLE_OFFSET = new Rotation3d(0,0,0); // is cam mounted facing forward, upright? 
 
 
     // The standard deviations of our vision estimated poses, which affect correction rate
