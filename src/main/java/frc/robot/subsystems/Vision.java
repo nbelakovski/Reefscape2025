@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 
 import frc.robot.Constants.VisionConstants;
+import frc.robot.Constants;
 import frc.robot.FieldConstants;
 import frc.robot.utils.AprilCam;
 import org.photonvision.targeting.PhotonTrackedTarget;
@@ -26,8 +27,8 @@ public class Vision extends SubsystemBase {
       VisionConstants.CAM1_NAME, 
       new Translation3d(), 
       new Rotation3d(), 
-      VisionConstants.CAM1_X_OFFSET, 
-      VisionConstants.CAM1_Y_OFFSET
+      VisionConstants.CAM1_X_OFFSET_TO_CENTER, 
+      VisionConstants.CAM1_Y_OFFSET_TO_CENTER
     );
     cam1.update();
 
@@ -88,7 +89,11 @@ public class Vision extends SubsystemBase {
     SmartDashboard.putNumber("tag 21 pose y", FieldConstants.aprilTagFieldLayout.getTagPose(21).get().getY());
     SmartDashboard.putNumber("tag 21 angle", FieldConstants.aprilTagFieldLayout.getTagPose(21).get().getRotation().getAngle());
 
-    SmartDashboard.putNumber("closest Id", closestId);
+    SmartDashboard.putNumber("closest Id", getClosestId());
+    SmartDashboard.putNumber("CAM1 X offset to Front", Constants.VisionConstants.CAM1_X_OFFSET_TO_FRONT);
+    SmartDashboard.putNumber("CAM1 X offset to Center", Constants.VisionConstants.CAM1_X_OFFSET_TO_CENTER);
+    SmartDashboard.putNumber("CAM1 Bumper to Center Dist", Constants.RobotConstants.BUMPER_TO_ROBOT_CENTER_DISTANCE);
+    
     
   }
 }

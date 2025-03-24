@@ -168,6 +168,8 @@ public class FieldConstants {
             branchOffset = new Translation3d(Math.sin(tagAngle) * branchOffsetDistance, -Math.cos(tagAngle) * branchOffsetDistance, 0);
         }  else  if (branchDirection.equals("RIGHT")){
             branchOffset = new Translation3d(-Math.sin(tagAngle) * branchOffsetDistance, Math.cos(tagAngle) * branchOffsetDistance, 0);
+        } else if(branchDirection.equals("CENTER")){
+            //no branch offset
         }
 
         // Add tag and branch offset to get desired target coordinate --> target "Pose" to front of Bumper

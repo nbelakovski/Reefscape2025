@@ -16,9 +16,9 @@ public class TestCalculations {
 
         // Testing Variables
         Alliance alliance = Alliance.Blue;
-        int startLocation = 1;
-        String reefFace = "E";  //Blue D = 21
-        String branchDirection = "RIGHT";
+        int startLocation = 2;
+        String reefFace = "D";  //Blue D = 21
+        String branchDirection = "LEFT";
         String stationDirection = "LEFT";
         
 
