@@ -18,6 +18,7 @@ import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.MechConstants;
 import frc.robot.commands.basic.CoralRetract;
 import frc.robot.commands.basic.CoralScore;
+import frc.robot.commands.closed.DriveToBranchPID;
 import frc.robot.commands.closed.DriveToPeg;
 import frc.robot.commands.closed.ElevatorSetPosition;
 import frc.robot.commands.closed.SetJawAngle;
@@ -36,12 +37,12 @@ public class AutoStraightPathToCoralScore extends SequentialCommandGroup {
     drivetrain = Drivetrain.getInstance();
 
     // Set the desired elevator height
-    double elevatorLevelHeight = ElevatorConstants.ELEVATOR_L2;
-    if(level == 3){
-      elevatorLevelHeight = ElevatorConstants.ELEVATOR_L3;
-    } else if(level == 4){
-      elevatorLevelHeight = ElevatorConstants.ELEVATOR_L4;
-    }
+    // double elevatorLevelHeight = ElevatorConstants.ELEVATOR_L2;
+    // if(level == 3){
+    //   elevatorLevelHeight = ElevatorConstants.ELEVATOR_L3;
+    // } else if(level == 4){
+    //   elevatorLevelHeight = ElevatorConstants.ELEVATOR_L4;
+    // }
 
     // Table for AprilTag IDs
     // 6	Red Reef F --> (Blue 19)
@@ -100,9 +101,10 @@ public class AutoStraightPathToCoralScore extends SequentialCommandGroup {
       // Move elevator up to desired elevator position
       new ParallelRaceGroup(
         // new ElevatorSetPosition(elevatorLevelHeight),
-        new WaitCommand(3)
+        new DriveToBranchPID(21, "LEFT")
+        //new WaitCommand(3)
       )
-
+ 
       //For 2 seconds, spin the coral and maintain the elevator's position
       // new ParallelDeadlineGroup(
       //   new WaitCommand(2),

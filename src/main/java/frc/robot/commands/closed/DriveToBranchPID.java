@@ -54,7 +54,7 @@ public class DriveToBranchPID extends Command {
 
     // Setup PID controllers for X & Y distances
     controllerX = new PIDController(0.4, 0, 0.1);
-    controllerY = new PIDController(0.7, 0, 0.05); 
+    controllerY = new PIDController(0.8, 0, 0.05); 
     controllerTurn = new PIDController(SwerveAutoConstants.TURN_P, SwerveAutoConstants.TURN_I, SwerveAutoConstants.TURN_D);
 
     // Set setpoints for X & Y controllers
@@ -95,7 +95,7 @@ public class DriveToBranchPID extends Command {
     // Set to 0 for isolation testing
     // xSpeed=0;
     // ySpeed=0;
-    // turnSpeed=0;
+    turnSpeed=0;
 
     //make robot move
     drivetrain.setDrive(xSpeed, ySpeed, turnSpeed, true);
