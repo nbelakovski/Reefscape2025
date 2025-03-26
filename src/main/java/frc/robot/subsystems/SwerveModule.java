@@ -117,6 +117,7 @@ public class SwerveModule {
     driveMotorConfig.encoder
             .positionConversionFactor(drivingFactor) // meters
             .velocityConversionFactor(drivingFactor / 60.0); // meters per second
+      
     driveMotorConfig.closedLoop
             .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
             // These are example gains you may need to them for your own robot!

@@ -51,10 +51,10 @@ public final class Constants {
     public static final double BL_ANGULAR_OFFSET = 0;
  
     // Determine if specific modules need to be inverted
-    public static final boolean FL_INVERSION = true;
-    public static final boolean FR_INVERSION = true;
-    public static final boolean BR_INVERSION = false;
-    public static final boolean BL_INVERSION = false;
+    public static final boolean FL_INVERSION = false;
+    public static final boolean FR_INVERSION = false;
+    public static final boolean BR_INVERSION = true;
+    public static final boolean BL_INVERSION = true;
 
     //Constructor to hold all of the data to configure a SwerveModule
     public static final ModuleConfig SWERVE_FL = new ModuleConfig("FL", Ports.SWERVE_DRIVE_FL, Ports.SWERVE_TURN_FL, FL_SENSOR_OFFSET, FL_ANGULAR_OFFSET, FL_INVERSION);
@@ -222,7 +222,7 @@ public final class Constants {
 
     // Jaw Angles
     public static final double JAW_STARTING_ANGLE = 260;
-    public static final double JAW_INTAKE_ANGLE = -40;
+    public static final double JAW_INTAKE_ANGLE = -45;
     // public static final double JAW_UP_ANGLE = 25;
     public static final double JAW_AUTO_ANGLE = 80;
 
@@ -261,7 +261,7 @@ public final class Constants {
   public static class VisionConstants{
 
     //Camera Name
-    public static final String CAM1_NAME = "Arducam_OV9782_USB_Camera";
+    public static final String CAM1_NAME = "SplashyCam1";
     public static double CAM1_X_OFFSET_TO_FRONT = -(0.236 + RobotConstants.BUMPER_WIDTH); //cam mounted 12.5" back from front bumper
     public static double CAM1_X_OFFSET_TO_CENTER = CAM1_X_OFFSET_TO_FRONT + RobotConstants.BUMPER_TO_ROBOT_CENTER_DISTANCE;
     public static double CAM1_Y_OFFSET_TO_CENTER = -0.034; //-0.013;

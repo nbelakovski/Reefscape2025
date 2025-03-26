@@ -292,7 +292,7 @@ public class Drivetrain extends SubsystemBase {
     double rotSpeedCommanded = rot;
 
     // Convert the commanded speeds into the correct units for the drivetrain
-    double xSpeedDelivered = xSpeedCommanded * SwerveConstants.TOP_SPEED;
+    double xSpeedDelivered = -xSpeedCommanded * SwerveConstants.TOP_SPEED;
     double ySpeedDelivered = ySpeedCommanded * SwerveConstants.TOP_SPEED;
     double rotSpeedDelivered = rotSpeedCommanded * SwerveConstants.TOP_ANGULAR_SPEED;
 

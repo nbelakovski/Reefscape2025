@@ -206,6 +206,7 @@ public void autoChooserInit() {
     // autoChooser.addOption("DrivetoDL4-old", new DriveDtoL4() );
     autoChooser.addOption("turntoangle", new TurnToAnglePID(90));
     autoChooser.addOption("testing", new PathPlannerAuto("testing"));
+    autoChooser.addOption("DriveForward", new DriveForward());
 
 
     // Table for AprilTag IDs
