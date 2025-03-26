@@ -164,11 +164,13 @@ public class RobotContainer {
     //---------- ALGAE TONGUE ----------//
 
     // Operator - Y - Eat the Algae
-    new JoystickButton(operatorController, Button.kY.value).whileTrue(new ElevatorJawCombo(ElevatorConstants.ELEVATOR_L2).repeatedly()); //11.7
+    new JoystickButton(operatorController, Button.kY.value).whileTrue(new ElevatorJawCombo().repeatedly()); //11.7
     //new JoystickButton(operatorController, Button.kY.value).whileTrue(new AlgaeEat());
 
     // Operator - X - Spit out the Algae
     new JoystickButton(operatorController, Button.kX.value).whileTrue(new AlgaeSpit());
+
+    new JoystickButton(operatorController, Button.kRightBumper.value).whileTrue(new AlgaeEat());
 
 
     //---------- SYSID  ----------//

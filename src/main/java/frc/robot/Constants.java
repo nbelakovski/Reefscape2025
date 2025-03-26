@@ -39,7 +39,7 @@ public final class Constants {
   public static class SwerveConstants {
 
     // Sensor Offsets for the radian difference between the physical sensor orientation and the calibrated swerve direction (from REV Hardware Client)
-    public static final double FL_SENSOR_OFFSET = 0.1345434; 
+    public static final double FL_SENSOR_OFFSET = 0.6419399;    ; 
     public static final double FR_SENSOR_OFFSET = 0.5278169; 
     public static final double BR_SENSOR_OFFSET = 0.6507399; 
     public static final double BL_SENSOR_OFFSET = 0.5267535;
@@ -222,7 +222,7 @@ public final class Constants {
 
     // Jaw Angles
     public static final double JAW_STARTING_ANGLE = 260;
-    public static final double JAW_INTAKE_ANGLE = 7.21;
+    public static final double JAW_INTAKE_ANGLE = -40;
     // public static final double JAW_UP_ANGLE = 25;
     public static final double JAW_AUTO_ANGLE = 80;
 
