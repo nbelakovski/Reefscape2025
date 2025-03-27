@@ -110,6 +110,7 @@ public final class Constants {
     public static final double TURN_TOL = 0.5; //0.5 degrees = 0.0087266 radians
     public static final double TURN_DERIV_TOL = 1.0; //from 2022
 
+    
 
     // public static final double kMaxSpeedMetersPerSecond = 3;
     // public static final double kMaxAccelerationMetersPerSecondSquared = 3;

@@ -224,11 +224,6 @@ public class Drivetrain extends SubsystemBase {
     return instance;
   }
 
-  // Primary method to move drivetrain -- takes in 4 fields which can be set independently, called periodically
-  public void drive() {
-    move(this.xSpeed, this.ySpeed, this.rotSpeed, this.fieldCentric);
-  }
-
   // sets forward/backward motion of robot
   public void setXSpeed(double xSpeed){
     this.xSpeed = xSpeed;
@@ -340,18 +335,26 @@ public class Drivetrain extends SubsystemBase {
   // Helps AutoBuilder do stuff
   public void driveRobotRelative(ChassisSpeeds robotRelativeSpeeds) {
 
+    SmartDashboard.putNumber("PP Xspeed", robotRelativeSpeeds.vxMetersPerSecond);
+    SmartDashboard.putNumber("PP Yspeeds", robotRelativeSpeeds.vyMetersPerSecond);
+
+    double speedFactor = 0.15;
+    
     ChassisSpeeds speeds = ChassisSpeeds.discretize(robotRelativeSpeeds, 0.02);
 
-    //Store the states of each module
-    SwerveModuleState[] swerveModuleStates = driveKinematics.toSwerveModuleStates(speeds);
-    
-    //cleans up any weird speeds that may be too high after kinematics equation
-    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, SwerveConstants.TOP_SPEED);
+    this.move(speeds.vxMetersPerSecond * speedFactor, speeds.vyMetersPerSecond * speedFactor, speeds.omegaRadiansPerSecond, false);
 
-    // setting the state for each module as an array
-    for(int i = 0; i < modules.length; i++) {
-      modules[i].setDesiredState(swerveModuleStates[i]);
-    }
+
+    //Store the states of each module
+    // SwerveModuleState[] swerveModuleStates = driveKinematics.toSwerveModuleStates(speeds);
+    
+    // //cleans up any weird speeds that may be too high after kinematics equation
+    // SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, SwerveConstants.TOP_SPEED);
+
+    // // setting the state for each module as an array
+    // for(int i = 0; i < modules.length; i++) {
+    //   modules[i].setDesiredState(swerveModuleStates[i]);
+    // }
 
   }
 
@@ -511,7 +514,7 @@ public class Drivetrain extends SubsystemBase {
 
     updatePose();
     updateModuleTelemetry();
-    drive();
+    move(this.xSpeed, this.ySpeed, this.rotSpeed, this.fieldCentric);
     
     SmartDashboard.putNumber("NavX Compass Heading", navX.getCompassHeading());
 
