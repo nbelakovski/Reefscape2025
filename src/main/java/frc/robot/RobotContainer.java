@@ -83,7 +83,7 @@ public class RobotContainer {
 
     // Driver - DPAD - Align to a Visible Branch on the Reef
     // new DPad(driverController,180).whileTrue(new TurnToAnglePID(180));
-    // new DPad(driverController,270).whileTrue(new TurnToAnglePID(90));
+    // new DPad(driverController,270).whileTrue(newnToAnglePID(90));
     // new DPad(driverController,0).whileTrue(new TurnToAnglePID(0));
     // new DPad(driverController,90).whileTrue(new TurnToAnglePID(270));
 
@@ -199,6 +199,8 @@ public void autoChooserInit() {
     autoChooser.addOption("PP-Auto1", new PathPlannerAuto("Auto1"));
     autoChooser.addOption("PP-Auto2", new PathPlannerAuto("Auto2"));
     autoChooser.addOption("PP-ERComboPath", new PathPlannerAuto("ERComboPath"));
+    autoChooser.addOption("CRComboPath", new PathPlannerAuto("CRComboPath"));
+
 
     autoChooser.addOption("driveToBranch-Closest-LEFT", new DriveToBranchPID(vision.getClosestId(), "LEFT"));
     autoChooser.addOption("driveToBranch-21-LEFT", new DriveToBranchPID(21, "LEFT"));
@@ -207,6 +209,7 @@ public void autoChooserInit() {
     autoChooser.addOption("turntoangle", new TurnToAnglePID(90));
     autoChooser.addOption("testing", new PathPlannerAuto("testing"));
     autoChooser.addOption("DriveForward", new DriveForward());
+
 
 
     // Table for AprilTag IDs

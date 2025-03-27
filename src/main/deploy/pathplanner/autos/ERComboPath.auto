@@ -11,19 +11,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "LeftStart-to-ER-path"
+                  "pathName": "CenterStart-to-DR-Path"
                 }
               },
               {
                 "type": "path",
                 "data": {
                   "pathName": "ER-to-CoralStation-Path"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "CoralStation-to-FL-Path"
                 }
               }
             ]
