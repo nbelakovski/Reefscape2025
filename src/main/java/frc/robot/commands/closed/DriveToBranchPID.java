@@ -89,7 +89,7 @@ public class DriveToBranchPID extends Command {
     
     //calculating the X, Y, TURN speeds needed to strafe (field-centrically)
     double xSpeed = -controllerX.calculate(currentX);
-    double ySpeed = -controllerY.calculate(currentY);
+    double ySpeed = controllerY.calculate(currentY);
     double turnSpeed = -controllerTurn.calculate(currentAngle);
 
     // Set to 0 for isolation testing
