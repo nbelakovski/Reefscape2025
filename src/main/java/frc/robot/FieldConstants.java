@@ -3,7 +3,6 @@ package frc.robot;
 
 import java.util.Optional;
 import java.util.OptionalInt;
-
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
@@ -78,7 +77,6 @@ public class FieldConstants {
         // System.out.println("tagX\t"+tagPose.getX());
         // System.out.println("tagY\t"+tagPose.getY());
         
-
         //Get the coordinate of tag on field
         Translation3d tagTranslation = tagPose.getTranslation();
         double tagAngle = tagPose.getRotation().getAngle();
@@ -106,8 +104,6 @@ public class FieldConstants {
         // System.out.println("targetAngle\t"+targetAngle.getZ());
         
         return targetPose;
-   
-
     }
 
 
