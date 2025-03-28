@@ -11,12 +11,11 @@ import frc.robot.subsystems.AlgaeHandler;
 public class ElevatorJawCombo extends ParallelCommandGroup {
   /** Creates a new ElevatorJawCombo. */
 
-  public ElevatorJawCombo(double position) {
+  public ElevatorJawCombo() {
     
     addCommands(
-      new AlgaeEat(),
-      new ElevatorSetPosition(position),
-      new SetJawAngle(MechConstants.JAW_INTAKE_ANGLE)
+      new SetJawAngle(MechConstants.JAW_INTAKE_ANGLE).repeatedly(),
+      new AlgaeEat()
     );
 
   }

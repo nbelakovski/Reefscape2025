@@ -116,12 +116,11 @@ public class Drivetrain extends SubsystemBase {
     var stateStdDevs = VecBuilder.fill(0.1, 0.1, 0.1);
     var visionStdDevs = VecBuilder.fill(1, 1, 1);
 
-
     this.poseEstimator =  new SwerveDrivePoseEstimator(
       SwerveConstants.DRIVE_KINEMATICS,
       getRobotHeading(),
       getSwerveModulePos(),
-      FieldConstants.getInitialPose(),
+      FieldConstants.getRobotPoseInitialFMS().toPose2d(),
       stateStdDevs,
       visionStdDevs);
 
@@ -130,15 +129,15 @@ public class Drivetrain extends SubsystemBase {
 
   }
 
-  //Path Planner Drive Controller
+  //PathPlanner Drive Controller
   public final PPHolonomicDriveController pathFollowerConfig = new PPHolonomicDriveController(
     new PIDConstants(SwerveAutoConstants.TRANSLATE_P, SwerveAutoConstants.TRANSLATE_I, SwerveAutoConstants.TRANSLATE_D), // Translation constants 
     new PIDConstants(SwerveAutoConstants.TURN_P, SwerveAutoConstants.TURN_I, SwerveAutoConstants.TURN_D) // Rotation constants 
   );
 
+  // Configure AutoBuilder for PathPlanner
   private void autoConfig(){
 
-    // Configure AutoBuilder
     AutoBuilder.configure(
       this::getPose, 
       this::resetPose, 
@@ -228,11 +227,6 @@ public class Drivetrain extends SubsystemBase {
     return instance;
   }
 
-  // Primary method to move drivetrain -- takes in 4 fields which can be set independently, called periodically
-  public void drive() {
-    move(this.xSpeed, this.ySpeed, this.rotSpeed, this.fieldCentric);
-  }
-
   // sets forward/backward motion of robot
   public void setXSpeed(double xSpeed){
     this.xSpeed = xSpeed;
@@ -296,7 +290,7 @@ public class Drivetrain extends SubsystemBase {
     double rotSpeedCommanded = rot;
 
     // Convert the commanded speeds into the correct units for the drivetrain
-    double xSpeedDelivered = xSpeedCommanded * SwerveConstants.TOP_SPEED;
+    double xSpeedDelivered = -xSpeedCommanded * SwerveConstants.TOP_SPEED;
     double ySpeedDelivered = ySpeedCommanded * SwerveConstants.TOP_SPEED;
     double rotSpeedDelivered = rotSpeedCommanded * SwerveConstants.TOP_ANGULAR_SPEED;
 
@@ -344,18 +338,26 @@ public class Drivetrain extends SubsystemBase {
   // Helps AutoBuilder do stuff
   public void driveRobotRelative(ChassisSpeeds robotRelativeSpeeds) {
 
+    SmartDashboard.putNumber("PP Xspeed", robotRelativeSpeeds.vxMetersPerSecond);
+    SmartDashboard.putNumber("PP Yspeeds", robotRelativeSpeeds.vyMetersPerSecond);
+
+    double speedFactor = 0.15;
+    
     ChassisSpeeds speeds = ChassisSpeeds.discretize(robotRelativeSpeeds, 0.02);
 
-    //Store the states of each module
-    SwerveModuleState[] swerveModuleStates = driveKinematics.toSwerveModuleStates(speeds);
-    
-    //cleans up any weird speeds that may be too high after kinematics equation
-    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, SwerveConstants.TOP_SPEED);
+    this.move(speeds.vxMetersPerSecond * speedFactor, speeds.vyMetersPerSecond * speedFactor, speeds.omegaRadiansPerSecond, false);
 
-    // setting the state for each module as an array
-    for(int i = 0; i < modules.length; i++) {
-      modules[i].setDesiredState(swerveModuleStates[i]);
-    }
+
+    //Store the states of each module
+    // SwerveModuleState[] swerveModuleStates = driveKinematics.toSwerveModuleStates(speeds);
+    
+    // //cleans up any weird speeds that may be too high after kinematics equation
+    // SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, SwerveConstants.TOP_SPEED);
+
+    // // setting the state for each module as an array
+    // for(int i = 0; i < modules.length; i++) {
+    //   modules[i].setDesiredState(swerveModuleStates[i]);
+    // }
 
   }
 
@@ -546,7 +548,7 @@ public class Drivetrain extends SubsystemBase {
 
     updatePoseFromOdometry();
     updateModuleTelemetry();
-    drive();
+    move(this.xSpeed, this.ySpeed, this.rotSpeed, this.fieldCentric);
     
     SmartDashboard.putNumber("NavX Compass Heading", navX.getCompassHeading());
 

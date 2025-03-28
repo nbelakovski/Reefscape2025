@@ -2,12 +2,14 @@ package frc.robot.subsystems;
 
 
 import frc.robot.Constants.VisionConstants;
+import frc.robot.Constants;
 import frc.robot.FieldConstants;
 import frc.robot.utils.AprilCam;
 
 import org.photonvision.targeting.PhotonTrackedTarget;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
@@ -17,8 +19,9 @@ public class Vision extends SubsystemBase {
   public AprilCam cam1;
   public AprilCam cam2;
   public boolean doubleCam = false;
-  public int closestID;
+  public int closestId;
   Drivetrain drivetrain = Drivetrain.getInstance();
+  private final SendableChooser<Integer> tagChooser = new SendableChooser<>();
 
   // Vision Constructor
   private Vision() {
@@ -42,6 +45,11 @@ public class Vision extends SubsystemBase {
       );
       cam2.update();  
     }
+
+    for(int i=1; i<=22; i++){
+      tagChooser.addOption("AT "+i, i);
+    }
+    
   }
 
   // Camera Singleton - ensures only one Camera instance is constructed
@@ -61,12 +69,14 @@ public class Vision extends SubsystemBase {
     return cam1.getXDesired(target);
   }
 
-  public  Pose3d getTagPose(int tagID){
-    return FieldConstants.aprilTagFieldLayout.getTagPose(tagID).get();
+  public  Pose3d getTagPose(int tagId){
+    return FieldConstants.aprilTagFieldLayout.getTagPose(tagId).get();
   }
   
-  public int getClosestID(){
-    return cam1.closestID;
+  public int getClosestId(){
+    // return cam1.closestId;
+    closestId = FieldConstants.getNearestReefTag(new Pose3d(drivetrain.getPose()));
+    return closestId;
   }  
 
 
@@ -107,11 +117,18 @@ public class Vision extends SubsystemBase {
       }
     }
 
-    SmartDashboard.putNumber("tag x", getXDesired(getDesiredTarget(closestID)));
-    SmartDashboard.putNumber("tag 21 pose x", FieldConstants.aprilTagFieldLayout.getTagPose(21).get().getX());
-    SmartDashboard.putNumber("tag 21 pose y", FieldConstants.aprilTagFieldLayout.getTagPose(21).get().getY());
-    SmartDashboard.putNumber("tag 21 angle", FieldConstants.aprilTagFieldLayout.getTagPose(21).get().getRotation().getAngle());
-    SmartDashboard.putNumber("closest ID", closestID);
+    int tagId = tagChooser.getSelected();
+    SmartDashboard.putNumber("tag " + tagId + " pose x", FieldConstants.aprilTagFieldLayout.getTagPose(tagId).get().getX());
+    SmartDashboard.putNumber("tag " + tagId + " pose y", FieldConstants.aprilTagFieldLayout.getTagPose(tagId).get().getY());
+    SmartDashboard.putNumber("tag " + tagId + " angle", FieldConstants.aprilTagFieldLayout.getTagPose(tagId).get().getRotation().getAngle());
+
+    SmartDashboard.putNumber("closest Id", getClosestId());
+    SmartDashboard.putNumber("closest x", getXDesired(getDesiredTarget(closestId)));
+
+    SmartDashboard.putNumber("CAM1 X offset to Front", Constants.VisionConstants.CAM1_X_OFFSET_TO_FRONT);
+    SmartDashboard.putNumber("CAM1 X offset to Center", Constants.VisionConstants.CAM1_X_OFFSET_TO_CENTER);
+    SmartDashboard.putNumber("CAM1 Bumper to Center Dist", Constants.RobotConstants.BUMPER_TO_ROBOT_CENTER_DISTANCE);
+    
     
   }
 }

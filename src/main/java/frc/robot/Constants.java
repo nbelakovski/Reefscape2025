@@ -7,11 +7,14 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.pathplanner.lib.util.*;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.util.*;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -40,7 +43,7 @@ public final class Constants {
   public static class SwerveConstants {
 
     // Sensor Offsets for the radian difference between the physical sensor orientation and the calibrated swerve direction (from REV Hardware Client)
-    public static final double FL_SENSOR_OFFSET = 0.1345434; 
+    public static final double FL_SENSOR_OFFSET = 0.6419399;    ; 
     public static final double FR_SENSOR_OFFSET = 0.5278169; 
     public static final double BR_SENSOR_OFFSET = 0.6507399; 
     public static final double BL_SENSOR_OFFSET = 0.5267535;
@@ -52,10 +55,10 @@ public final class Constants {
     public static final double BL_ANGULAR_OFFSET = 0;
  
     // Determine if specific modules need to be inverted
-    public static final boolean FL_INVERSION = true;
-    public static final boolean FR_INVERSION = true;
-    public static final boolean BR_INVERSION = false;
-    public static final boolean BL_INVERSION = false;
+    public static final boolean FL_INVERSION = false;
+    public static final boolean FR_INVERSION = false;
+    public static final boolean BR_INVERSION = true;
+    public static final boolean BL_INVERSION = true;
 
     //Constructor to hold all of the data to configure a SwerveModule
     public static final ModuleConfig SWERVE_FL = new ModuleConfig("FL", Ports.SWERVE_DRIVE_FL, Ports.SWERVE_TURN_FL, FL_SENSOR_OFFSET, FL_ANGULAR_OFFSET, FL_INVERSION);
@@ -63,27 +66,15 @@ public final class Constants {
     public static final ModuleConfig SWERVE_BL = new ModuleConfig("BL", Ports.SWERVE_DRIVE_BL, Ports.SWERVE_TURN_BL, BL_SENSOR_OFFSET, BL_ANGULAR_OFFSET, BL_INVERSION);
     public static final ModuleConfig SWERVE_BR = new ModuleConfig("BR", Ports.SWERVE_DRIVE_BR, Ports.SWERVE_TURN_BR, BR_SENSOR_OFFSET, BR_ANGULAR_OFFSET, BR_INVERSION);
 
-    // Distance between centers of left and right wheels on robot
-    public static final double TRACK_WIDTH = Units.inchesToMeters(25);
-
-    // Distance between centers of front and back wheels on robot
-    public static final double WHEEL_BASE = Units.inchesToMeters(25);
-
-    // Distance from center of any wheel to center of robot geometry
-    public static final double DISTANCE_TO_CENTER = Math.sqrt(Math.pow(WHEEL_BASE/2, 2) + Math.pow(TRACK_WIDTH/2, 2));
-
-    //Bumper thickness
-    public static final double BUMPER_WIDTH = Units.inchesToMeters(3); //0.0635 meters 
-
 
     // public static final double FREE_SPIN_METER = 5.28; //???
 
     // Distance between front and back wheels on robot
     public static final SwerveDriveKinematics DRIVE_KINEMATICS = new SwerveDriveKinematics(
-        new Translation2d(WHEEL_BASE / 2, TRACK_WIDTH / 2),
-        new Translation2d(WHEEL_BASE / 2, -TRACK_WIDTH / 2),
-        new Translation2d(-WHEEL_BASE / 2, TRACK_WIDTH / 2),
-        new Translation2d(-WHEEL_BASE / 2, -TRACK_WIDTH / 2)
+        new Translation2d(RobotConstants.WHEEL_BASE / 2, RobotConstants.TRACK_WIDTH / 2),
+        new Translation2d(RobotConstants.WHEEL_BASE / 2, -RobotConstants.TRACK_WIDTH / 2),
+        new Translation2d(-RobotConstants.WHEEL_BASE / 2, RobotConstants.TRACK_WIDTH / 2),
+        new Translation2d(-RobotConstants.WHEEL_BASE / 2, -RobotConstants.TRACK_WIDTH / 2)
     );
 
     // Is NavX rotation values backwards?
@@ -123,6 +114,7 @@ public final class Constants {
     public static final double TURN_TOL = 0.5; //0.5 degrees = 0.0087266 radians
     public static final double TURN_DERIV_TOL = 1.0; //from 2022
 
+    
 
     // public static final double kMaxSpeedMetersPerSecond = 3;
     // public static final double kMaxAccelerationMetersPerSecondSquared = 3;
@@ -235,30 +227,56 @@ public final class Constants {
 
     // Jaw Angles
     public static final double JAW_STARTING_ANGLE = 260;
-    public static final double JAW_INTAKE_ANGLE = 7.21;
+    public static final double JAW_INTAKE_ANGLE = -45;
     // public static final double JAW_UP_ANGLE = 25;
     public static final double JAW_AUTO_ANGLE = 80;
 
   }
 
   public static class RobotConstants{
+   
+    //Robot Chassis Width
+    public static final double CHASSIS_WIDTH = Units.inchesToMeters(28);  
+
+    //Bumper thickness
+    public static final double BUMPER_WIDTH = Units.inchesToMeters(3); //0.0635 meters 
+
+    //Overall Robot's Width including bumpers
+    public static final double ROBOT_OVERALL_WIDTH = BUMPER_WIDTH*2 + CHASSIS_WIDTH;
+
+    // Distance from front of bumper to center of robot
+    public static final double BUMPER_TO_ROBOT_CENTER_DISTANCE = ROBOT_OVERALL_WIDTH/2;
+
+    // Distance between centers of left and right wheels on robot
+    public static final double TRACK_WIDTH = Units.inchesToMeters(25);
+
+    // Distance between centers of front and back wheels on robot
+    public static final double WHEEL_BASE = Units.inchesToMeters(25);
+
+    // Distance from center of any wheel to center of robot geometry
+    public static final double WHEEL_TO_CENTER_DISTANCE = Math.sqrt(Math.pow(WHEEL_BASE/2, 2) + Math.pow(TRACK_WIDTH/2, 2));
+
+    // Weight of Robot
     public static final Mass MASS = Kilograms.of(63); //was 25kg = 55lbs, 63kg =140lb
-    public static final MomentOfInertia MOI = KilogramSquareMeters.of(5); //was 0.2, Typical FRC robot will be between 3-8 Kg*m^2
+    
+    // Moment of Inertia of the Robot, Typical FRC robot will be between 3-8 Kg*m^2
+    public static final MomentOfInertia MOI = KilogramSquareMeters.of(5);
   }
 
   public static class VisionConstants{
 
     //Camera Name
-    public static final String CAM1_NAME = "Arducam_OV9782_USB_Camera";
-    public static double CAM1_X_OFFSET = -(0.254 + SwerveConstants.BUMPER_WIDTH); //cam mounted 12.5" back from front bumper
-    public static double CAM1_Y_OFFSET = -0.048;
-    public static Translation3d CAM1_POSITION_OFFSET = new Translation3d(CAM1_X_OFFSET, CAM1_Y_OFFSET,0.0); // is cam mounted at center? how far back from front of bumper?
+    public static final String CAM1_NAME = "SplashyCam1";
+    public static double CAM1_X_OFFSET_TO_FRONT = -(0.236 + RobotConstants.BUMPER_WIDTH); //cam mounted 12.5" back from front bumper
+    public static double CAM1_X_OFFSET_TO_CENTER = CAM1_X_OFFSET_TO_FRONT + RobotConstants.BUMPER_TO_ROBOT_CENTER_DISTANCE;
+    public static double CAM1_Y_OFFSET_TO_CENTER = -0.034; //-0.013;
+    public static Translation3d CAM1_POSITION_OFFSET = new Translation3d(CAM1_X_OFFSET_TO_CENTER, CAM1_Y_OFFSET_TO_CENTER,0.0); // is cam mounted at center? how far back from front of bumper?
     public static Rotation3d CAM1_ANGLE_OFFSET = new Rotation3d(0,0,0); // is cam mounted facing forward, upright? 
 
     public static final String CAM2_NAME = "Arducam_OV9782_USB_Camera_2"; 
-    public static double CAM2_X_OFFSET = CAM1_X_OFFSET;
-    public static double CAM2_Y_OFFSET = -0.048;
-    public static Translation3d CAM2_POSITION_OFFSET = new Translation3d(CAM1_X_OFFSET, CAM1_Y_OFFSET,0.0); // is cam mounted at center? how far back from front of bumper?
+    public static double CAM2_X_OFFSET_TO_CENTER = CAM1_X_OFFSET_TO_CENTER;
+    public static double CAM2_Y_OFFSET_TO_CENTER = -0.048;
+    public static Translation3d CAM2_POSITION_OFFSET = new Translation3d(CAM2_X_OFFSET_TO_CENTER, CAM2_Y_OFFSET_TO_CENTER,0.0); // is cam mounted at center? how far back from front of bumper?
     public static Rotation3d CAM2_ANGLE_OFFSET = new Rotation3d(0,0,0); // is cam mounted facing forward, upright? 
 
 
