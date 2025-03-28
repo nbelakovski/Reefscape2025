@@ -101,12 +101,12 @@ public final class Constants {
     public static final double X_P = 1;
     public static final double X_I = 0;
     public static final double X_D = 0;
-    public static final double X_TOL = Units.inchesToMeters(0.5); //0.025m
+    public static final double X_TOL = Units.inchesToMeters(0.2); //0.025m
 
     public static final double Y_P = 1.0;
     public static final double Y_I = 0;
     public static final double Y_D = 0;
-    public static final double Y_TOL = Units.inchesToMeters(0.5); //0.012m
+    public static final double Y_TOL = Units.inchesToMeters(0.1); //0.012m
 
     public static final double TURN_P = 0.007;
     public static final double TURN_I = 0;
@@ -197,10 +197,10 @@ public final class Constants {
 
   public static class ElevatorConstants {
     
-    public static final double ELEVATOR_MIN = -3;
+    public static final double ELEVATOR_MIN = 0;//-3;
     public static final double ELEVATOR_MAX = 100;
 
-    public static final double INTAKE_HEIGHT = 2.5;
+    public static final double INTAKE_HEIGHT = 3.5; //2.5;
     public static final double ELEVATOR_L1 = 3;
     public static final double ELEVATOR_L2 = 11.7;
     public static final double ELEVATOR_L3 = 26;

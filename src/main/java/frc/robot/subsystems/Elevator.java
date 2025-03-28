@@ -41,6 +41,8 @@ public class Elevator extends SubsystemBase {
     rightMotorConfig = new SparkMaxConfig();
     leftEncoder = elevatorLeftMotor.getEncoder();
     rightEncoder = elevatorRightMotor.getEncoder();
+    rightEncoder.setPosition(0);
+    leftEncoder.setPosition(0);
     topLimitSwitch = new DigitalInput(Ports.DIGITAL_TOP_LIMIT_PORT);
     bottomLimitSwitch = new DigitalInput(Ports.DIGITAL_BOTTOM_LIMIT_PORT);
 
