@@ -7,13 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "RightStart-to-CR-Path"
+            "pathName": "StartR-to-CL-Path"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "CR-to-CoralStation-Path"
+            "pathName": "CL-to-StationR-Path"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "StationR-to-BR-Path"
           }
         }
       ]

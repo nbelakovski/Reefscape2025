@@ -84,6 +84,21 @@ public class FieldConstants {
         return facingBackwardsPose;
     }
 
+     // Returns a robot's center pose when facing a specific aprilTag
+     public static Pose3d getRobotPoseToTag(int tagID){
+
+        Pose3d tagPose = aprilTagFieldLayout.getTagPose(tagID).get();
+
+        //Get the coordinate of tag on field
+        Translation3d tagTranslation = tagPose.getTranslation();
+        double tagAngle = tagPose.getRotation().getAngle();
+
+        Pose3d flippedPose = getRobotPoseSpin180(tagPose);
+        Pose3d centerOfRobotPose = getCenterPoseFromFrontPose(flippedPose);
+        return centerOfRobotPose;
+    }
+
+
     // Finds the Pose3d 180 degrees rotated from original pose, staying in same coordinates
     public static Pose3d getRobotPoseSpin180(Pose3d originalPose){
         return originalPose.rotateAround(originalPose.getTranslation(), new Rotation3d(0,0,Units.degreesToRadians(180)));
@@ -179,7 +194,7 @@ public class FieldConstants {
         return targetPose;
     }
 
-    // Returns the Pose3d of a BRANCH (facing out of the Reef), adjusting for an offset from the aprilTag on that face
+    // Returns the Pose3d of a Robot backin up to the CORAL STATION
     public static Pose3d getCoralStationPose(Alliance alliance, String stationDirection){
 
         // Determine the tag at the desired Coral Station
@@ -239,7 +254,7 @@ public class FieldConstants {
     }
 
     // See AprilTag field map: https://firstfrc.blob.core.windows.net/frc2025/FieldAssets/Apriltag_Images_and_User_Guide.pdf
-    public static int getTagFromReef(String reefFace, Alliance alliance){
+    public static int getTagFromReef(Alliance alliance, String reefFace){
         
         if(reefFace.equals("A") && alliance == Alliance.Blue) return 18;
         else if(reefFace.equals("B") & alliance == Alliance.Blue) return 17;
