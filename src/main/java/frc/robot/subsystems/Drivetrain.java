@@ -54,10 +54,7 @@ public class Drivetrain extends SubsystemBase {
   private final SwerveModule backL = new SwerveModule(SwerveConstants.SWERVE_BL);
   private final SwerveModule backR = new SwerveModule(SwerveConstants.SWERVE_BR);
 
-  public boolean fieldCentric;
-
-  // The gyro sensor
-  public AHRS navX;
+  public AHRS navX;   // The gyro sensor
 
   // Slew rate filter variables for controlling lateral acceleration
   // private double m_currentRotSpeed = 0.0;
@@ -71,6 +68,7 @@ public class Drivetrain extends SubsystemBase {
   private double xSpeed = 0.0;
   private double ySpeed = 0.0;
   private double rotSpeed = 0.0;
+  public boolean fieldCentric = true;
 
   private final SwerveDrivePoseEstimator poseEstimator;
 
@@ -120,7 +118,7 @@ public class Drivetrain extends SubsystemBase {
       SwerveConstants.DRIVE_KINEMATICS,
       getRobotHeading(),
       getSwerveModulePos(),
-      FieldConstants.getRobotPoseInitialFMS().toPose2d(),
+      FieldConstants.getRobotPoseInitialFMS().toPose2d(), // Starting pose based on FMS Alliance + Driver Station
       stateStdDevs,
       visionStdDevs);
 
@@ -303,8 +301,10 @@ public class Drivetrain extends SubsystemBase {
 
     //Store an array of speeds for each wheel. By default do robot centric speeds but if fieldCentric use fromFieldRelativeSpeeds
     ChassisSpeeds speeds = new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotSpeedDelivered);
+
     if (fieldCentric) {
       var rotation = getPose().getRotation();
+      
       var allianceOptional = DriverStation.getAlliance();
       if (allianceOptional.isPresent() && allianceOptional.get() == DriverStation.Alliance.Red) {
         // Flip the rotation if our driverstation is red alliance so that driving is "driver centric"
