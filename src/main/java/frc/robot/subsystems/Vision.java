@@ -117,7 +117,8 @@ public class Vision extends SubsystemBase {
       }
     }
 
-    int tagId = tagChooser.getSelected();
+    // int tagId = tagChooser.getSelected();
+    int tagId = 21;
     SmartDashboard.putNumber("tag " + tagId + " pose x", FieldConstants.aprilTagFieldLayout.getTagPose(tagId).get().getX());
     SmartDashboard.putNumber("tag " + tagId + " pose y", FieldConstants.aprilTagFieldLayout.getTagPose(tagId).get().getY());
     SmartDashboard.putNumber("tag " + tagId + " angle", FieldConstants.aprilTagFieldLayout.getTagPose(tagId).get().getRotation().getAngle());

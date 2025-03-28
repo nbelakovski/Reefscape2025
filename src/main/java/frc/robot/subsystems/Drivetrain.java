@@ -283,12 +283,12 @@ public class Drivetrain extends SubsystemBase {
    */
   public void move(double xSpeed, double ySpeed, double rot, boolean fieldcentric) {
 
-    double xSpeedCommanded = xSpeed;
+    double xSpeedCommanded = -xSpeed;
     double ySpeedCommanded = ySpeed;
     double rotSpeedCommanded = rot;
 
     // Convert the commanded speeds into the correct units for the drivetrain
-    double xSpeedDelivered = -xSpeedCommanded * SwerveConstants.TOP_SPEED;
+    double xSpeedDelivered = xSpeedCommanded * SwerveConstants.TOP_SPEED;
     double ySpeedDelivered = ySpeedCommanded * SwerveConstants.TOP_SPEED;
     double rotSpeedDelivered = rotSpeedCommanded * SwerveConstants.TOP_ANGULAR_SPEED;
 
@@ -335,7 +335,7 @@ public class Drivetrain extends SubsystemBase {
     backR.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
   }
 
-  // Helps AutoBuilder do stuff
+  // Helps AutoBuilder do stuff - ONLY USED BY PATH PLANNER
   public void driveRobotRelative(ChassisSpeeds robotRelativeSpeeds) {
 
     SmartDashboard.putNumber("PP Xspeed", robotRelativeSpeeds.vxMetersPerSecond);
@@ -344,8 +344,8 @@ public class Drivetrain extends SubsystemBase {
     double speedFactor = 0.15;
     
     ChassisSpeeds speeds = ChassisSpeeds.discretize(robotRelativeSpeeds, 0.02);
-
-    this.move(speeds.vxMetersPerSecond * speedFactor, speeds.vyMetersPerSecond * speedFactor, speeds.omegaRadiansPerSecond, false);
+    //negative Y-values fix something
+    this.move(speeds.vxMetersPerSecond * speedFactor, -speeds.vyMetersPerSecond * speedFactor, speeds.omegaRadiansPerSecond, false);
 
 
     //Store the states of each module
@@ -386,7 +386,7 @@ public class Drivetrain extends SubsystemBase {
     SwerveModulePosition[] modulePosition = new SwerveModulePosition[4];
     for(int i = 0; i < modules.length; i++) {
       SwerveModulePosition currentPos = modules[i].getPosition();
-      modulePosition[i] = new SwerveModulePosition(-currentPos.distanceMeters, currentPos.angle);
+      modulePosition[i] = new SwerveModulePosition(currentPos.distanceMeters, currentPos.angle); //negative on distance BAD!
     }
     return modulePosition;
   }
