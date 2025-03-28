@@ -41,6 +41,7 @@ public class AlgaeHandler extends SubsystemBase {
         jawConfig = new SparkMaxConfig();
         jawConfig.inverted(true);
         jawEncoder = jawMotor.getEncoder();
+        jawEncoder.setPosition(0);
         // jawEncoder = jawMotor.getAbsoluteEncoder();
         // jawConfig.absoluteEncoder.positionConversionFactor(360);
         // jawConfig.absoluteEncoder.zeroOffset(0.94);

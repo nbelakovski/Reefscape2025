@@ -74,7 +74,7 @@ public class RobotContainer {
     Drivetrain.getInstance().setDefaultCommand(new SwerveDrive(
       () -> driverController.getRawAxis(1),
       () -> -driverController.getRawAxis(0),
-      () -> driverController.getRawAxis(4),
+      () -> -driverController.getRawAxis(4), //negative joystick values make a positive CCW turn
       () -> driverController.getAButton()
     ));
 
@@ -148,6 +148,9 @@ public class RobotContainer {
     //Operator - B - Go to L4, Algae score angle, and spit algae 
     new JoystickButton(operatorController, Button.kB.value).whileTrue(new ElevatorSpitCombo(ElevatorConstants.ELEVATOR_L4).repeatedly());
     
+    // Operator - RB - Rotate jaw to bring Coral out of the way for a Supercycle
+    new JoystickButton(operatorController, Button.kLeftBumper.value).whileTrue(new SetJawAngle(MechConstants.JAW_UP_ANGLE)); //RB
+
     // Operator - B - Rotate Jaw to Starting/Coral Stop Angle
     // new JoystickButton(operatorController, Button.kB.value).whileTrue(new SetJawAngle(MechConstants.JAW_STARTING_ANGLE).repeatedly());
 

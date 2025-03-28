@@ -43,7 +43,7 @@ public class DriveDtoL4 extends SequentialCommandGroup {
 
       // Move jaw up out of the way
       new ParallelRaceGroup(
-        new SetJawAngle(MechConstants.JAW_AUTO_ANGLE),
+        new SetJawAngle(MechConstants.JAW_UP_ANGLE),
         new WaitCommand(3)
       ),
 
