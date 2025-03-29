@@ -26,17 +26,57 @@ public class DriveToClosestBranch extends Command {
   private double setpointX;
   private double setpointY;
   private double setpointTurn;
+  int tagId;
+  Pose3d targetPose;
+  String branchDirection;
+  private boolean oldAllianceCentric;
   
   
   /** DriveToBranchPID Constructor #1 - takes in a specific AprilTag & Branch direction  */
   public DriveToClosestBranch(String branchDirection) {
-    
-    int tagId = Vision.getInstance().getClosestId();
-    Pose3d targetPose = FieldConstants.getRobotPoseToBranch(tagId, branchDirection);
-    SmartDashboard.putString("DTB Branch", branchDirection);
-    SmartDashboard.putNumber("DTB Tag", tagId);
+
+    this.branchDirection = branchDirection;
+    // tagId = Vision.getInstance().getClosestId();
+    // targetPose = FieldConstants.getRobotPoseToBranch(tagId, branchDirection);
 
     drivetrain = Drivetrain.getInstance();
+
+    //Record starting values for X (m), Y (m), Angle (deg)
+    // startX = drivetrain.getPose().getX();
+    // startY = drivetrain.getPose().getY();
+    // startAngle = drivetrain.getPose().getRotation().getDegrees();
+
+    // Record the setpoints for X (m), Y (m), Angle (deg)
+    // setpointX = targetPose.getX();
+    // setpointY = targetPose.getY();
+    // setpointTurn = Math.toDegrees(targetPose.getRotation().getZ());
+
+    // // Setup PID controllers for X & Y distances
+    // controllerX = new PIDController(SwerveAutoConstants.X_P, SwerveAutoConstants.X_I, SwerveAutoConstants.X_D);
+    // controllerY = new PIDController(SwerveAutoConstants.Y_P, SwerveAutoConstants.Y_I, SwerveAutoConstants.Y_D); 
+    // controllerTurn = new PIDController(SwerveAutoConstants.TURN_P, SwerveAutoConstants.TURN_I, SwerveAutoConstants.TURN_D);
+
+    // // Set setpoints for X & Y controllers
+    // controllerX.setSetpoint(setpointX);
+    // controllerY.setSetpoint(setpointY);
+    // controllerTurn.setSetpoint(setpointTurn);
+
+    // // Set tolerances for X & Y controllers
+    // controllerX.setTolerance(SwerveAutoConstants.X_TOL);
+    // controllerY.setTolerance(SwerveAutoConstants.Y_TOL);
+    // controllerTurn.setTolerance(SwerveAutoConstants.TURN_TOL,SwerveAutoConstants.TURN_DERIV_TOL);
+    addRequirements(drivetrain);
+  }
+
+  // Called when the command is initially scheduled.
+  @Override
+  public void initialize() {
+    drivetrain.stopDrive(); 
+
+    oldAllianceCentric = drivetrain.allianceCentric;
+
+    tagId = Vision.getInstance().getClosestId();
+    targetPose = FieldConstants.getRobotPoseToBranch(tagId, branchDirection);
 
     //Record starting values for X (m), Y (m), Angle (deg)
     startX = drivetrain.getPose().getX();
@@ -62,16 +102,10 @@ public class DriveToClosestBranch extends Command {
     controllerX.setTolerance(SwerveAutoConstants.X_TOL);
     controllerY.setTolerance(SwerveAutoConstants.Y_TOL);
     controllerTurn.setTolerance(SwerveAutoConstants.TURN_TOL,SwerveAutoConstants.TURN_DERIV_TOL);
-    addRequirements(drivetrain);
-  }
+    controllerTurn.enableContinuousInput(-180, 180);
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-    controllerTurn.reset();
-    controllerX.reset();
-    controllerY.reset();
-    drivetrain.stopDrive(); 
+    SmartDashboard.putString("DTB Branch", branchDirection);
+    SmartDashboard.putNumber("DTB Tag", tagId);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -91,10 +125,14 @@ public class DriveToClosestBranch extends Command {
     // Set to 0 for isolation testing
     // xSpeed=0;
     // ySpeed=0;
-     turnSpeed=0;
+     //turnSpeed=0;
 
     //make robot move
-    drivetrain.setDrive(xSpeed, ySpeed, turnSpeed, true);
+    if(controllerX.getError() < 0.1 && controllerY.getError() < 0.1) {
+      controllerX.setP(SwerveAutoConstants.X_P * 3);
+      controllerY.setP(SwerveAutoConstants.Y_P * 3);
+    }
+    drivetrain.setDrive(xSpeed, ySpeed, turnSpeed, true, false);
 
     //SD stuff
     SmartDashboard.putNumber("DTB xSpeed", xSpeed);
@@ -122,6 +160,7 @@ public class DriveToClosestBranch extends Command {
     controllerX.close();
     controllerY.close();
     controllerTurn.close();
+    drivetrain.allianceCentric = oldAllianceCentric;
   }
 
   // Returns true when the command should end.

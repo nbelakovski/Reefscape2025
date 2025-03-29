@@ -202,7 +202,7 @@ public void autoChooserInit() {
 
     //autoChooser.addOption("one meter", new PathPlannerAuto("one meter"));
 
-    autoChooser.addOption("OnePieceAutoTest", new AutoPathToBranchScore(Alliance.Red, "testing", "C", "LEFT", 3));
+    autoChooser.addOption("OnePieceAutoTest", new AutoPathToBranchScore(Alliance.Red, "testing", "C", "RIGHT", 4));
     autoChooser.addOption("driveToBranch-Closest-LEFT", new DriveToClosestBranch("LEFT"));
     autoChooser.addOption("driveToBranch-21-LEFT", new DriveToBranchPID(21, "LEFT"));
     autoChooser.addOption("turntoangle", new TurnToAnglePID(90));

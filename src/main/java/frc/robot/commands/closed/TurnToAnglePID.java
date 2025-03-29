@@ -50,8 +50,8 @@ public class TurnToAnglePID extends Command {
     
     // OPTION 1: Turning Only in place
     boolean isFieldCentric = true;
-    drivetrain.move(0, 0 , newRotSpeed, isFieldCentric); 
-
+    //do old alliance centric if used
+    //drivetrain.move(0, 0 , newRotSpeed, isFieldCentric, false); 
     //OPTION 2: //<--allows translation to also happen
     // drivetrain.setRotSpeed(newRotSpeed); 
     // drivetrain.drive();

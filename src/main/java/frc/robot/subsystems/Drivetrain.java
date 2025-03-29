@@ -69,6 +69,7 @@ public class Drivetrain extends SubsystemBase {
   private double ySpeed = 0.0;
   private double rotSpeed = 0.0;
   public boolean fieldCentric = true;
+  public boolean allianceCentric = true;
 
   private final SwerveDrivePoseEstimator poseEstimator;
 
@@ -110,6 +111,7 @@ public class Drivetrain extends SubsystemBase {
 
     this.field = new Field2d();
     this.fieldCentric = true;
+    this.allianceCentric = true;
     
     var stateStdDevs = VecBuilder.fill(0.1, 0.1, 0.1);
     var visionStdDevs = VecBuilder.fill(1, 1, 1);
@@ -261,11 +263,12 @@ public class Drivetrain extends SubsystemBase {
     this.rotSpeed = rotSpeed;
   }
 
-  public void setDrive(double xSpeed, double ySpeed, double rotSpeed, boolean fieldCentric) {
+  public void setDrive(double xSpeed, double ySpeed, double rotSpeed, boolean fieldCentric, boolean allianceCentric) {
     this.xSpeed = xSpeed;
     this.ySpeed = ySpeed;
     this.rotSpeed = rotSpeed;
     this.fieldCentric = fieldCentric;
+    this.allianceCentric = allianceCentric;
   }
 
   public void stopDrive() {
@@ -281,16 +284,16 @@ public class Drivetrain extends SubsystemBase {
    * @param fieldcentric Whether the provided x and y speeds are relative to the field.
    * @param rateLimit     Whether to enable rate limiting for smoother control.
    */
-  public void move(double xSpeed, double ySpeed, double rot, boolean fieldcentric) {
+  public void move(double xSpeed, double ySpeed, double rot, boolean fieldcentric, boolean allianceCentric) {
 
     double xSpeedCommanded = -xSpeed;
     double ySpeedCommanded = ySpeed;
     double rotSpeedCommanded = rot;
 
     // Convert the commanded speeds into the correct units for the drivetrain
-    double xSpeedDelivered = xSpeedCommanded * SwerveConstants.TOP_SPEED;
-    double ySpeedDelivered = ySpeedCommanded * SwerveConstants.TOP_SPEED;
-    double rotSpeedDelivered = rotSpeedCommanded * SwerveConstants.TOP_ANGULAR_SPEED;
+    double xSpeedDelivered = xSpeedCommanded;
+    double ySpeedDelivered = ySpeedCommanded;
+    double rotSpeedDelivered = rotSpeedCommanded;
 
     //SwerveModuleState[] 
     // var swerveModuleStates = SwerveConstants.DRIVE_KINEMATICS.toSwerveModuleStates(
@@ -305,11 +308,13 @@ public class Drivetrain extends SubsystemBase {
     if (fieldCentric) {
       var rotation = getPose().getRotation();
       
+      if(allianceCentric) {
       var allianceOptional = DriverStation.getAlliance();
       if (allianceOptional.isPresent() && allianceOptional.get() == DriverStation.Alliance.Red) {
         // Flip the rotation if our driverstation is red alliance so that driving is "driver centric"
         rotation = rotation.rotateBy(Rotation2d.fromDegrees(180));
       }
+    }
       speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotSpeedDelivered, rotation);
     }
 
@@ -341,11 +346,12 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putNumber("PP Xspeed", robotRelativeSpeeds.vxMetersPerSecond);
     SmartDashboard.putNumber("PP Yspeeds", robotRelativeSpeeds.vyMetersPerSecond);
 
-    double speedFactor = 0.15;
+    double speedFactor = 1;
     
     ChassisSpeeds speeds = ChassisSpeeds.discretize(robotRelativeSpeeds, 0.02);
     //negative Y-values fix something
-    this.move(speeds.vxMetersPerSecond * speedFactor, -speeds.vyMetersPerSecond * speedFactor, speeds.omegaRadiansPerSecond, false);
+    
+    this.move(-speeds.vxMetersPerSecond * speedFactor, speeds.vyMetersPerSecond * speedFactor, speeds.omegaRadiansPerSecond, false, false);
 
 
     //Store the states of each module
@@ -548,7 +554,7 @@ public class Drivetrain extends SubsystemBase {
 
     updatePoseFromOdometry();
     updateModuleTelemetry();
-    move(this.xSpeed, this.ySpeed, this.rotSpeed, this.fieldCentric);
+    move(this.xSpeed, this.ySpeed, this.rotSpeed, this.fieldCentric, this.allianceCentric);
     
     SmartDashboard.putNumber("NavX Compass Heading", navX.getCompassHeading());
 

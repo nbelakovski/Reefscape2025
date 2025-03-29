@@ -64,8 +64,11 @@ public class AutoPathToBranchScore extends SequentialCommandGroup {
     
     addCommands(
 
-      // 1. Wait for 2 seconds
-      new WaitCommand(2),
+      // 1. Move jaw up out of the way
+      // new ParallelRaceGroup(
+      //   new SetJawAngle(MechConstants.JAW_UP_ANGLE),
+      //   new WaitCommand(2)
+      // ),
       
       // 2. Move coral forward a tiny bit to avoid elevator jamming
       new ParallelRaceGroup(
@@ -74,23 +77,19 @@ public class AutoPathToBranchScore extends SequentialCommandGroup {
         new WaitCommand(0.1)  
       ),
 
-      // 3. Move jaw up out of the way
-      new ParallelRaceGroup(
-        new SetJawAngle(MechConstants.JAW_UP_ANGLE),
-        new WaitCommand(2)
-      ),
+
 
       // 4. Use PathPlanner to drive first route to Reef Face
-      new ParallelRaceGroup(
-        new WaitCommand(3),
-        new PathPlannerAuto(ppAutoName)
-      ),
+      // new ParallelRaceGroup(
+      //   new WaitCommand(3),
+      //   new PathPlannerAuto(ppAutoName)
+      // ),
  
 
-      // 5. Use Vision to align to a specific tag
+      //5. Use Vision to align to a specific tag
       new ParallelDeadlineGroup(
-        new WaitCommand(2),
-        new DriveToBranchPID(tagId, branchDirection),
+        new WaitCommand(3),
+        new DriveToClosestBranch(branchDirection),
         new SetJawAngle(MechConstants.JAW_UP_ANGLE)
       ),
 
@@ -106,10 +105,10 @@ public class AutoPathToBranchScore extends SequentialCommandGroup {
 
 
       // 7. Move elevator up to desired elevator position
-      new ParallelRaceGroup(
+      new ParallelDeadlineGroup(
         new WaitCommand(3),
         new ElevatorSetPosition(elevatorLevelHeight),
-        new DriveToClosestBranch("LEFT")
+        new DriveToClosestBranch(branchDirection)
       ),
  
       // 8. For 2 seconds, spin the coral and maintain the elevator's position

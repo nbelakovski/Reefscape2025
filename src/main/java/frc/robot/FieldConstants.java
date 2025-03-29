@@ -44,7 +44,7 @@ public class FieldConstants {
     public static final Pose3d blueProcessorSideAutoPose = new Pose3d( new Pose2d(BLUE_STARTING_X, RED_CENTER_CAGE_Y, Rotation2d.fromDegrees(BLUE_AUTO_ANGLE)));
     public static final Pose3d redBargeSideAutoPose = new Pose3d( new Pose2d(RED_STARTING_X, RED_CENTER_CAGE_Y, Rotation2d.fromDegrees(RED_AUTO_ANGLE)));
     public static final Pose3d redCenterAutoPose = new Pose3d( new Pose2d(RED_STARTING_X, FIELD_CENTER_Y, Rotation2d.fromDegrees(RED_AUTO_ANGLE)));
-    public static final Pose3d redProcessorSideAutoPose = new Pose3d(new Pose2d(RED_STARTING_X, BLUE_CENTER_CAGE_Y, Rotation2d.fromDegrees(RED_AUTO_ANGLE)));
+    public static final Pose3d redProcessorSideAutoPose = new Pose3d(new Pose2d(RED_STARTING_X, BLUE_CENTER_CAGE_Y, Rotation2d.fromDegrees(-45)));
 
     // Center-of-Robot Poses facing CORAL STATION
     public static final Pose3d blueCoralStationLeftPose = getRobotPoseToCoralStation(Alliance.Blue,"LEFT");
@@ -59,7 +59,7 @@ public class FieldConstants {
     public static Pose3d getRobotPoseToBranch(int tagID, String branchDirection){
         Pose3d branchPose = getBranchPose(tagID, branchDirection);
         Pose3d flippedPose = getRobotPoseSpin180(branchPose);
-        Pose3d centerOfRobotPose = getCenterPoseFromFrontPose(flippedPose);
+        Pose3d centerOfRobotPose = getCenterPoseFromFrontPose(flippedPose, Units.inchesToMeters(3));
         return centerOfRobotPose;
     }
 
@@ -73,7 +73,7 @@ public class FieldConstants {
         // System.out.print("\nFlippedPose:    ");
         // printPose3d(flippedPose);
 
-        Pose3d centerOfRobotPose = getCenterPoseFromFrontPose(flippedPose);
+        Pose3d centerOfRobotPose = getCenterPoseFromFrontPose(flippedPose, 0.0);
         // System.out.print("\ncenterRobotPose:");
         // printPose3d(centerOfRobotPose);
 
@@ -94,7 +94,7 @@ public class FieldConstants {
         double tagAngle = tagPose.getRotation().getAngle();
 
         Pose3d flippedPose = getRobotPoseSpin180(tagPose);
-        Pose3d centerOfRobotPose = getCenterPoseFromFrontPose(flippedPose);
+        Pose3d centerOfRobotPose = getCenterPoseFromFrontPose(flippedPose, 0.0);
         return centerOfRobotPose;
     }
 
@@ -105,7 +105,7 @@ public class FieldConstants {
     }
 
     // Provides a Pose3d to the center of the robot given a Pose3d at the front of the bumper
-    public static Pose3d getCenterPoseFromFrontPose(Pose3d frontPose){
+    public static Pose3d getCenterPoseFromFrontPose(Pose3d frontPose, double offset){
 
         // System.out.println("\n\nStarting with frontPose of: "+frontPose + "---->");
         double frontToCenterDistance = RobotConstants.BUMPER_TO_ROBOT_CENTER_DISTANCE;
@@ -113,8 +113,8 @@ public class FieldConstants {
         double angleRadians = frontPose.getRotation().getZ();
         // System.out.printf("\tAngleDegrees: \t%.1f\n", Math.toDegrees(frontPose.getRotation().getZ()));
 
-        double xOffset = frontToCenterDistance * Math.cos(angleRadians);
-        double yOffset = frontToCenterDistance * Math.sin(angleRadians);
+        double xOffset = (frontToCenterDistance - offset) * Math.cos(angleRadians);
+        double yOffset = (frontToCenterDistance - offset) * Math.sin(angleRadians);
         // System.out.println("\tMath.cos(angleRad) = " + Math.cos(angleRadians));
         // System.out.println("\tMath.sin(angleRad) = " + Math.sin(angleRadians));
         // System.out.println("\txoffset: "+xOffset + ", yOffset: " + yOffset);
