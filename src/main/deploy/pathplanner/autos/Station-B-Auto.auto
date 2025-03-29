@@ -7,25 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "StartR-to-C-Path"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "C-to-StationR-Path"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
             "pathName": "StationR-to-B-Path"
           }
         }
       ]
     }
   },
-  "resetOdom": true,
+  "resetOdom": false,
   "folder": null,
   "choreoAuto": false
 }
