@@ -13,6 +13,7 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -88,11 +89,12 @@ public class RobotContainer {
     // new DPad(driverController,90).whileTrue(new TurnToAnglePID(270));
 
     // Driver - DPAD - Align to AprilTag Branch LEFT or RIGHT
-    int tagID = vision.getClosestId();
-    // int tagID = 21;
-    new DPad(driverController,270).whileTrue(new DriveToBranchPID(tagID,"LEFT"));
-    new DPad(driverController,180).whileTrue(new DriveToBranchPID(tagID,"CENTER"));
-    new DPad(driverController,90).whileTrue(new DriveToBranchPID(tagID,"RIGHT")); 
+    // int tagId = vision.getClosestId();
+    // int tagId = 21;
+    // int tagId = 5298;
+    new DPad(driverController,270).whileTrue(new DriveToClosestBranch("LEFT"));
+    new DPad(driverController,180).whileTrue(new DriveToClosestBranch("CENTER"));
+    new DPad(driverController,90).whileTrue(new DriveToClosestBranch("RIGHT")); 
 
 
 
@@ -199,19 +201,18 @@ public void autoChooserInit() {
     autoChooser.setDefaultOption("PP-one meter", new PathPlannerAuto("one meter"));
 
     //autoChooser.addOption("one meter", new PathPlannerAuto("one meter"));
+
+    autoChooser.addOption("OnePieceAutoTest", new AutoPathToBranchScore(Alliance.Red, "testing", "C", "LEFT", 3));
+    autoChooser.addOption("driveToBranch-Closest-LEFT", new DriveToClosestBranch("LEFT"));
+    autoChooser.addOption("driveToBranch-21-LEFT", new DriveToBranchPID(21, "LEFT"));
+    autoChooser.addOption("turntoangle", new TurnToAnglePID(90));
+    autoChooser.addOption("DriveForward", new DriveForward());
+
+    autoChooser.addOption("testing", new PathPlannerAuto("testing"));
     autoChooser.addOption("PP-Auto1", new PathPlannerAuto("Auto1"));
     autoChooser.addOption("PP-Auto2", new PathPlannerAuto("Auto2"));
     autoChooser.addOption("PP-ERComboPath", new PathPlannerAuto("ERComboPath"));
     autoChooser.addOption("CRComboPath", new PathPlannerAuto("CRComboPath"));
-
-
-    autoChooser.addOption("driveToBranch-Closest-LEFT", new DriveToBranchPID(vision.getClosestId(), "LEFT"));
-    autoChooser.addOption("driveToBranch-21-LEFT", new DriveToBranchPID(21, "LEFT"));
-    autoChooser.addOption("straightToDL4-RED", new AutoStraightPathToCoralScore(21,4) );
-    // autoChooser.addOption("DrivetoDL4-old", new DriveDtoL4() );
-    autoChooser.addOption("turntoangle", new TurnToAnglePID(90));
-    autoChooser.addOption("testing", new PathPlannerAuto("testing"));
-    autoChooser.addOption("DriveForward", new DriveForward());
 
 
 

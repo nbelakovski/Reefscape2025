@@ -98,14 +98,14 @@ public final class Constants {
     public static final double TRANSLATE_I = 0;
     public static final double TRANSLATE_D = 0;
 
-    public static final double X_P = 1;
+    public static final double X_P = 0.7;
     public static final double X_I = 0;
-    public static final double X_D = 0;
+    public static final double X_D = 0.2;
     public static final double X_TOL = Units.inchesToMeters(0.2); //0.025m
 
-    public static final double Y_P = 1.0;
+    public static final double Y_P = 0.8;
     public static final double Y_I = 0;
-    public static final double Y_D = 0;
+    public static final double Y_D = 0.05;
     public static final double Y_TOL = Units.inchesToMeters(0.1); //0.012m
 
     public static final double TURN_P = 0.007;

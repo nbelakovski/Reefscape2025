@@ -8,9 +8,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.SwerveAutoConstants;
 import frc.robot.FieldConstants;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Vision;
 
 
-public class DriveToBranchPID extends Command {
+public class DriveToClosestBranch extends Command {
 
   private static Drivetrain drivetrain;
 
@@ -28,16 +29,12 @@ public class DriveToBranchPID extends Command {
   
   
   /** DriveToBranchPID Constructor #1 - takes in a specific AprilTag & Branch direction  */
-  public DriveToBranchPID(int tagId, String branchDirection) {
+  public DriveToClosestBranch(String branchDirection) {
     
-    this(FieldConstants.getRobotPoseToBranch(tagId, branchDirection));
-    
+    int tagId = Vision.getInstance().getClosestId();
+    Pose3d targetPose = FieldConstants.getRobotPoseToBranch(tagId, branchDirection);
     SmartDashboard.putString("DTB Branch", branchDirection);
     SmartDashboard.putNumber("DTB Tag", tagId);
-  }
-
-  /** DriveToBranchPID Constructor #2 - takes in any Pose  */
-  public DriveToBranchPID(Pose3d targetPose) {
 
     drivetrain = Drivetrain.getInstance();
 
