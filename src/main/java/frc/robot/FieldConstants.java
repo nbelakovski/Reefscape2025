@@ -57,7 +57,7 @@ public class FieldConstants {
 
     // Returns a robot's center pose to a specific branch
     public static Pose3d getRobotPoseToBranch(int tagID, String branchDirection){
-        Pose3d branchPose = getBranchPose(tagID, branchDirection);
+        Pose3d branchPose = getBranchPose(tagID, branchDirection); 
         Pose3d flippedPose = getRobotPoseSpin180(branchPose);
         Pose3d centerOfRobotPose = getCenterPoseFromFrontPose(flippedPose, Units.inchesToMeters(3));
         return centerOfRobotPose;
@@ -177,7 +177,8 @@ public class FieldConstants {
 
         //Create offset from tag to desired branch
         Translation3d branchOffset = new Translation3d();
-        double branchOffsetDistance = Units.inchesToMeters(6.5);
+        double calibrationDistance = Units.inchesToMeters(0.5); 
+        double branchOffsetDistance = Units.inchesToMeters(6.5) + calibrationDistance;
         
         if (branchDirection.equals("LEFT")){
             branchOffset = new Translation3d(Math.sin(tagAngle) * branchOffsetDistance, -Math.cos(tagAngle) * branchOffsetDistance, 0);

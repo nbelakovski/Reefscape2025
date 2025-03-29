@@ -105,7 +105,7 @@ public final class Constants {
 
     public static final double Y_P = 2.5;
     public static final double Y_I = 0;
-    public static final double Y_D = 0.8;
+    public static final double Y_D = 1;
     public static final double Y_TOL = Units.inchesToMeters(0.1); //0.012m
 
     public static final double TURN_P = 0.07;

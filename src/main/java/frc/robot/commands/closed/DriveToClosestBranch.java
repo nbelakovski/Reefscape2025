@@ -129,8 +129,8 @@ public class DriveToClosestBranch extends Command {
 
     //make robot move
     if(controllerX.getError() < 0.1 && controllerY.getError() < 0.1) {
-      controllerX.setP(SwerveAutoConstants.X_P * 3);
-      controllerY.setP(SwerveAutoConstants.Y_P * 3);
+      controllerX.setP(SwerveAutoConstants.X_P * 2);
+      controllerY.setP(SwerveAutoConstants.Y_P * 2);
     }
     drivetrain.setDrive(xSpeed, ySpeed, turnSpeed, true, false);
 
