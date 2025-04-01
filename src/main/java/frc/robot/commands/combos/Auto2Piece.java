@@ -25,9 +25,9 @@ public class Auto2Piece extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new AutoPathToBranchScore(alliance, "Start-C-Auto", "C", "LEFT", 4),
-      new AutoPathToStation("C-Station-Auto"),
-      new AutoPathToBranchScore(alliance, "Station-B-Auto", "B", "LEFT", 4)
+      new AutoPathToBranchScore(alliance, "Start-E-Auto", "E", "LEFT", 4),
+      new AutoPathToStation("E-to-Station-Auto")
+      //new AutoPathToBranchScore(alliance, "Station-F-Auto", "F", "LEFT", 4)
 
     );
   }

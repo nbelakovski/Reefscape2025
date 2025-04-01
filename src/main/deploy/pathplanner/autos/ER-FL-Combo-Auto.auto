@@ -11,13 +11,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "StartL-to-ER-Path"
+                  "pathName": "Start-to-E-Path"
                 }
               },
               {
                 "type": "path",
                 "data": {
-                  "pathName": "ER-to-StationL-Path"
+                  "pathName": "E-to-Station-Path"
                 }
               },
               {
