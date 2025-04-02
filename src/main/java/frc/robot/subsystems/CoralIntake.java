@@ -17,7 +17,8 @@ import edu.wpi.first.wpilibj.AnalogInput;
 public class CoralIntake extends SubsystemBase {
 
   private static CoralIntake instance;
-  private SparkMax coralIntakeMotor;
+  private SparkMax coralIntakeMotorL;
+  private SparkMax coralIntakeMotorR;
   private SparkMaxConfig motorConfig;
   private boolean coralInGap = false;
   private AnalogInput gapSensor;
@@ -27,9 +28,13 @@ public class CoralIntake extends SubsystemBase {
   // CoralIntake Constructor
   private CoralIntake() {
 
-    coralIntakeMotor = new SparkMax(Ports.LEFT_INTAKE_MOTOR_PORT, MotorType.kBrushless);
+    coralIntakeMotorL = new SparkMax(Ports.LEFT_INTAKE_MOTOR_PORT, MotorType.kBrushless);
+    coralIntakeMotorR = new SparkMax(Ports.RIGHT_INTAKE_MOTOR_PORT, MotorType.kBrushless);
+
     motorConfig = new SparkMaxConfig();
-    coralIntakeMotor.configure(motorConfig, null, null);
+    coralIntakeMotorL.configure(motorConfig, null, null);
+    coralIntakeMotorR.configure(motorConfig, null, null);
+
     
     gapSensor = new AnalogInput(Ports.ANALOG_GAP_SENSOR_PORT);
   }
@@ -44,13 +49,18 @@ public class CoralIntake extends SubsystemBase {
 
 
   public void eat(){
-    coralIntakeMotor.set(MechConstants.CORAL_INTAKE_SPEED);
+    coralIntakeMotorL.set(MechConstants.CORAL_INTAKE_SPEED);
+    coralIntakeMotorR.set(-MechConstants.CORAL_INTAKE_SPEED);
   }
   public void spit(){
-    coralIntakeMotor.set(-MechConstants.CORAL_INTAKE_SPEED);
+    coralIntakeMotorL.set(-MechConstants.CORAL_INTAKE_SPEED);
+    coralIntakeMotorR.set(MechConstants.CORAL_INTAKE_SPEED);
+
   }
   public void stop(){
-    coralIntakeMotor.set(0);
+    coralIntakeMotorL.set(0);
+    coralIntakeMotorR.set(0);
+
   }
 
   // Checks if coral is blocking the gap between intake & coral scorer

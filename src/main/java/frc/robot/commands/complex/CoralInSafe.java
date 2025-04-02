@@ -40,7 +40,7 @@ public class CoralInSafe extends Command {
     //If coral is completely inside of the scorer then were done intaking 
     if(stop){
       coralIntake.stop();
-      coralScorer.spitSlow();
+      coralScorer.spitSlow(); //???
     }
     else{
       // coralScorer.changeSpeed(MechConstants.INTAKE_SPEED);
