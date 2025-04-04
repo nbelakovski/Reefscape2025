@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Station-to-F-Auto"
+            "pathName": "Station-to-B-Path"
           }
         }
       ]
     }
   },
-  "resetOdom": true,
+  "resetOdom": false,
   "folder": null,
   "choreoAuto": false
 }

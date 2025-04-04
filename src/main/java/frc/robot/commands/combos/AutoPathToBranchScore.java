@@ -34,10 +34,10 @@ public class AutoPathToBranchScore extends SequentialCommandGroup {
   public static Drivetrain drivetrain;
   
 
-  public AutoPathToBranchScore(Alliance alliance, String ppAutoName, String reefFace, String branchDirection, double level) {
+  public AutoPathToBranchScore( String ppAutoName, String branchDirection, double level) {
     
     drivetrain = Drivetrain.getInstance();
-    int tagId = FieldConstants.getTagFromReef(alliance, reefFace);
+   // int tagId = FieldConstants.getTagFromReef(alliance, reefFace);
 
     // Set the desired elevator height
     double elevatorLevelHeight = ElevatorConstants.ELEVATOR_L2;

@@ -43,14 +43,14 @@ public final class Constants {
   public static class SwerveConstants {
 
     // Sensor Offsets for the radian difference between the physical sensor orientation and the calibrated swerve direction (from REV Hardware Client)
-    public static final double FL_SENSOR_OFFSET = 0.6419399;    ; 
-    public static final double FR_SENSOR_OFFSET = 0.5278169; 
+    public static final double FL_SENSOR_OFFSET = 0.6419399;    
+    public static final double FR_SENSOR_OFFSET = 0.0506888; 
     public static final double BR_SENSOR_OFFSET = 0.6507399; 
     public static final double BL_SENSOR_OFFSET = 0.5267535;
 
     // Angular Offsets for the radian difference between the calibrated swerve and desired forward direction (based off REV calibration tool)
     public static final double FL_ANGULAR_OFFSET = Math.PI / 2;
-    public static final double FR_ANGULAR_OFFSET = Math.PI;
+    public static final double FR_ANGULAR_OFFSET = 0;
     public static final double BR_ANGULAR_OFFSET = 3* Math.PI / 2;
     public static final double BL_ANGULAR_OFFSET = 0;
  
@@ -200,10 +200,10 @@ public final class Constants {
     public static final double ELEVATOR_MIN = 0;//-3;
     public static final double ELEVATOR_MAX = 100;
 
-    public static final double INTAKE_HEIGHT = 3.5; //2.5;
+    public static final double INTAKE_HEIGHT = 2.8; //2.5;
     public static final double ELEVATOR_L1 = 3;
-    public static final double ELEVATOR_L2 = 11.7;
-    public static final double ELEVATOR_L3 = 26;
+    public static final double ELEVATOR_L2 = 10.2;
+    public static final double ELEVATOR_L3 = 24;
     public static final double ELEVATOR_L4 = 46;
  
     public static final double ELEVATOR_PROCESSOR = 0;
@@ -220,7 +220,7 @@ public final class Constants {
     public static final int ENCODER_TICKS = 8192; //Counts per Revolution
 
     // Mech Motor Speeds for Buttons
-    public static double CORAL_INTAKE_SPEED = 0.27;
+    public static double CORAL_INTAKE_SPEED = 0.25;
     public static double CORAL_RETRACT_SPEED = 0.3;
     public static double CORAL_SCORE_SPEED = 0.5;
     public static double ALGAE_INTAKE_SPEED = 1.0;

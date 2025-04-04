@@ -66,7 +66,7 @@ public class CoralIntake extends SubsystemBase {
   // Checks if coral is blocking the gap between intake & coral scorer
   //new coral range
   public boolean isGapBlocked(){
-    if(getDistance() > 1156 && getDistance() < 1800){
+    if(getDistance() > 800 && getDistance() < 1800){
       coralInGap = true;
     }
     else{
@@ -85,7 +85,7 @@ public class CoralIntake extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putBoolean("Coral in Gap", isGapBlocked());
-    SmartDashboard.putNumber("anolog distance", getDistance());
+    SmartDashboard.putNumber("coral gap distance", getDistance());
     
     // LEDs priority
     if(coralInGap && !CoralScorer.getInstance().hasCoral()){
