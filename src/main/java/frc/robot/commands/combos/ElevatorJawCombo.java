@@ -14,7 +14,7 @@ public class ElevatorJawCombo extends ParallelCommandGroup {
   public ElevatorJawCombo() {
     
     addCommands(
-      new SetJawAngle(MechConstants.JAW_INTAKE_ANGLE).repeatedly(),
+      new SetJawAngle(MechConstants.JAW_INTAKE_ANGLE),
       new AlgaeEat()
     );
 

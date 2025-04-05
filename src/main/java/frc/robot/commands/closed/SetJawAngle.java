@@ -19,10 +19,11 @@ public class SetJawAngle extends Command {
     public SetJawAngle(double desiredAngle) {
         // Use addRequirements() here to declare subsystem dependencies.
         handler = AlgaeHandler.getInstance();
-        controller = new PIDController(0.02,0,0);
+        // p value was 0.02 may need to change back
+        controller = new PIDController(0.625,0,0.05);
 
         controller.setSetpoint(desiredAngle);
-        controller.setTolerance(1);
+        controller.setTolerance(2);
 
         addRequirements(handler);
     }
@@ -31,12 +32,13 @@ public class SetJawAngle extends Command {
     @Override
     public void initialize() {
         controller.reset();
-        handler.stop();
+        handler.stopPivot();
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
+
         double speed = controller.calculate(handler.getAngle());
         handler.pivot(speed);
     }
@@ -44,7 +46,7 @@ public class SetJawAngle extends Command {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        handler.stop();
+        handler.stopPivot();
         //stop the controller from moving instead!
         controller.close();
     }

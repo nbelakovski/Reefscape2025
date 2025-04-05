@@ -189,7 +189,7 @@ public class Elevator extends SubsystemBase {
     //   LEDStrip.request(SubsystemPriority.ELEVATOR, LEDStrip.MIN_HEIGHT);
     // }
 
-    if (instance.getPosition() > 1.5 && instance.getPosition() < 1.8){
+    if (instance.getPosition() > 1.5 && instance.getPosition() < 2.1){
       LEDStrip.request(SubsystemPriority.ELEVATOR, LEDStrip.INTAKE_HEIGHT);
     }
     else if (instance.getPosition() == ElevatorConstants.ELEVATOR_L1) {

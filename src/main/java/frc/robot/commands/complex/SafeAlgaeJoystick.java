@@ -31,7 +31,12 @@ public class SafeAlgaeJoystick extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    algaeHandler.pivot(MathUtil.applyDeadband(speed.get(), 0.2));
+    double speedVal = speed.get();
+
+    speedVal = MathUtil.clamp(speedVal, -0.8, 0.8);
+    speedVal = MathUtil.applyDeadband(speedVal, 0.2);
+    
+    algaeHandler.pivot(speedVal);
   }
 
   // Called once the command ends or is interrupted.

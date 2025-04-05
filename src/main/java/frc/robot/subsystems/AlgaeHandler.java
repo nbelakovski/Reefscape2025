@@ -83,7 +83,6 @@ public class AlgaeHandler extends SubsystemBase {
     }
 
     public void pivot(double speed){
-        speed = MathUtil.clamp(speed, -0.5, 0.5);
         jawMotor.set(speed);
     }
 

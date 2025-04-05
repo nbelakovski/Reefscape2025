@@ -145,7 +145,7 @@ public class RobotContainer {
 
 
     // Operator - A - Rotate jaw to Intake Angle
-    new JoystickButton(operatorController, Button.kA.value).whileTrue(new SetJawAngle(MechConstants.JAW_INTAKE_ANGLE).repeatedly());
+    new JoystickButton(operatorController, Button.kA.value).whileTrue(new SetJawAngle(MechConstants.JAW_INTAKE_ANGLE));
 
     //Operator - B - Go to L4, Algae score angle, and spit algae 
     new JoystickButton(operatorController, Button.kB.value).whileTrue(new ElevatorSpitCombo(ElevatorConstants.ELEVATOR_L4).repeatedly());
@@ -169,7 +169,7 @@ public class RobotContainer {
     //---------- ALGAE TONGUE ----------//
 
     // Operator - Y - Eat the Algae
-    new JoystickButton(operatorController, Button.kY.value).whileTrue(new ElevatorJawCombo().repeatedly()); //11.7
+    new JoystickButton(operatorController, Button.kY.value).whileTrue(new ElevatorJawCombo()); //11.7
     //new JoystickButton(operatorController, Button.kY.value).whileTrue(new AlgaeEat());
 
     // Operator - X - Spit out the Algae

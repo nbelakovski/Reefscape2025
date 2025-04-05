@@ -88,6 +88,7 @@ public class AutoPathToBranchScore extends SequentialCommandGroup {
 
       //5. Use Vision to align to a specific tag
       new ParallelDeadlineGroup(
+      
         new WaitCommand(3),
         new DriveToClosestBranch(branchDirection),
         new SetJawAngle(MechConstants.JAW_UP_ANGLE)

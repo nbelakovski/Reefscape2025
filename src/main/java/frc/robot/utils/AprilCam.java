@@ -107,6 +107,7 @@ public class AprilCam {
     public PhotonTrackedTarget getDesiredTarget(int desiredTargetId){
 
         //look at each target in the arraylist of targets
+        if(getTargets() != null){
         for (PhotonTrackedTarget t: getTargets())
         {
             //look for the target with the desired Id
@@ -115,7 +116,9 @@ public class AprilCam {
                 return t;
             }
         }
+    }
         //return null if you can't find the desiredTarget
+        System.out.println("HELPPPPPPPPP");
         return null;
     }
 

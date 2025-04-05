@@ -98,12 +98,14 @@ public final class Constants {
     public static final double TRANSLATE_I = 0;
     public static final double TRANSLATE_D = 0;
 
-    public static final double X_P = 2.5;
+    // p was 2.5 maybe change back
+    public static final double X_P = 2.7;
     public static final double X_I = 0;
     public static final double X_D = 0.8;
-    public static final double X_TOL = Units.inchesToMeters(0.2); //0.0051m
+    public static final double X_TOL = Units.inchesToMeters(0.1); //0.0051m
 
-    public static final double Y_P = 2.5;
+    // p was 2.5 maybe change back
+    public static final double Y_P = 2.7;
     public static final double Y_I = 0;
     public static final double Y_D = 1;
     public static final double Y_TOL = Units.inchesToMeters(0.1); //0.012m
@@ -222,7 +224,7 @@ public final class Constants {
     // Mech Motor Speeds for Buttons
     public static double CORAL_INTAKE_SPEED = 0.25;
     public static double CORAL_RETRACT_SPEED = 0.3;
-    public static double CORAL_SCORE_SPEED = 0.5;
+    public static double CORAL_SCORE_SPEED = 0.4;
     public static double ALGAE_INTAKE_SPEED = 1.0;
 
     // Jaw Angles
@@ -274,7 +276,7 @@ public final class Constants {
     public static Translation3d CAM1_POSITION_OFFSET = new Translation3d(CAM1_X_OFFSET_TO_CENTER, CAM1_Y_OFFSET_TO_CENTER,0.0); // is cam mounted at center? how far back from front of bumper?
     public static Rotation3d CAM1_ANGLE_OFFSET = new Rotation3d(0,0,0); // is cam mounted facing forward, upright? 
 
-    public static final String CAM2_NAME = "SplashyCam2"; 
+    public static final String CAM2_NAME = "Arducam OV9281 USB Camera"; 
     public static double CAM2_X_OFFSET_TO_CENTER = CAM1_X_OFFSET_TO_CENTER;
     public static double CAM2_Y_OFFSET_TO_CENTER = Units.inchesToMeters(6.5);
     public static Translation3d CAM2_POSITION_OFFSET = new Translation3d(CAM2_X_OFFSET_TO_CENTER, CAM2_Y_OFFSET_TO_CENTER,0.0); // is cam mounted at center? how far back from front of bumper?
