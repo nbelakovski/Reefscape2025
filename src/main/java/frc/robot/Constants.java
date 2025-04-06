@@ -202,7 +202,7 @@ public final class Constants {
     public static final double ELEVATOR_MIN = 0;//-3;
     public static final double ELEVATOR_MAX = 100;
 
-    public static final double INTAKE_HEIGHT = 2.8; //2.5;
+    public static final double INTAKE_HEIGHT = 3.4; //2.5;
     public static final double ELEVATOR_L1 = 3;
     public static final double ELEVATOR_L2 = 10.2;
     public static final double ELEVATOR_L3 = 24;

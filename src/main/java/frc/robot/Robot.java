@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.AlgaeHandler;
 import frc.robot.subsystems.Drivetrain;
 
 //import org.littletonrobotics.urcl.URCL;
@@ -73,7 +74,9 @@ public class Robot extends TimedRobot {
   public void disabledInit() {}
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    AlgaeHandler.getInstance().setCoast();
+  }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
@@ -86,7 +89,7 @@ public class Robot extends TimedRobot {
     }
     //AlgaeHandler.getInstance().zeroAngle();
     //Drivetrain.getInstance().resetIMU();
-
+    AlgaeHandler.getInstance().setBrake();
   }
 
   /** This function is called periodically during autonomous. */
@@ -104,6 +107,7 @@ public class Robot extends TimedRobot {
     }
     //Drivetrain.getInstance().navX.setAngleAdjustment(180);
     //Drivetrain.getInstance().resetIMU();
+    AlgaeHandler.getInstance().setBrake();
   }
 
   /** This function is called periodically during operator control. */

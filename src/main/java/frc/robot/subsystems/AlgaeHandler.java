@@ -65,6 +65,18 @@ public class AlgaeHandler extends SubsystemBase {
         return instance;
     }
 
+    public void setCoast(){
+        jawConfig.idleMode(IdleMode.kCoast);
+        //re-configures the sparkmax after changing brake/coast
+        jawMotor.configure(jawConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    }
+
+    public void setBrake(){
+        jawConfig.idleMode(IdleMode.kBrake);
+        //re-configures the sparkmax after changing brake/coast
+        jawMotor.configure(jawConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    }
+
     
     public void spit(){
         tongueMotor.set(MechConstants.ALGAE_INTAKE_SPEED);

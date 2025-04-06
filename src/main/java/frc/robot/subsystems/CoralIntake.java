@@ -66,11 +66,11 @@ public class CoralIntake extends SubsystemBase {
   // Checks if coral is blocking the gap between intake & coral scorer
   //new coral range
   public boolean isGapBlocked(){
-    if(getDistance() > 800 && getDistance() < 1800){
+    if(getDistance() > 1000 && getDistance() < 1800){
       coralInGap = true;
     }
     else{
-      coralInGap = false;
+      coralInGap = false;   
     }
     return coralInGap;
   }
