@@ -229,7 +229,7 @@ public final class Constants {
 
     // Jaw Angles
     public static final double JAW_STARTING_ANGLE = 0;//260;
-    public static final double JAW_INTAKE_ANGLE = -45;
+    public static final double JAW_INTAKE_ANGLE = -34;
     public static final double JAW_UP_ANGLE = -75;//25;
     public static final double JAW_MAX_ANGLE = -80;//25;
     // public static final double JAW_AUTO_ANGLE = 80;

@@ -23,21 +23,22 @@ public class LEDStrip extends SubsystemBase {
     public static final double IN_GAP_SCORER = LEDColors.RED_STROBE;
     public static final double INTAKING = LEDColors.WHITE_HEARTBEAT;
     public static final double HAVE_ALGAE = LEDColors.YELLOW; //random colors
+    public static final double SCORE_READY = LEDColors.RAINBOW_PARTY;
 
     // Elevator Heights
-    public static final double L1 = LEDColors.WHITE_HEARTBEAT;
-    public static final double L2 = LEDColors.RED_HEARTBEAT;
-    public static final double L3 = LEDColors.MEDIUM_HEARTBEAT;
-    public static final double L4 = LEDColors.MEDIUM_HEARTBEAT_2;
+    public static final double L1 = LEDColors.HOT_PINK;
+    public static final double L2 = LEDColors.HOT_PINK;
+    public static final double L3 = LEDColors.HOT_PINK;
+    public static final double L4 = LEDColors.HOT_PINK;
     public static final double INTAKE_HEIGHT = LEDColors.WHITE_STROBE;
     public static final double MIN_HEIGHT = LEDColors.RED;
     public static final double MAX_HEIGHT = LEDColors.RED;
 
     // Drive Colors
-    public static final double ALIGNED = LEDColors.RAINBOW_PARTY;
+    //public static final double ALIGNED = LEDColors.RAINBOW_PARTY;
 
     private static int topCurrentPriority = 0;
-    private static double[] patternArray = new double[4];
+    private static double[] patternArray = new double[5];
 
     
     // LEDStrip Singleton -- ensures only 1 LEDStrip is constructed
@@ -54,6 +55,7 @@ public class LEDStrip extends SubsystemBase {
         ELEVATOR(1),
         CORAL(2),
         ALGAE(3),
+        ELCORAL(4),
         DEFAULT(0);
 
         private int priority;

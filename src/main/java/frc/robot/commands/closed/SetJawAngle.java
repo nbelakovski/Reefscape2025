@@ -20,7 +20,7 @@ public class SetJawAngle extends Command {
         // Use addRequirements() here to declare subsystem dependencies.
         handler = AlgaeHandler.getInstance();
         // p value was 0.02 may need to change back
-        controller = new PIDController(0.625,0,0.05);
+        controller = new PIDController(0.15, 0, 0.02);
 
         controller.setSetpoint(desiredAngle);
         controller.setTolerance(2);

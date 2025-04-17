@@ -96,6 +96,10 @@ public class RobotContainer {
     new DPad(driverController,180).whileTrue(new DriveToClosestBranch("CENTER"));
     new DPad(driverController,90).whileTrue(new DriveToClosestBranch("RIGHT")); 
 
+    new JoystickButton(driverController, Button.kLeftBumper.value).whileTrue(new DriveToClosestBranch("LEFT")); 
+    new JoystickButton(driverController, Button.kRightBumper.value).whileTrue(new DriveToClosestBranch("RIGHT")); 
+
+
 
 
     //---------- ELEVATOR ----------//

@@ -188,23 +188,43 @@ public class Elevator extends SubsystemBase {
     // if (instance.getBotLimit()) {
     //   LEDStrip.request(SubsystemPriority.ELEVATOR, LEDStrip.MIN_HEIGHT);
     // }
+    
+    if (instance.getPosition() > 2 && instance.getPosition() < 3.5){
+      if(CoralScorer.getInstance().hasCoral()) {
+        LEDStrip.request(SubsystemPriority.ELCORAL, LEDStrip.SCORE_READY);
+      }
 
-    if (instance.getPosition() > 1.5 && instance.getPosition() < 2.1){
       LEDStrip.request(SubsystemPriority.ELEVATOR, LEDStrip.INTAKE_HEIGHT);
     }
-    else if (instance.getPosition() == ElevatorConstants.ELEVATOR_L1) {
+    else if (instance.getPosition() > ElevatorConstants.ELEVATOR_L1 - 1 && instance.getPosition() < ElevatorConstants.ELEVATOR_L1 + 1) {
+      if(CoralScorer.getInstance().hasCoral()) {
+        LEDStrip.request(SubsystemPriority.ELCORAL, LEDStrip.SCORE_READY);
+      }
+
       LEDStrip.request(SubsystemPriority.ELEVATOR, LEDStrip.L1);
     }
     
-    else if (instance.getPosition() == ElevatorConstants.ELEVATOR_L2) {
+    else if (instance.getPosition() > ElevatorConstants.ELEVATOR_L2 - 1 && instance.getPosition() < ElevatorConstants.ELEVATOR_L2 + 1) {
+      if(CoralScorer.getInstance().hasCoral()) {
+        LEDStrip.request(SubsystemPriority.ELCORAL, LEDStrip.SCORE_READY);
+      }
+
       LEDStrip.request(SubsystemPriority.ELEVATOR, LEDStrip.L2);
     }
 
-    else if (instance.getPosition() == ElevatorConstants.ELEVATOR_L3) {
+    else if (instance.getPosition() > ElevatorConstants.ELEVATOR_L3 - 1 && instance.getPosition() < ElevatorConstants.ELEVATOR_L3 + 1) {
+      if(CoralScorer.getInstance().hasCoral()) {
+        LEDStrip.request(SubsystemPriority.ELCORAL, LEDStrip.SCORE_READY);
+      }
+
       LEDStrip.request(SubsystemPriority.ELEVATOR, LEDStrip.L3);
     }
 
-    else if (instance.getPosition() == ElevatorConstants.ELEVATOR_L4) {
+    else if (instance.getPosition() > ElevatorConstants.ELEVATOR_L4 - 1 && instance.getPosition() < ElevatorConstants.ELEVATOR_L4 + 1) {
+      if(CoralScorer.getInstance().hasCoral()) {
+        LEDStrip.request(SubsystemPriority.ELCORAL, LEDStrip.SCORE_READY);
+      }
+
       LEDStrip.request(SubsystemPriority.ELEVATOR, LEDStrip.L4);
     }
 
