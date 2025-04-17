@@ -44,13 +44,13 @@ public final class Constants {
 
     // Sensor Offsets for the radian difference between the physical sensor orientation and the calibrated swerve direction (from REV Hardware Client)
     public static final double FL_SENSOR_OFFSET = 0.6419399;    
-    public static final double FR_SENSOR_OFFSET = 0.0506888; 
+    public static final double FR_SENSOR_OFFSET = 0.8829775; 
     public static final double BR_SENSOR_OFFSET = 0.6507399; 
     public static final double BL_SENSOR_OFFSET = 0.5267535;
 
     // Angular Offsets for the radian difference between the calibrated swerve and desired forward direction (based off REV calibration tool)
     public static final double FL_ANGULAR_OFFSET = Math.PI / 2;
-    public static final double FR_ANGULAR_OFFSET = 0;
+    public static final double FR_ANGULAR_OFFSET = Math.PI;
     public static final double BR_ANGULAR_OFFSET = 3* Math.PI / 2;
     public static final double BL_ANGULAR_OFFSET = 0;
  
@@ -202,8 +202,8 @@ public final class Constants {
     public static final double ELEVATOR_MIN = 0;//-3;
     public static final double ELEVATOR_MAX = 100;
 
-    public static final double INTAKE_HEIGHT = 3.4; //2.5;
-    public static final double ELEVATOR_L1 = 3;
+    public static final double INTAKE_HEIGHT = 3.2; //3.4;
+    public static final double ELEVATOR_L1 = 6;
     public static final double ELEVATOR_L2 = 10.2;
     public static final double ELEVATOR_L3 = 24;
     public static final double ELEVATOR_L4 = 46;
