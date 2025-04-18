@@ -82,19 +82,10 @@ public class RobotContainer {
     // Driver - X - Toggle FieldCentric on/off
     new JoystickButton(driverController,Button.kX.value).toggleOnTrue(new ToggleFieldCentric());
 
-    // Driver - DPAD - Align to a Visible Branch on the Reef
-    // new DPad(driverController,180).whileTrue(new TurnToAnglePID(180));
-    // new DPad(driverController,270).whileTrue(newnToAnglePID(90));
-    // new DPad(driverController,0).whileTrue(new TurnToAnglePID(0));
-    // new DPad(driverController,90).whileTrue(new TurnToAnglePID(270));
-
     // Driver - DPAD - Align to AprilTag Branch LEFT or RIGHT
-    // int tagId = vision.getClosestId();
-    // int tagId = 21;
-    // int tagId = 5298;
-    new DPad(driverController,270).whileTrue(new DriveToClosestBranch("LEFT"));
-    new DPad(driverController,180).whileTrue(new DriveToClosestBranch("CENTER"));
-    new DPad(driverController,90).whileTrue(new DriveToClosestBranch("RIGHT")); 
+    new Trigger(() -> driverController.getPOV() == 270).whileTrue(new DriveToClosestBranch("LEFT"));
+    new Trigger(() -> driverController.getPOV() == 180).whileTrue(new DriveToClosestBranch("CENTER"));
+    new Trigger(() -> driverController.getPOV() == 90).whileTrue(new DriveToClosestBranch("RIGHT")); 
 
     new JoystickButton(driverController, Button.kLeftBumper.value).whileTrue(new DriveToClosestBranch("LEFT")); 
     new JoystickButton(driverController, Button.kRightBumper.value).whileTrue(new DriveToClosestBranch("RIGHT")); 
@@ -113,10 +104,10 @@ public class RobotContainer {
     ));
 
     //Operator - DPAD - Elevator to L1, L2, L3, L4 heights
-    new DPad(operatorController,180).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L1));
-    new DPad(operatorController,270).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L2));
-    new DPad(operatorController,0).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L3));
-    new DPad(operatorController,90).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L4));
+    new Trigger(() -> operatorController.getPOV() == 180).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L1));
+    new Trigger(() -> operatorController.getPOV() == 270).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L2));
+    new Trigger(() -> operatorController.getPOV() == 0).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L3));
+    new Trigger(() -> operatorController.getPOV() == 90).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L4));
     
     //---------- CORAL INTAKE/ SCORING ----------//
 
@@ -140,10 +131,6 @@ public class RobotContainer {
       () -> operatorController.getRawAxis(1)
     ));
 
-    // Driver - DPAD - manually move Jaw up & down
-    // new DPad(driverController, 0).whileTrue(new SafeAlgaeJoystick(() -> 0.5));
-    // new DPad(driverController, 180).whileTrue(new SafeAlgaeJoystick(() -> -0.5));
-
     // Driver - ?? - Zero Angle of Algae Handler
     // new TriggerButton(driverController, 2).whileTrue(new ZeroAlgae());
 
@@ -165,10 +152,6 @@ public class RobotContainer {
     // Driver - B - Snap Elevator & Jaw to prep for Algae on L2
     //new JoystickButton(driverController, Button.kB.value).whileTrue(new ElevatorJawCombo(ElevatorConstants.ELEVATOR_ALGAE_L2));
 
-    // Driver - DPAD - Set Jaw angles
-    //new DPad(driverController, 0).whileTrue(new SetJawAngle(MechConstants.JAW_INTAKE_ANGLE));
-    //new DPad(driverController, 180).whileTrue(new SetJawAngle(MechConstants.JAW_CORAL_STOP_ANGLE));
-
 
     //---------- ALGAE TONGUE ----------//
 
@@ -180,24 +163,6 @@ public class RobotContainer {
     new JoystickButton(operatorController, Button.kX.value).whileTrue(new AlgaeSpit());
 
     new JoystickButton(operatorController, Button.kRightBumper.value).whileTrue(new AlgaeEat());
-
-
-    //---------- SYSID  ----------//
-
-    // SYSID - X,Y,A,B - Drive Tests
-    new JoystickButton(sysIdController, Button.kX.value).whileTrue(Drivetrain.getInstance().transQ1);
-    new JoystickButton(sysIdController, Button.kY.value).whileTrue(Drivetrain.getInstance().transQ2);
-    new JoystickButton(sysIdController, Button.kA.value).whileTrue(Drivetrain.getInstance().transD1);
-    new JoystickButton(sysIdController, Button.kB.value).whileTrue(Drivetrain.getInstance().transD2);
-
-    // SYSID - D-PAD - Rot Tests
-    new DPad(sysIdController,180).whileTrue(Drivetrain.getInstance().rotQ1);
-    new DPad(sysIdController,270).whileTrue(Drivetrain.getInstance().rotQ2);
-    new DPad(sysIdController,90).whileTrue(Drivetrain.getInstance().rotD1);
-    new DPad(sysIdController,0).whileTrue(Drivetrain.getInstance().rotD2);
-
-
-
   }
 
 public void autoChooserInit() {
