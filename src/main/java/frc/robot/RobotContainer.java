@@ -112,16 +112,16 @@ public class RobotContainer {
     //---------- CORAL INTAKE/ SCORING ----------//
 
     // Driver - RT - Move Elevator in position to Intake + Spin Intake wheels
-    new TriggerButton(driverController, 3).whileTrue(new ElevatorIntakeCombo());        //RT 
+    new Trigger(() -> (driverController.getRawAxis(3) > 0.7)).whileTrue(new ElevatorIntakeCombo());        //RT 
   
     // Operator - LT - Intake Coral with sensors
-    new TriggerButton(operatorController, 2).whileTrue(new CoralInSafe());        //LT    
+    new Trigger(() -> (operatorController.getRawAxis(2) > 0.7)).whileTrue(new CoralInSafe());        //LT    
     
     // Operator - LB - Retract Coral if hanging too far out
     new JoystickButton(operatorController, Button.kLeftBumper.value).whileTrue(new CoralRetract()); //LB
     
     //Operator - RT - Score Coral
-    new TriggerButton(operatorController, 3).whileTrue(new CoralScore()); //RT
+    new Trigger(() -> (operatorController.getRawAxis(3) > 0.7)).whileTrue(new CoralScore()); //RT
     
 
     //---------- ALGAE JAW ----------//
@@ -130,9 +130,6 @@ public class RobotContainer {
     AlgaeHandler.getInstance().setDefaultCommand(new SafeAlgaeJoystick(
       () -> operatorController.getRawAxis(1)
     ));
-
-    // Driver - ?? - Zero Angle of Algae Handler
-    // new TriggerButton(driverController, 2).whileTrue(new ZeroAlgae());
 
 
     // Operator - A - Rotate jaw to Intake Angle
