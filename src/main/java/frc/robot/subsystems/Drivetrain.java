@@ -22,14 +22,10 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import static edu.wpi.first.units.Units.Volts;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,14 +52,6 @@ public class Drivetrain extends SubsystemBase {
 
   public AHRS navX;   // The gyro sensor
 
-  // Slew rate filter variables for controlling lateral acceleration
-  // private double m_currentRotSpeed = 0.0;
-  // private double m_currentTranslationDir = 0.0;
-  // private double m_currentTranslationMag = 0.0;
-  // private SlewRateLimiter m_magLimiter = new SlewRateLimiter(SwerveConstants.kMagnitudeSlewRate);
-  // private SlewRateLimiter m_rotLimiter = new SlewRateLimiter(SwerveConstants.kRotationalSlewRate);
-  // private double m_prevTime = WPIUtilJNI.now() * 1e-6;
-
   //Fields that control 3 dimensions of drive motion
   private double xSpeed = 0.0;
   private double ySpeed = 0.0;
@@ -74,17 +62,6 @@ public class Drivetrain extends SubsystemBase {
   private final SwerveDrivePoseEstimator poseEstimator;
 
   private final Field2d field;
-
-
-  // SysID Commands
-  public Command transQ1;
-  public Command transQ2;
-  public Command transD1;
-  public Command transD2;
-  public Command rotQ1;
-  public Command rotQ2;
-  public Command rotD1;
-  public Command rotD2;
 
 
   /** Drivetrain Constructor */
@@ -102,16 +79,11 @@ public class Drivetrain extends SubsystemBase {
     modulesList.add(backL);
     modulesList.add(backR);
     
-    //assign the NavX to be our sensor for rotation
-    //*****no worky figure out why*******
-    //this.navX = new AHRS(SPI.Port.kMXP);
     this.navX = new AHRS(NavXComType.kMXP_SPI);
 
     this.driveKinematics = SwerveConstants.DRIVE_KINEMATICS;
 
     this.field = new Field2d();
-    this.fieldCentric = true;
-    this.allianceCentric = true;
     
     var stateStdDevs = VecBuilder.fill(0.1, 0.1, 0.1);
     var visionStdDevs = VecBuilder.fill(1, 1, 1);
@@ -125,8 +97,6 @@ public class Drivetrain extends SubsystemBase {
       visionStdDevs);
 
     autoConfig();
-    sysIdConfig();
-
   }
 
   //PathPlanner Drive Controller
@@ -171,53 +141,6 @@ public class Drivetrain extends SubsystemBase {
     );
    
   }
-
-  private void sysIdConfig(){
-    
-    // Create the SysId routines
-    var translationSysIdRoutine = new SysIdRoutine(
-      new SysIdRoutine.Config(),
-      new SysIdRoutine.Mechanism(
-        volts ->
-        modulesList.forEach(
-            m -> m.updateInputs(Rotation2d.fromRadians(0), volts.in(Volts))),
-        // (voltage) -> this.runVolts(voltage.in(Volts)),
-        null, // No log consumer, since data is recorded by URCL
-        this
-      )
-    );
-    var rotationalSysIdRoutine = new SysIdRoutine(
-      new SysIdRoutine.Config(),
-      new SysIdRoutine.Mechanism(
-        volts -> {
-          this.frontL.updateInputs(
-            Rotation2d.fromRadians((3 * Math.PI / 4) + SwerveConstants.FL_ANGULAR_OFFSET), volts.in(Volts));
-        this.frontR.updateInputs(
-            Rotation2d.fromRadians((Math.PI / 4) + SwerveConstants.FR_ANGULAR_OFFSET), volts.in(Volts));
-        this.backL.updateInputs(
-            Rotation2d.fromRadians((-3 * Math.PI / 4) + SwerveConstants.BL_ANGULAR_OFFSET), volts.in(Volts));
-        this.backR.updateInputs(
-            Rotation2d.fromRadians((-Math.PI / 4) + SwerveConstants.BR_ANGULAR_OFFSET), volts.in(Volts));
-        },
-        // (voltage) -> this.runVolts(voltage.in(Volts)),
-        null, // No log consumer, since data is recorded by URCL
-        this
-      )
-    );
-
-    // SysID methods below return Command objects
-    transQ1 = translationSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
-    transQ2 = translationSysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
-    transD1 = translationSysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
-    transD2 = translationSysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
-
-    rotQ1 = rotationalSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
-    rotQ2 = rotationalSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
-    rotD1 = rotationalSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
-    rotD2 = rotationalSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
-
-  }
-
 
   // Drivetrain Singleton - ensures only 1 instance of Drivetrain is constructed
   public static Drivetrain getInstance() {
@@ -457,10 +380,6 @@ public class Drivetrain extends SubsystemBase {
 
   public void updatePoseFromOdometry() {
     poseEstimator.update(getRobotHeading(), getSwerveModulePos());
-  }
-
-  public Field2d getField() {
-    return field;
   }
 
   public SwerveDriveKinematics getKinematics() {

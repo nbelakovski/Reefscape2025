@@ -11,9 +11,7 @@ import frc.robot.commands.combos.*;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -33,13 +31,6 @@ public class RobotContainer {
 
   private static final XboxController driverController = new XboxController(Ports.DRIVER_CONTROLLER);
   private static final XboxController operatorController = new XboxController(Ports.OPERATOR_CONTROLLER);
-  private static final XboxController sysIdController = new XboxController(2);
-  private static final XboxController testController = new XboxController(3);
-
-  private Vision vision = Vision.getInstance();
-  private Drivetrain drivetrain = Drivetrain.getInstance();
-  private AlgaeHandler algae = AlgaeHandler.getInstance();
-  private LEDStrip led = LEDStrip.getInstance();
 
   private SendableChooser<Command> autoChooser;
 
@@ -89,9 +80,6 @@ public class RobotContainer {
 
     new JoystickButton(driverController, Button.kLeftBumper.value).whileTrue(new DriveToClosestBranch("LEFT")); 
     new JoystickButton(driverController, Button.kRightBumper.value).whileTrue(new DriveToClosestBranch("RIGHT")); 
-
-
-
 
     //---------- ELEVATOR ----------//
 
@@ -196,18 +184,7 @@ public void autoChooserInit() {
 
 }
 
-
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
     return autoChooser.getSelected();
-    //return new DriveToBranchPID(21, "RIGHT");
   }
 }
-
-
-
