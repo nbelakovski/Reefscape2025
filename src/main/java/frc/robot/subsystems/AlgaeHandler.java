@@ -7,7 +7,6 @@ import frc.robot.utils.Ports;
 import frc.robot.Constants.MechConstants;
 
 import com.revrobotics.spark.SparkMax;
-// import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -17,9 +16,6 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.DigitalInput;
 
 public class AlgaeHandler extends SubsystemBase {
 
@@ -28,10 +24,6 @@ public class AlgaeHandler extends SubsystemBase {
     private SparkMaxConfig tongueConfig;
     private SparkMax jawMotor;
     private SparkMaxConfig jawConfig;
-    private Timer timer;
-    private DigitalInput touchSensor;
-    private boolean haveAlgae = false;
-    //private AbsoluteEncoder encoder;
     private RelativeEncoder jawEncoder;
 
     // AlgaeHandler Constructor
@@ -52,9 +44,6 @@ public class AlgaeHandler extends SubsystemBase {
         tongueConfig = new SparkMaxConfig();
         tongueConfig.idleMode(IdleMode.kBrake);
         tongueMotor.configure(tongueConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
-        touchSensor = new DigitalInput(Ports.DIGITAL_ALGAEHANDLER_PORT);
-
     }
 
     // AlgaeHandler Singleton - ensures AlgaeHandler is only constructed once
@@ -102,15 +91,6 @@ public class AlgaeHandler extends SubsystemBase {
         jawMotor.set(0);   
     }
 
-    public boolean checkAlgae() {
-        if (touchSensor.get()) {
-            haveAlgae = true;
-        } else {
-            haveAlgae = false;
-        }
-        return haveAlgae;
-    }
-
     public double getAngle(){
         //return encoder.getPosition()*90/32-2.3;
         return jawEncoder.getPosition();
@@ -119,8 +99,6 @@ public class AlgaeHandler extends SubsystemBase {
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-        SmartDashboard.putBoolean("Touching Algae", haveAlgae);
         SmartDashboard.putNumber("Angle of Jaw", getAngle());
     }
-
 }
