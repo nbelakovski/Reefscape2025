@@ -227,21 +227,6 @@ public class Drivetrain extends SubsystemBase {
     return instance;
   }
 
-  // sets forward/backward motion of robot
-  public void setXSpeed(double xSpeed){
-    this.xSpeed = xSpeed;
-  }
-
-  // sets strafing right/left speed of robot
-  public void setYSpeed(double ySpeed){
-    this.ySpeed = ySpeed;
-  }
-
-  // sets rotation right/left speed of robot
-  public void setRotSpeed(double rotSpeed){
-    this.rotSpeed = rotSpeed;
-  }
-
   // sets whether driving is fieldcentric or not
   public void setFieldCentric(boolean fieldCentric) {
     this.fieldCentric = fieldCentric;

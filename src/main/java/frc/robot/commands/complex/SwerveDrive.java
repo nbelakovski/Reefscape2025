@@ -1,9 +1,7 @@
 package frc.robot.commands.complex;
 
-
 import java.util.function.Supplier;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.Drivetrain;
@@ -12,23 +10,19 @@ import frc.robot.subsystems.Drivetrain;
 public class SwerveDrive extends Command {
 
   private static Drivetrain drivetrain;
-  private Supplier<Double> xSpeed;
-  private Supplier<Double> ySpeed;
-  private Supplier<Double> rotSpeed;
-  private SlewRateLimiter xFilter;
-  private SlewRateLimiter yFilter;
-  private Supplier<Boolean> fieldReset;
+  private Supplier<Double> xSpeedSupplier;
+  private Supplier<Double> ySpeedSupplier;
+  private Supplier<Double> rotSpeedSupplier;
+  private Supplier<Boolean> fieldResetSupplier;
 
   
   /** Creates a new SwerveDrive. */
-  public SwerveDrive(Supplier<Double> xSpeed, Supplier<Double> ySpeed, Supplier<Double> rotSpeed, Supplier<Boolean> fieldReset) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    this.xSpeed = xSpeed;
-    this.ySpeed = ySpeed;
-    this.rotSpeed = rotSpeed;
-    this.fieldReset = fieldReset;
-    xFilter = new SlewRateLimiter(1.2);
-    yFilter = new SlewRateLimiter(1.2);
+  public SwerveDrive(Supplier<Double> xSpeedSupplier, Supplier<Double> ySpeedSupplier,
+    Supplier<Double> rotSpeedSupplier, Supplier<Boolean> fieldResetSupplier) {
+    this.xSpeedSupplier = xSpeedSupplier;
+    this.ySpeedSupplier = ySpeedSupplier;
+    this.rotSpeedSupplier = rotSpeedSupplier;
+    this.fieldResetSupplier = fieldResetSupplier;
 
 
     drivetrain = Drivetrain.getInstance();
@@ -45,24 +39,23 @@ public class SwerveDrive extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    drivetrain.allianceCentric = true;
-    
-    drivetrain.setXSpeed(MathUtil.applyDeadband(xSpeed.get(), 0.1) * SwerveConstants.TOP_SPEED);
-    drivetrain.setYSpeed(MathUtil.applyDeadband(ySpeed.get(), 0.1) * SwerveConstants.TOP_SPEED);
-    drivetrain.setRotSpeed(MathUtil.applyDeadband(rotSpeed.get(), 0.1) * SwerveConstants.TOP_ANGULAR_SPEED);
+    double xSpeed = xSpeedSupplier.get();
+    double xSpeedDeadbanded = MathUtil.applyDeadband(xSpeed, 0.1);
+    double xSpeedScaled = xSpeedDeadbanded * SwerveConstants.TOP_SPEED;
 
-    // drivetrain.move(
-    //   MathUtil.applyDeadband(xSpeed.get(), 0.1), 
-    //   MathUtil.applyDeadband(ySpeed.get(), 0.1), 
-    //   MathUtil.applyDeadband(rotSpeed.get(), 0.1), 
-    //   true);
+    double ySpeed = ySpeedSupplier.get();
+    double ySpeedDeadbanded = MathUtil.applyDeadband(ySpeed, 0.1);
+    double ySpeedScaled = ySpeedDeadbanded * SwerveConstants.TOP_SPEED;
 
-      // xFilter.calculate(MathUtil.applyDeadband(xSpeed.get(), 0.1)), 
-      // yFilter.calculate(MathUtil.applyDeadband(ySpeed.get(), 0.1)),
+    double rotSpeed = rotSpeedSupplier.get();
+    double rotSpeedDeadbanded = MathUtil.applyDeadband(rotSpeed, 0.1);
+    double rotSpeedScaled = rotSpeedDeadbanded * SwerveConstants.TOP_ANGULAR_SPEED;
+
+    drivetrain.setDrive(xSpeedScaled, ySpeedScaled, rotSpeedScaled, true, true);
     
-      if(fieldReset.get()) {
-        drivetrain.zeroRobotHeading();
-      }
+    if(fieldResetSupplier.get()) {
+      drivetrain.zeroRobotHeading();
+    }
   }
 
   // Called once the command ends or is interrupted.
