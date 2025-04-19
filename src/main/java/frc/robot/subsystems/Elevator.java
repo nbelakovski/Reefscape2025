@@ -27,9 +27,9 @@ public class Elevator extends SubsystemBase {
   private RelativeEncoder rightEncoder;
   private SparkMaxConfig leftMotorConfig;
   private SparkMaxConfig rightMotorConfig;
+  // I don't see us using the limit switches, are they real?
   private DigitalInput topLimitSwitch;
   private DigitalInput bottomLimitSwitch;
-  private boolean ignore;
 
 
   // Elevator Constructor
@@ -45,8 +45,6 @@ public class Elevator extends SubsystemBase {
     leftEncoder.setPosition(0);
     topLimitSwitch = new DigitalInput(Ports.DIGITAL_TOP_LIMIT_PORT);
     bottomLimitSwitch = new DigitalInput(Ports.DIGITAL_BOTTOM_LIMIT_PORT);
-
-    ignore = true;
     
     rightMotorConfig.inverted(ElevatorConstants.RIGHT_ELEVATOR_INVERTED);
   
@@ -72,6 +70,9 @@ public class Elevator extends SubsystemBase {
         getPosition() <= ElevatorConstants.ELEVATOR_MIN ) {
       speed = 0;
     }
+    if (CoralIntake.getInstance().isGapBlocked() && getPosition() < 3) {
+      speed = 0;
+    }
 
     speed = MathUtil.clamp(speed, -0.8, 0.8);
     elevatorLeftMotor.set(speed);
@@ -84,26 +85,6 @@ public class Elevator extends SubsystemBase {
   public double getPosition() {
     double avg = (leftEncoder.getPosition() + -rightEncoder.getPosition()) / 2;
     return avg;
-  }
-
-  // Stops the elevator if a coral is stuck!
-  public boolean coralGapStop(){
-    if(!ignore() && CoralIntake.getInstance().isGapBlocked()){
-      setSpeed(0);
-      return true;
-    }
-    return false;
-  
-  }
-
-  // Checks if it should ignore the gap sensor if the elevator is above the intake height
-  public boolean ignore() {
-    if ((getPosition() > 3)) {
-      return true;
-    } else {
-      ignore = false;
-      return false;
-    }
   }
   
   // Gets the value of the top limit switch
@@ -133,65 +114,40 @@ public class Elevator extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-
-    ignore();
-
     SmartDashboard.putNumber("elevator position", getPosition());
     SmartDashboard.putNumber("left elevator position", leftEncoder.getPosition());
     SmartDashboard.putNumber("right elevator position", -rightEncoder.getPosition());
     SmartDashboard.putBoolean("Top Limit", getTopLimit());
     SmartDashboard.putBoolean("Bottom Limit", getBotLimit());
-    SmartDashboard.putBoolean("coral stop", coralGapStop());
-    SmartDashboard.putBoolean("ignore", ignore());
 
-    // if (instance.getBotLimit()) {
-    //   LEDStrip.request(SubsystemPriority.ELEVATOR, LEDStrip.MIN_HEIGHT);
-    // }
+    boolean hasCoral = CoralScorer.getInstance().hasCoral();
+    boolean nearIntake = getPosition() > 2 && getPosition() < 3.5;
+    boolean nearL1 = (getPosition() > ElevatorConstants.ELEVATOR_L1 - 1 && getPosition() < ElevatorConstants.ELEVATOR_L1 + 1);
+    boolean nearL2 = (getPosition() > ElevatorConstants.ELEVATOR_L2 - 1 && getPosition() < ElevatorConstants.ELEVATOR_L2 + 1);
+    boolean nearL3 = (getPosition() > ElevatorConstants.ELEVATOR_L3 - 1 && getPosition() < ElevatorConstants.ELEVATOR_L3 + 1);
+    boolean nearL4 = (getPosition() > ElevatorConstants.ELEVATOR_L4 - 1 && getPosition() < ElevatorConstants.ELEVATOR_L4 + 1);
+    boolean nearSomething = nearIntake || nearL1 || nearL2 || nearL3 || nearL4;
+    if (nearSomething && hasCoral) {
+      LEDStrip.request(SubsystemPriority.ELCORAL, LEDStrip.SCORE_READY);
+    }
     
-    if (instance.getPosition() > 2 && instance.getPosition() < 3.5){
-      if(CoralScorer.getInstance().hasCoral()) {
-        LEDStrip.request(SubsystemPriority.ELCORAL, LEDStrip.SCORE_READY);
-      }
-
+    if (nearIntake){
       LEDStrip.request(SubsystemPriority.ELEVATOR, LEDStrip.INTAKE_HEIGHT);
     }
-    else if (instance.getPosition() > ElevatorConstants.ELEVATOR_L1 - 1 && instance.getPosition() < ElevatorConstants.ELEVATOR_L1 + 1) {
-      if(CoralScorer.getInstance().hasCoral()) {
-        LEDStrip.request(SubsystemPriority.ELCORAL, LEDStrip.SCORE_READY);
-      }
-
+    else if (nearL1) {
       LEDStrip.request(SubsystemPriority.ELEVATOR, LEDStrip.L1);
     }
-    
-    else if (instance.getPosition() > ElevatorConstants.ELEVATOR_L2 - 1 && instance.getPosition() < ElevatorConstants.ELEVATOR_L2 + 1) {
-      if(CoralScorer.getInstance().hasCoral()) {
-        LEDStrip.request(SubsystemPriority.ELCORAL, LEDStrip.SCORE_READY);
-      }
-
+    else if (nearL2) {
       LEDStrip.request(SubsystemPriority.ELEVATOR, LEDStrip.L2);
     }
-
-    else if (instance.getPosition() > ElevatorConstants.ELEVATOR_L3 - 1 && instance.getPosition() < ElevatorConstants.ELEVATOR_L3 + 1) {
-      if(CoralScorer.getInstance().hasCoral()) {
-        LEDStrip.request(SubsystemPriority.ELCORAL, LEDStrip.SCORE_READY);
-      }
-
+    else if (nearL3) {
       LEDStrip.request(SubsystemPriority.ELEVATOR, LEDStrip.L3);
     }
-
-    else if (instance.getPosition() > ElevatorConstants.ELEVATOR_L4 - 1 && instance.getPosition() < ElevatorConstants.ELEVATOR_L4 + 1) {
-      if(CoralScorer.getInstance().hasCoral()) {
-        LEDStrip.request(SubsystemPriority.ELCORAL, LEDStrip.SCORE_READY);
-      }
-
+    else if (nearL4) {
       LEDStrip.request(SubsystemPriority.ELEVATOR, LEDStrip.L4);
     }
-
-    // else if (instance.getTopLimit()) {
-    //   LEDStrip.request(SubsystemPriority.ELEVATOR, LEDStrip.MAX_HEIGHT);
-    // }
 
   }
 }
 
-//jb ms
+// Authors: jb ms
