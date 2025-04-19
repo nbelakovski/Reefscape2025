@@ -23,24 +23,24 @@ public class SafeDescend extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    elevator.stop();
+    elevator.setSpeed(0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     if(CoralIntake.getInstance().isGapBlocked() && Elevator.getInstance().getPosition() < 15){
-      elevator.stop();
+      elevator.setSpeed(0);
     }
     else{
-      elevator.descend(0.3);
+      elevator.setSpeed(-0.3);
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    elevator.stop();
+    elevator.setSpeed(0);
   }
 
   // Returns true when the command should end.

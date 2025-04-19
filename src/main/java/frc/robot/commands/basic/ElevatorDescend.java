@@ -23,19 +23,19 @@ public class ElevatorDescend extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    elevator.stop();
+    elevator.setSpeed(0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    elevator.descend(0.6);
+    elevator.setSpeed(-0.6);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    elevator.stop();
+    elevator.setSpeed(0);
   }
 
   // Returns true when the command should end.

@@ -24,7 +24,7 @@ public class SafeElevate extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    elevator.stop();
+    elevator.setSpeed(0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -32,17 +32,17 @@ public class SafeElevate extends Command {
   public void execute() {
    
     if(CoralIntake.getInstance().isGapBlocked() && Elevator.getInstance().getPosition() < 15){
-      elevator.stop();
+      elevator.setSpeed(0);
     }
     else{
-      elevator.move(0.6);
+      elevator.setSpeed(0.6);
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    elevator.stop();
+    elevator.setSpeed(0);
     
   }
 

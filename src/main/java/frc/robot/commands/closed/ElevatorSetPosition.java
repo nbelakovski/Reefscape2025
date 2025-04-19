@@ -39,7 +39,7 @@ public class ElevatorSetPosition extends Command {
   @Override
   public void initialize() {
     controller.reset();
-    elevator.stop();
+    elevator.setSpeed(0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -48,10 +48,10 @@ public class ElevatorSetPosition extends Command {
     double speed = controller.calculate(elevator.getPosition());
 
     if(elevator.coralGapStop() && !(setpoint == ElevatorConstants.INTAKE_HEIGHT)){
-      elevator.stop();
+      elevator.setSpeed(0);
     }
     else{
-      elevator.move(speed);
+      elevator.setSpeed(speed);
     }
     
 
@@ -69,7 +69,7 @@ public class ElevatorSetPosition extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    elevator.stop();
+    elevator.setSpeed(0);
   }
 
   // Returns true when the command should end.

@@ -67,55 +67,15 @@ public class Elevator extends SubsystemBase {
   }
 
   // Primary method to move the elevator up & down
-  public void move(double speed){
+  public void setSpeed(double speed){
+    if (getPosition() >= ElevatorConstants.ELEVATOR_MAX ||
+        getPosition() <= ElevatorConstants.ELEVATOR_MIN ) {
+      speed = 0;
+    }
 
     speed = MathUtil.clamp(speed, -0.8, 0.8);
-
-    if(speed > 0){
-      elevate(speed);
-    }
-    else if(speed < 0){
-      descend(-speed);
-    }
-    else{
-      stop();
-    }
-  }
-  
-
-  // Manually move elevator up
-  public void elevate(double speed){
-    //|| getTopLimit()
-    if (getPosition() >= ElevatorConstants.ELEVATOR_MAX ) {
-      elevatorRightMotor.set(0);
-      elevatorLeftMotor.set(0);
-    }
-
-     else {
-      elevatorLeftMotor.set(speed);
-      elevatorRightMotor.set(-speed);
-     }
-
-  }
-  
-  // Manually move elevator down
-  public void descend(double speed){
-    //|| getBotLimit()
-    if (getPosition() <= ElevatorConstants.ELEVATOR_MIN ) {
-      elevatorLeftMotor.set(0);
-      elevatorRightMotor.set(0);
-    }
-
-    else {
-      elevatorRightMotor.set(speed);
-      elevatorLeftMotor.set(-speed);
-    }
-    
-  }  
-
-  public void stop(){
-    elevatorLeftMotor.set(0);
-    elevatorRightMotor.set(0);
+    elevatorLeftMotor.set(speed);
+    elevatorRightMotor.set(-speed);
   }
 
   //----------------- SENSOR METHODS -----------------//
@@ -129,8 +89,7 @@ public class Elevator extends SubsystemBase {
   // Stops the elevator if a coral is stuck!
   public boolean coralGapStop(){
     if(!ignore() && CoralIntake.getInstance().isGapBlocked()){
-      elevatorLeftMotor.set(0);
-      elevatorRightMotor.set(0);
+      setSpeed(0);
       return true;
     }
     return false;
