@@ -4,11 +4,8 @@
 
 package frc.robot.commands.closed;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.ElevatorConstants;
-import frc.robot.Constants.MechConstants;
 import frc.robot.subsystems.Elevator;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
@@ -16,10 +13,7 @@ public class ElevatorSetPosition extends Command {
 
   private static Elevator elevator;
   private PIDController controller;
-  private boolean finished;
-  private double setpoint;
 
-  
   /** Creates a new ElevatorSetPositionNew. */
   public ElevatorSetPosition(double desiredPosition) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -29,9 +23,6 @@ public class ElevatorSetPosition extends Command {
 
     controller.setSetpoint(desiredPosition);
     controller.setTolerance(0.1);
-
-    setpoint = desiredPosition;
-    finished = false;
     addRequirements(elevator);
   }
 
@@ -46,24 +37,7 @@ public class ElevatorSetPosition extends Command {
   @Override
   public void execute() {
     double speed = controller.calculate(elevator.getPosition());
-
-    if(elevator.coralGapStop() && !(setpoint == ElevatorConstants.INTAKE_HEIGHT)){
-      elevator.setSpeed(0);
-    }
-    else{
-      elevator.setSpeed(speed);
-    }
-    
-
-    // if (setpoint == ElevatorConstants.ELEVATOR_L4 && (controller.getError() < 2 && controller.getError() > -2)) {
-    //   finished = true;
-    // }
-    // else if (controller.getError() < 0.5 && controller.getError() > -0.5) {
-    //   finished = true;
-    // }
-    // else {
-    //   finished = false;
-    // }
+    elevator.setSpeed(speed);
   }
 
   // Called once the command ends or is interrupted.

@@ -29,12 +29,7 @@ public class SafeElevatorJoystick extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(elevator.coralGapStop()){
-      elevator.setSpeed(0);
-    }
-    else{
-      elevator.setSpeed(MathUtil.applyDeadband(-speedSupplier.get(), 0.2));
-    }   
+    elevator.setSpeed(MathUtil.applyDeadband(-speedSupplier.get(), 0.2)); 
   }
 
   // Called once the command ends or is interrupted.
