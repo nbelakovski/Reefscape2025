@@ -64,6 +64,15 @@ public class AlgaeHandler extends SubsystemBase {
             instance);
     }
 
+    public FunctionalCommand spitCommand() {
+        return new FunctionalCommand(
+            () -> this.stop(),
+            () -> this.spit(),
+            (interrupted) -> this.stop(),
+            () -> false,
+            instance);
+    }
+
     public void setCoast(){
         jawConfig.idleMode(IdleMode.kCoast);
         //re-configures the sparkmax after changing brake/coast

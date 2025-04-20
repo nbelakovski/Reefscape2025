@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.MechConstants;
-import frc.robot.commands.basic.CoralRetract;
 import frc.robot.commands.basic.CoralScore;
 import frc.robot.commands.closed.DriveToPeg;
 import frc.robot.commands.closed.ElevatorSetPosition;
