@@ -54,21 +54,9 @@ public class AprilCam {
         this.photonPoseEstimator = new PhotonPoseEstimator(FieldConstants.aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, camOffset);
      }
 
-     // Constructor 2: simple version
-    public AprilCam(String name) {
-        this(name,new Translation3d(), new Rotation3d());
-    }
-
 
     public void update() {
         this.results = camera.getAllUnreadResults();
-
-        // SmartDashboard.putNumber("X", getX());
-        // SmartDashboard.putNumber("Y", getY());
-        // SmartDashboard.putNumber("Z", getZ());
-        // for (int i = 0; i < getTargets().size(); i++) {
-        //   SmartDashboard.putString("Id" + i, getTargets().get(i).toString());
-        // }
     }
 
     // --------------------- GETTING TARGETS -------------------)------------ //
@@ -299,16 +287,4 @@ public class AprilCam {
         if (!Robot.isSimulation()) return null;
         return visionSim.getDebugField();
     }
-
-    
-    //method that gets the Id of the "best" target, generally not used by our robot
-    // public String getAllTargets(){
-
-    //     Optional<MultiTargetPNPResult> target = result.getMultiTagResult();
-
-    //     return target.get().fiducialIdsUsed.toString();
-    // }
-
-   
-
 }

@@ -146,13 +146,15 @@ public class RobotContainer {
     //---------- ALGAE TONGUE ----------//
 
     // Operator - Y - Eat the Algae
+    Command eatCommand = AlgaeHandler.getInstance().eatCommand();
     new JoystickButton(operatorController, Button.kY.value).whileTrue(new ElevatorJawCombo()); //11.7
-    //new JoystickButton(operatorController, Button.kY.value).whileTrue(new AlgaeEat());
+    //new JoystickButton(operatorController, Button.kY.value).whileTrue(eatCommand);
 
     // Operator - X - Spit out the Algae
-    new JoystickButton(operatorController, Button.kX.value).whileTrue(new AlgaeSpit());
-
-    new JoystickButton(operatorController, Button.kRightBumper.value).whileTrue(new AlgaeEat());
+    Command spitCommand = AlgaeHandler.getInstance().spitCommand();
+    new JoystickButton(operatorController, Button.kX.value).whileTrue(spitCommand);
+    
+    new JoystickButton(operatorController, Button.kRightBumper.value).whileTrue(eatCommand);
   }
 
 public void autoChooserInit() {
