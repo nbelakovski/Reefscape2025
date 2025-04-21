@@ -4,27 +4,14 @@
 
 package frc.robot.commands.combos;
 
-import java.util.function.Supplier;
-
 import com.pathplanner.lib.commands.PathPlannerAuto;
-
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.FieldConstants;
 import frc.robot.Constants.ElevatorConstants;
-import frc.robot.Constants.MechConstants;
-import frc.robot.commands.closed.DriveToBranchPID;
-import frc.robot.commands.closed.DriveToClosestBranch;
 import frc.robot.commands.closed.ElevatorSetPosition;
-import frc.robot.commands.closed.SetJawAngle;
 import frc.robot.commands.complex.CoralInSafe;
-import frc.robot.commands.complex.SafeAlgaeJoystick;
-import frc.robot.commands.complex.SwerveDrive;
 import frc.robot.subsystems.Drivetrain;
 
 
