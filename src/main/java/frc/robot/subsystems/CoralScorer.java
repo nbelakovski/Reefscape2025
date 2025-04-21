@@ -53,6 +53,15 @@ public class CoralScorer extends SubsystemBase {
       instance);
   }
 
+  public FunctionalCommand scoreCommand() {
+    return new FunctionalCommand(
+      () -> this.stop(),
+      () -> this.spitFast(),
+      (interrupted) -> this.stop(),
+      () -> false,
+      instance);
+  }
+
   // Spits out Coral slowly
   public void spitSlow(){
     coralScorerMotor.set(-MechConstants.CORAL_INTAKE_SPEED);

@@ -18,7 +18,6 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.FieldConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.MechConstants;
-import frc.robot.commands.basic.CoralScore;
 import frc.robot.commands.closed.DriveToBranchPID;
 import frc.robot.commands.closed.DriveToClosestBranch;
 import frc.robot.commands.closed.ElevatorSetPosition;

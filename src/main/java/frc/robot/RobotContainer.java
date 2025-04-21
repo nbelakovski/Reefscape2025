@@ -4,7 +4,6 @@ package frc.robot;
 import frc.robot.Constants.*;
 import frc.robot.utils.*;
 import frc.robot.subsystems.*;
-import frc.robot.commands.basic.*;
 import frc.robot.commands.closed.*;
 import frc.robot.commands.complex.*;
 import frc.robot.commands.combos.*;
@@ -115,7 +114,8 @@ public class RobotContainer {
     new JoystickButton(operatorController, Button.kLeftBumper.value).whileTrue(retractCommand); //LB
     
     //Operator - RT - Score Coral
-    new Trigger(() -> (operatorController.getRawAxis(3) > 0.7)).whileTrue(new CoralScore()); //RT
+    Command scoreCommand = CoralScorer.getInstance().scoreCommand();
+    new Trigger(() -> (operatorController.getRawAxis(3) > 0.7)).whileTrue(scoreCommand); //RT
     
 
     //---------- ALGAE JAW ----------//

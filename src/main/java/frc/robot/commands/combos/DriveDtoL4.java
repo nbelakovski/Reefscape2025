@@ -15,12 +15,12 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.MechConstants;
-import frc.robot.commands.basic.CoralScore;
 import frc.robot.commands.closed.DriveToPeg;
 import frc.robot.commands.closed.ElevatorSetPosition;
 import frc.robot.commands.closed.SetJawAngle;
 import frc.robot.commands.complex.SwerveDrive;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.CoralScorer;
 
 
 public class DriveDtoL4 extends SequentialCommandGroup {
@@ -36,7 +36,7 @@ public class DriveDtoL4 extends SequentialCommandGroup {
     
       // Move coral forward a tiny bit to avoid elevator jamming
       new ParallelRaceGroup(
-        new CoralScore(),
+        CoralScorer.getInstance().scoreCommand(),
         new WaitCommand(0.1)  
       ),
 
@@ -74,7 +74,7 @@ public class DriveDtoL4 extends SequentialCommandGroup {
       //For 3 seconds, spin the coral and maintain the L4 position
       new ParallelDeadlineGroup(
         new WaitCommand(3),
-        new CoralScore(),
+        CoralScorer.getInstance().scoreCommand(),
         new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L4)
       )
     
