@@ -34,37 +34,8 @@ public class DriveToClosestBranch extends Command {
   
   /** DriveToBranchPID Constructor #1 - takes in a specific AprilTag & Branch direction  */
   public DriveToClosestBranch(String branchDirection) {
-
     this.branchDirection = branchDirection;
-    // tagId = Vision.getInstance().getClosestId();
-    // targetPose = FieldConstants.getRobotPoseToBranch(tagId, branchDirection);
-
     drivetrain = Drivetrain.getInstance();
-
-    //Record starting values for X (m), Y (m), Angle (deg)
-    // startX = drivetrain.getPose().getX();
-    // startY = drivetrain.getPose().getY();
-    // startAngle = drivetrain.getPose().getRotation().getDegrees();
-
-    // Record the setpoints for X (m), Y (m), Angle (deg)
-    // setpointX = targetPose.getX();
-    // setpointY = targetPose.getY();
-    // setpointTurn = Math.toDegrees(targetPose.getRotation().getZ());
-
-    // // Setup PID controllers for X & Y distances
-    // controllerX = new PIDController(SwerveAutoConstants.X_P, SwerveAutoConstants.X_I, SwerveAutoConstants.X_D);
-    // controllerY = new PIDController(SwerveAutoConstants.Y_P, SwerveAutoConstants.Y_I, SwerveAutoConstants.Y_D); 
-    // controllerTurn = new PIDController(SwerveAutoConstants.TURN_P, SwerveAutoConstants.TURN_I, SwerveAutoConstants.TURN_D);
-
-    // // Set setpoints for X & Y controllers
-    // controllerX.setSetpoint(setpointX);
-    // controllerY.setSetpoint(setpointY);
-    // controllerTurn.setSetpoint(setpointTurn);
-
-    // // Set tolerances for X & Y controllers
-    // controllerX.setTolerance(SwerveAutoConstants.X_TOL);
-    // controllerY.setTolerance(SwerveAutoConstants.Y_TOL);
-    // controllerTurn.setTolerance(SwerveAutoConstants.TURN_TOL,SwerveAutoConstants.TURN_DERIV_TOL);
     addRequirements(drivetrain);
   }
 
