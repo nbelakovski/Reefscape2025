@@ -98,7 +98,11 @@ public class RobotContainer {
     //---------- CORAL INTAKE/ SCORING ----------//
 
     // Driver - RT - Move Elevator in position to Intake + Spin Intake wheels
-    new Trigger(() -> (driverController.getRawAxis(3) > 0.7)).whileTrue(new ElevatorIntakeCombo());        //RT 
+    Command elevatorIntakeCombo = new ParallelCommandGroup(
+      Elevator.getInstance().setIntake(),
+      new CoralInSafe()
+    );
+    new Trigger(() -> (driverController.getRawAxis(3) > 0.7)).whileTrue(elevatorIntakeCombo);        //RT 
   
     // Operator - LT - Intake Coral with sensors
     new Trigger(() -> (operatorController.getRawAxis(2) > 0.7)).whileTrue(new CoralInSafe());        //LT    
