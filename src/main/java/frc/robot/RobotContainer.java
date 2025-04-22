@@ -67,15 +67,9 @@ public class RobotContainer {
       () -> driverController.getRawAxis(1),
       () -> -driverController.getRawAxis(0),
       () -> -driverController.getRawAxis(4), //negative joystick values make a positive CCW turn
-      () -> driverController.getAButton()
+      () -> driverController.getAButton(),
+      () -> driverController.getXButton()
     ));
-
-    // Driver - X - Toggle FieldCentric on/off
-    InstantCommand toggleFieldCentric = new InstantCommand(() -> {
-      Drivetrain dt = Drivetrain.getInstance();
-      dt.setFieldCentric(!dt.fieldCentric);
-    }, Drivetrain.getInstance());
-    new JoystickButton(driverController,Button.kX.value).toggleOnTrue(toggleFieldCentric);
 
     // Driver - DPAD - Align to AprilTag Branch LEFT or RIGHT
     new Trigger(() -> driverController.getPOV() == 270).whileTrue(new DriveToClosestBranch("LEFT"));

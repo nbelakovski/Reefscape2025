@@ -83,13 +83,6 @@ public class Drivetrain extends SubsystemBase {
 
   public AHRS navX;   // The gyro sensor
 
-  //Fields that control 3 dimensions of drive motion
-  private double xSpeed = 0.0;
-  private double ySpeed = 0.0;
-  private double rotSpeed = 0.0;
-  public boolean fieldCentric = true;
-  public boolean allianceCentric = true;
-
   private final SwerveDrivePoseEstimator poseEstimator;
 
   private final Field2d field;
@@ -132,31 +125,29 @@ public class Drivetrain extends SubsystemBase {
 
   //PathPlanner Drive Controller
   public final PPHolonomicDriveController pathFollowerConfig = new PPHolonomicDriveController(
-    new PIDConstants(SwerveAutoConstants.TRANSLATE_P, SwerveAutoConstants.TRANSLATE_I, SwerveAutoConstants.TRANSLATE_D), // Translation constants 
+    new PIDConstants(1, 0, 0), // Translation constants
     new PIDConstants(SwerveAutoConstants.TURN_P, SwerveAutoConstants.TURN_I, SwerveAutoConstants.TURN_D) // Rotation constants 
   );
-
-  // efharisto
 
   // Configure AutoBuilder for PathPlanner
   private void autoConfig(){
 
     AutoBuilder.configure(
-      this::getPose, 
-      this::resetPose, 
+      this::getPose,
+      this::resetPose,
       this::getSpeeds, 
-      this::driveRobotRelative, 
+      this::driveRobotRelative,
       pathFollowerConfig,
       new RobotConfig(
-        RobotConstants.MASS, 
-        RobotConstants.MOI, 
+        RobotConstants.MASS,
+        RobotConstants.MOI,
         new ModuleConfig(
-          SwerveModuleConstants.WHEEL_DIAMETER_METERS/2, 
-          SwerveConstants.TOP_SPEED, 
-          SwerveModuleConstants.WHEEL_COEFFICIENT_OF_FRICTION, 
-          DCMotor.getNEO(1).withReduction(SwerveModuleConstants.DRIVE_GEAR_REDUCTION), 
-          SwerveModuleConstants.kDrivingMotorCurrentLimit, 
-          1), 
+          SwerveModuleConstants.WHEEL_DIAMETER_METERS/2,
+          SwerveConstants.TOP_SPEED,
+          SwerveModuleConstants.WHEEL_COEFFICIENT_OF_FRICTION,
+          DCMotor.getNEO(1).withReduction(SwerveModuleConstants.DRIVE_GEAR_REDUCTION),
+          SwerveModuleConstants.kDrivingMotorCurrentLimit,
+          1),
         SwerveConstants.DRIVE_KINEMATICS.getModules()
       ),
       () -> {
@@ -183,37 +174,8 @@ public class Drivetrain extends SubsystemBase {
     return instance;
   }
 
-  // sets whether driving is fieldcentric or not
-  public void setFieldCentric(boolean fieldCentric) {
-    this.fieldCentric = fieldCentric;
-  }  
-  public boolean getFieldCentric() {
-    return fieldCentric;
-  }
-
-  /**
-   * Making a drive function to make the speed for drive a fraction of total
-   * @author Aiden Sing
-   * @param xSpeed speed of the robot front to back
-   * @param ySpeed speed of robot left to right
-   * @param rotSpeed speed of robot turning
-   */
-  public void setDrive(double xSpeed, double ySpeed, double rotSpeed) {
-    this.xSpeed = xSpeed;
-    this.ySpeed = ySpeed;
-    this.rotSpeed = rotSpeed;
-  }
-
-  public void setDrive(double xSpeed, double ySpeed, double rotSpeed, boolean fieldCentric, boolean allianceCentric) {
-    this.xSpeed = xSpeed;
-    this.ySpeed = ySpeed;
-    this.rotSpeed = rotSpeed;
-    this.fieldCentric = fieldCentric;
-    this.allianceCentric = allianceCentric;
-  }
-
   public void stopDrive() {
-    setDrive(0.0,0.0,0.0);
+    move(0.0, 0.0, 0.0, false, false);
   }
 
   /**
@@ -225,26 +187,19 @@ public class Drivetrain extends SubsystemBase {
    * @param fieldcentric Whether the provided x and y speeds are relative to the field.
    * @param rateLimit     Whether to enable rate limiting for smoother control.
    */
-  public void move(double xSpeed, double ySpeed, double rot, boolean fieldcentric, boolean allianceCentric) {
+  public void move(double xSpeed, double ySpeed, double rot, boolean fieldCentric, boolean allianceCentric) {
 
     double xSpeedCommanded = -xSpeed;
     double ySpeedCommanded = ySpeed;
     double rotSpeedCommanded = rot;
 
-    // Convert the commanded speeds into the correct units for the drivetrain
-    double xSpeedDelivered = xSpeedCommanded;
-    double ySpeedDelivered = ySpeedCommanded;
-    double rotSpeedDelivered = rotSpeedCommanded;
-
-    //SwerveModuleState[] 
-    // var swerveModuleStates = SwerveConstants.DRIVE_KINEMATICS.toSwerveModuleStates(
-    //     fieldcentric
-    //         ? ChassisSpeeds.fromfieldcentricSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromDegrees(m_gyro.getAngle(IMUAxis.kZ)))
-    //         : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
-    // SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, SwerveConstants.TOP_SPEED);
+    SmartDashboard.putNumber("xspeed", xSpeedCommanded);
+    SmartDashboard.putNumber("yspeed", ySpeedCommanded);
+    SmartDashboard.putNumber("rotspeed", rotSpeedCommanded);
+    SmartDashboard.putBoolean("fieldCentric", fieldCentric);
 
     //Store an array of speeds for each wheel. By default do robot centric speeds but if fieldCentric use fromFieldRelativeSpeeds
-    ChassisSpeeds speeds = new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotSpeedDelivered);
+    ChassisSpeeds speeds = new ChassisSpeeds(xSpeedCommanded, ySpeedCommanded, rotSpeedCommanded);
 
     if (fieldCentric) {
       var rotation = getPose().getRotation();
@@ -256,7 +211,7 @@ public class Drivetrain extends SubsystemBase {
         rotation = rotation.rotateBy(Rotation2d.fromDegrees(180));
       }
     }
-      speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotSpeedDelivered, rotation);
+      speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedCommanded, ySpeedCommanded, rotSpeedCommanded, rotation);
     }
 
     //Store the states of each module
@@ -283,31 +238,12 @@ public class Drivetrain extends SubsystemBase {
 
   // Helps AutoBuilder do stuff - ONLY USED BY PATH PLANNER
   public void driveRobotRelative(ChassisSpeeds robotRelativeSpeeds) {
-
     SmartDashboard.putNumber("PP Xspeed", robotRelativeSpeeds.vxMetersPerSecond);
     SmartDashboard.putNumber("PP Yspeeds", robotRelativeSpeeds.vyMetersPerSecond);
 
-    double speedFactor = 1;
-    
     ChassisSpeeds speeds = ChassisSpeeds.discretize(robotRelativeSpeeds, 0.02);
-    //negative Y-values fix something
-    
-    this.move(-speeds.vxMetersPerSecond * speedFactor, speeds.vyMetersPerSecond * speedFactor, speeds.omegaRadiansPerSecond, false, false);
-
-
-    //Store the states of each module
-    // SwerveModuleState[] swerveModuleStates = driveKinematics.toSwerveModuleStates(speeds);
-    
-    // //cleans up any weird speeds that may be too high after kinematics equation
-    // SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, SwerveConstants.TOP_SPEED);
-
-    // // setting the state for each module as an array
-    // for(int i = 0; i < modules.length; i++) {
-    //   modules[i].setDesiredState(swerveModuleStates[i]);
-    // }
-
+    this.move(-speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond, false, false);
   }
-
 
     
   //---------------SWERVEMODULE HELPER METHODS --------------//
@@ -477,7 +413,6 @@ public class Drivetrain extends SubsystemBase {
 
     updatePoseFromOdometry();
     updateModuleTelemetry();
-    move(this.xSpeed, this.ySpeed, this.rotSpeed, this.fieldCentric, this.allianceCentric);
     
     SmartDashboard.putNumber("NavX Compass Heading", navX.getCompassHeading());
 
@@ -491,13 +426,8 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putNumber("PoseY", getPose().getY());
     SmartDashboard.putNumber("PoseAngle", getPose().getRotation().getDegrees());
 
-    SmartDashboard.putNumber("xspeed", xSpeed);
-    SmartDashboard.putNumber("yspeed", ySpeed);
-    SmartDashboard.putNumber("rotspeed", rotSpeed);
-
     field.setRobotPose(getPose());
     SmartDashboard.putData("PoseEstimator Field", field);
-    SmartDashboard.putBoolean("fieldCentric", fieldCentric);
     SmartDashboard.putNumber("FL distanceMeters", frontL.getPosition().distanceMeters);
   }
 }

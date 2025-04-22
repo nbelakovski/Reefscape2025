@@ -27,11 +27,6 @@ import static edu.wpi.first.units.Units.KilogramSquareMeters;
 public final class Constants {
   public static final class SwerveAutoConstants {
 
-    //PID constants for Swerve
-    public static final double TRANSLATE_P = 1;
-    public static final double TRANSLATE_I = 0;
-    public static final double TRANSLATE_D = 0;
-
     // p was 2.5 maybe change back
     public static final double X_P = 2.7;
     public static final double X_I = 0;
@@ -49,43 +44,6 @@ public final class Constants {
     public static final double TURN_D = 0.0;
     public static final double TURN_TOL = 0.5; //0.5 degrees = 0.0087266 radians
     public static final double TURN_DERIV_TOL = 1.0; //from 2022
-
-    
-
-    // public static final double kMaxSpeedMetersPerSecond = 3;
-    // public static final double kMaxAccelerationMetersPerSecondSquared = 3;
-    // public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
-    // public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
-
-    // public static final double kPXController = 1;
-    // public static final double kPYController = 1;
-    // public static final double kPThetaController = 1;
-
-    // Constraint for the motion profiled robot angle controller
-    // public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
-    //     kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
-
-    //Old Drivetrain PID constants
-    //public static final PIDF TURN_PID = new PIDF(0.16, 0, 2 * Math.PI, -1, 1, true);<-- from ???
-    // public static final PIDConstants translationPID = new PIDConstants(0.05, 0, 0); <-- from Rev
-    // public static final PIDConstants rotationPID = new PIDConstants(0.08, 0, 0); <-- from Rev
-    
-    // from Rev SwerveModule Constants
-    // public static final double kDrivingP = 0.03;
-    // public static final double kDrivingI = 0;
-    // public static final double kDrivingD = 0;
-    // public static final double kDrivingFF = 1 / kDriveWheelFreeSpeedRps;
-    // public static final double kDrivingMinOutput = -1;
-    // public static final double kDrivingMaxOutput = 1;
-
-    // public static final double kTurningP = 1;
-    // public static final double kTurningI = 0;
-    // public static final double kTurningD = 0;
-    // public static final double kTurningFF = 0;
-    // public static final double kTurningMinOutput = -1;
-    // public static final double kTurningMaxOutput = 1;
-
-
   }
 
   
@@ -223,8 +181,5 @@ public final class Constants {
     public static final Matrix<N3, N1> MULTI_TAG_SD = VecBuilder.fill(0.5, 0.5, 1);
 
   }
-
-  
-
 
 }

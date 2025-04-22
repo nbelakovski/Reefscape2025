@@ -13,15 +13,19 @@ public class SwerveDrive extends Command {
   private Supplier<Double> ySpeedSupplier;
   private Supplier<Double> rotSpeedSupplier;
   private Supplier<Boolean> fieldResetSupplier;
+  private Supplier<Boolean> toggleFieldCentricSupplier;
+  boolean fieldCentric = true;
 
   
   /** Creates a new SwerveDrive. */
   public SwerveDrive(Supplier<Double> xSpeedSupplier, Supplier<Double> ySpeedSupplier,
-    Supplier<Double> rotSpeedSupplier, Supplier<Boolean> fieldResetSupplier) {
+    Supplier<Double> rotSpeedSupplier, Supplier<Boolean> fieldResetSupplier,
+    Supplier<Boolean> toggleFieldCentricSupplier) {
     this.xSpeedSupplier = xSpeedSupplier;
     this.ySpeedSupplier = ySpeedSupplier;
     this.rotSpeedSupplier = rotSpeedSupplier;
     this.fieldResetSupplier = fieldResetSupplier;
+    this.toggleFieldCentricSupplier = toggleFieldCentricSupplier;
 
 
     drivetrain = Drivetrain.getInstance();
@@ -50,11 +54,15 @@ public class SwerveDrive extends Command {
     double rotSpeedDeadbanded = MathUtil.applyDeadband(rotSpeed, 0.1);
     double rotSpeedScaled = rotSpeedDeadbanded * Drivetrain.SwerveConstants.TOP_ANGULAR_SPEED;
 
-    drivetrain.setDrive(xSpeedScaled, ySpeedScaled, rotSpeedScaled, true, true);
+    drivetrain.move(xSpeedScaled, ySpeedScaled, rotSpeedScaled, fieldCentric, true);
     
     if(fieldResetSupplier.get()) {
       drivetrain.zeroRobotHeading();
     }
+    if(toggleFieldCentricSupplier.get()) {
+      fieldCentric = !fieldCentric;
+    }
+
   }
 
   // Called once the command ends or is interrupted.

@@ -29,7 +29,6 @@ public class DriveToClosestBranch extends Command {
   int tagId;
   Pose3d targetPose;
   String branchDirection;
-  private boolean oldAllianceCentric;
   
   
   /** DriveToBranchPID Constructor #1 - takes in a specific AprilTag & Branch direction  */
@@ -44,7 +43,6 @@ public class DriveToClosestBranch extends Command {
   public void initialize() {
     drivetrain.stopDrive(); 
 
-    oldAllianceCentric = drivetrain.allianceCentric;
 
     tagId = Vision.getInstance().getClosestId();
     targetPose = FieldConstants.getRobotPoseToBranch(tagId, branchDirection);
@@ -103,7 +101,7 @@ public class DriveToClosestBranch extends Command {
       controllerX.setP(SwerveAutoConstants.X_P * 2);
       controllerY.setP(SwerveAutoConstants.Y_P * 2);
     }
-    drivetrain.setDrive(xSpeed, ySpeed, turnSpeed, true, false);
+    drivetrain.move(xSpeed, ySpeed, turnSpeed, true, false);
 
     //SD stuff
     SmartDashboard.putNumber("DTB xSpeed", xSpeed);
@@ -131,7 +129,6 @@ public class DriveToClosestBranch extends Command {
     controllerX.close();
     controllerY.close();
     controllerTurn.close();
-    drivetrain.allianceCentric = oldAllianceCentric;
   }
 
   // Returns true when the command should end.
