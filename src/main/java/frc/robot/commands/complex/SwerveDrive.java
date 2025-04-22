@@ -3,7 +3,6 @@ package frc.robot.commands.complex;
 import java.util.function.Supplier;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.Drivetrain;
 
 
@@ -41,15 +40,15 @@ public class SwerveDrive extends Command {
   public void execute() {
     double xSpeed = xSpeedSupplier.get();
     double xSpeedDeadbanded = MathUtil.applyDeadband(xSpeed, 0.1);
-    double xSpeedScaled = xSpeedDeadbanded * SwerveConstants.TOP_SPEED;
+    double xSpeedScaled = xSpeedDeadbanded * Drivetrain.SwerveConstants.TOP_SPEED;
 
     double ySpeed = ySpeedSupplier.get();
     double ySpeedDeadbanded = MathUtil.applyDeadband(ySpeed, 0.1);
-    double ySpeedScaled = ySpeedDeadbanded * SwerveConstants.TOP_SPEED;
+    double ySpeedScaled = ySpeedDeadbanded * Drivetrain.SwerveConstants.TOP_SPEED;
 
     double rotSpeed = rotSpeedSupplier.get();
     double rotSpeedDeadbanded = MathUtil.applyDeadband(rotSpeed, 0.1);
-    double rotSpeedScaled = rotSpeedDeadbanded * SwerveConstants.TOP_ANGULAR_SPEED;
+    double rotSpeedScaled = rotSpeedDeadbanded * Drivetrain.SwerveConstants.TOP_ANGULAR_SPEED;
 
     drivetrain.setDrive(xSpeedScaled, ySpeedScaled, rotSpeedScaled, true, true);
     

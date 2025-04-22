@@ -15,6 +15,7 @@ import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -32,14 +33,42 @@ import java.util.List;
 
 import org.photonvision.EstimatedRobotPose;
 
-import frc.robot.Constants;
-import frc.robot.Constants.*;
+import frc.robot.Constants.RobotConstants;
+import frc.robot.Constants.SwerveAutoConstants;
+import frc.robot.Constants.SwerveModuleConstants;
 import frc.robot.FieldConstants;
 import frc.robot.utils.Ports;
 import frc.robot.utils.SwerveModule;
 
 
 public class Drivetrain extends SubsystemBase {
+  public static class SwerveConstants {
+    // Angular Offsets for the radian difference between the calibrated swerve and desired forward direction (based off REV calibration tool)
+    public static final double FL_ANGULAR_OFFSET = Math.PI / 2;
+    public static final double FR_ANGULAR_OFFSET = Math.PI;
+    public static final double BR_ANGULAR_OFFSET = Math.PI / 2;
+    public static final double BL_ANGULAR_OFFSET = Math.PI;
+
+
+    // public static final double FREE_SPIN_METER = 5.28; //???
+
+    // Distance between front and back wheels on robot
+    public static final SwerveDriveKinematics DRIVE_KINEMATICS = new SwerveDriveKinematics(
+        new Translation2d(RobotConstants.WHEEL_BASE / 2, RobotConstants.TRACK_WIDTH / 2),
+        new Translation2d(RobotConstants.WHEEL_BASE / 2, -RobotConstants.TRACK_WIDTH / 2),
+        new Translation2d(-RobotConstants.WHEEL_BASE / 2, RobotConstants.TRACK_WIDTH / 2),
+        new Translation2d(-RobotConstants.WHEEL_BASE / 2, -RobotConstants.TRACK_WIDTH / 2)
+    );
+
+    public static final double TOP_SPEED = 4.0; //9.6
+    public static final double TOP_ANGULAR_SPEED = 2 * Math.PI;
+
+    // //Slew stuff from Rev
+    // public static final double kDirectionSlewRate = 1; // radians per second
+    // public static final double kMagnitudeSlewRate = 1.4; // percent per second (1 = 100%)
+    // public static final double kRotationalSlewRate = 1; // percent per second (1 = 100%)
+
+  };
 
   private static Drivetrain instance;
 
@@ -128,7 +157,7 @@ public class Drivetrain extends SubsystemBase {
           DCMotor.getNEO(1).withReduction(SwerveModuleConstants.DRIVE_GEAR_REDUCTION), 
           SwerveModuleConstants.kDrivingMotorCurrentLimit, 
           1), 
-        Constants.SwerveConstants.DRIVE_KINEMATICS.getModules()
+        SwerveConstants.DRIVE_KINEMATICS.getModules()
       ),
       () -> {
           // Boolean supplier that controls when the path will be mirrored for the red alliance
@@ -352,17 +381,6 @@ public class Drivetrain extends SubsystemBase {
     navX.reset();
   }
 
-
-  /**
-   * Returns the turn rate of the robot.
-   *
-   * @return The turn rate of the robot, in degrees per second
-   */
-  public double getTurnRate() {
-    return navX.getVelocityZ() * (SwerveConstants.TURN_INVERSION ? -1.0 : 1.0);
-    //return m_gyro.getRate(IMUAxis.kZ) * (SwerveConstants.kGyroReversed ? -1.0 : 1.0);
-  }
-
   public float getPitch() {
     return navX.getPitch();
   }
@@ -451,9 +469,6 @@ public class Drivetrain extends SubsystemBase {
     field.getObject("Cam 2 Est Pose").setPose(estimate2.toPose2d());
 
   }
-
-
-
 
 
   // This method will be called once per scheduler run

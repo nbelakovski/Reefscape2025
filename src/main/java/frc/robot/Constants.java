@@ -6,9 +6,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
@@ -27,40 +25,6 @@ import static edu.wpi.first.units.Units.KilogramSquareMeters;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-
-  public static class SwerveConstants {
-
-    // Angular Offsets for the radian difference between the calibrated swerve and desired forward direction (based off REV calibration tool)
-    public static final double FL_ANGULAR_OFFSET = Math.PI / 2;
-    public static final double FR_ANGULAR_OFFSET = Math.PI;
-    public static final double BR_ANGULAR_OFFSET = Math.PI / 2;
-    public static final double BL_ANGULAR_OFFSET = Math.PI;
-
-
-    // public static final double FREE_SPIN_METER = 5.28; //???
-
-    // Distance between front and back wheels on robot
-    public static final SwerveDriveKinematics DRIVE_KINEMATICS = new SwerveDriveKinematics(
-        new Translation2d(RobotConstants.WHEEL_BASE / 2, RobotConstants.TRACK_WIDTH / 2),
-        new Translation2d(RobotConstants.WHEEL_BASE / 2, -RobotConstants.TRACK_WIDTH / 2),
-        new Translation2d(-RobotConstants.WHEEL_BASE / 2, RobotConstants.TRACK_WIDTH / 2),
-        new Translation2d(-RobotConstants.WHEEL_BASE / 2, -RobotConstants.TRACK_WIDTH / 2)
-    );
-
-    // Is NavX rotation values backwards?
-    public static final boolean TURN_INVERSION = false;
-
-    // Driving Parameters - max speeds allowed, not capable
-    public static final double TOP_SPEED = 4.0; //9.6
-    public static final double TOP_ANGULAR_SPEED = 2 * Math.PI;
-  
-    // //Slew stuff from Rev
-    // public static final double kDirectionSlewRate = 1; // radians per second
-    // public static final double kMagnitudeSlewRate = 1.4; // percent per second (1 = 100%)
-    // public static final double kRotationalSlewRate = 1; // percent per second (1 = 100%)
-
-  }
-
   public static final class SwerveAutoConstants {
 
     //PID constants for Swerve
