@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -88,6 +87,8 @@ public class RobotContainer {
     Elevator.getInstance().setDefaultCommand(new SafeElevatorJoystick(
       () -> operatorController.getRawAxis(5)
     ));
+    // EventLoop m_loop;
+    // operatorController.x(m_loop).rising()
 
     //Operator - DPAD - Elevator to L1, L2, L3, L4 heights
     new Trigger(() -> operatorController.getPOV() == 180).whileTrue(Elevator.getInstance().setL1());
@@ -98,10 +99,7 @@ public class RobotContainer {
     //---------- CORAL INTAKE/ SCORING ----------//
 
     // Driver - RT - Move Elevator in position to Intake + Spin Intake wheels
-    Command elevatorIntakeCombo = new ParallelCommandGroup(
-      Elevator.getInstance().setIntake(),
-      new CoralInSafe()
-    );
+    Command elevatorIntakeCombo = Elevator.getInstance().setIntake().alongWith(new CoralInSafe());
     new Trigger(() -> (driverController.getRawAxis(3) > 0.7)).whileTrue(elevatorIntakeCombo);        //RT 
   
     // Operator - LT - Intake Coral with sensors
@@ -129,8 +127,7 @@ public class RobotContainer {
     new JoystickButton(operatorController, Button.kA.value).whileTrue(jawIntakeAngle);
 
     //Operator - B - Go to L4, Algae score angle, and spit algae 
-    Command elevatorSpitCombo = new ParallelCommandGroup(
-      Elevator.getInstance().setL4(),
+    Command elevatorSpitCombo = Elevator.getInstance().setL4().alongWith(
       AlgaeHandler.getInstance().jawAngleCommand(MechConstants.JAW_INTAKE_ANGLE),
       AlgaeHandler.getInstance().spitCommand());
     new JoystickButton(operatorController, Button.kB.value).whileTrue(elevatorSpitCombo.repeatedly());
@@ -152,9 +149,9 @@ public class RobotContainer {
 
     // Operator - Y - Eat the Algae
     Command eatCommand = AlgaeHandler.getInstance().eatCommand();
-    Command elevatorJawCombo = new ParallelCommandGroup(
-      AlgaeHandler.getInstance().jawAngleCommand(MechConstants.JAW_INTAKE_ANGLE),
-      AlgaeHandler.getInstance().spitCommand());
+    Command elevatorJawCombo =
+      AlgaeHandler.getInstance().jawAngleCommand(MechConstants.JAW_INTAKE_ANGLE).alongWith(
+        AlgaeHandler.getInstance().spitCommand());
     new JoystickButton(operatorController, Button.kY.value).whileTrue(elevatorJawCombo); //11.7
     //new JoystickButton(operatorController, Button.kY.value).whileTrue(eatCommand);
 
@@ -178,7 +175,13 @@ public void autoChooserInit() {
     autoChooser.addOption("driveToBranch-Closest-LEFT", new DriveToClosestBranch("LEFT"));
     autoChooser.addOption("driveToBranch-21-LEFT", new DriveToBranchPID(21, "LEFT"));
     // autoChooser.addOption("turntoangle", new TurnToAnglePID(90));
-    // autoChooser.addOption("DriveForward", new DriveForward());
+
+
+    // Command driveForward = new ParallelRaceGroup(
+    //   new SwerveDrive( ()-> 0.5, ()-> 0.0, ()->0.0,()->false, () -> false),
+    //   new WaitCommand(1)
+    // );
+    // autoChooser.addOption("DriveForward", driveForward);
 
     autoChooser.addOption("testing", new PathPlannerAuto("testing"));
     autoChooser.addOption("PP-Auto1", new PathPlannerAuto("Auto1"));

@@ -4,10 +4,7 @@
 
 package frc.robot.commands.combos;
 
-import java.util.Optional;
 
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
@@ -22,12 +19,6 @@ public class Auto2Piece extends SequentialCommandGroup {
     Command getSecondCoral = null;
     Command scoreSecondCoral = null;
 
-
-    Optional<Alliance> allianceOptional = DriverStation.getAlliance();
-     Alliance alliance = null;
-    if (allianceOptional.isPresent()) {
-         alliance = allianceOptional.get();
-    }    
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     if(startSide.equals("LEFT")){

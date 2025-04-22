@@ -3,7 +3,6 @@ package frc.robot.utils;
 
 import frc.robot.Constants.VisionConstants;
 import frc.robot.FieldConstants;
-import frc.robot.Robot;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,8 +11,6 @@ import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
-import org.photonvision.simulation.PhotonCameraSim;
-import org.photonvision.simulation.VisionSystemSim;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
@@ -25,7 +22,6 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 
 
 /** Add your docs here. */
@@ -35,15 +31,11 @@ public class AprilCam {
     private Transform3d camOffset;
     private PhotonPoseEstimator photonPoseEstimator;
     private List<PhotonPipelineResult> results;
-    private PhotonPipelineResult lastResult;
 
-    private PhotonTrackedTarget desiredTarget;
     private List<PhotonTrackedTarget> targets;
     public int closestId;
 
     // Simulation
-    private PhotonCameraSim cameraSim;
-    private VisionSystemSim visionSim;
     private Matrix<N3, N1> currentSDs;
     
     
@@ -281,10 +273,5 @@ public class AprilCam {
      */
     public Matrix<N3, N1> getEstimationSDs() {
         return currentSDs;
-    }
-    /** A Field2d for visualizing our robot and objects on the field. */
-    public Field2d getSimDebugField() {
-        if (!Robot.isSimulation()) return null;
-        return visionSim.getDebugField();
     }
 }

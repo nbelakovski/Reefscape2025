@@ -3,7 +3,6 @@ package frc.robot;
 
 import java.util.Optional;
 import java.util.OptionalInt;
-import static edu.wpi.first.units.Units.Inches;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -88,10 +87,6 @@ public class FieldConstants {
      public static Pose3d getRobotPoseToTag(int tagID){
 
         Pose3d tagPose = aprilTagFieldLayout.getTagPose(tagID).get();
-
-        //Get the coordinate of tag on field
-        Translation3d tagTranslation = tagPose.getTranslation();
-        double tagAngle = tagPose.getRotation().getAngle();
 
         Pose3d flippedPose = getRobotPoseSpin180(tagPose);
         Pose3d centerOfRobotPose = getCenterPoseFromFrontPose(flippedPose, 0.0);

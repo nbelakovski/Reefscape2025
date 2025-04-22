@@ -47,10 +47,6 @@ public class TurnToAnglePID extends Command {
     
     //calculate new speed needed to turn to correct angle
     double newRotSpeed = controllerTurn.calculate(measurement);
-    
-    // OPTION 1: Turning Only in place
-    boolean isFieldCentric = true;
-    //do old alliance centric if used
 
     //SD stuff
     SmartDashboard.putNumber("TTA targetAngle", setpoint);

@@ -12,7 +12,6 @@ import frc.robot.subsystems.AlgaeHandler;
 
 
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.DataLogManager;
 
 
@@ -31,7 +30,7 @@ public class Robot extends TimedRobot {
    * initialization code.
    */
   public Robot() {
-    UsbCamera cam = CameraServer.startAutomaticCapture();
+    CameraServer.startAutomaticCapture();
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
