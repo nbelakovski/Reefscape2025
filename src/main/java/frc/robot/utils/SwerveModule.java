@@ -37,7 +37,6 @@ public class SwerveModule {
   private final ClosedLoopConfig driveControllerConfig;
   private final ClosedLoopConfig turnControllerConfig;
 
-  private SwerveModuleState desiredState;
 
   // field for offset related to how RevSwerveMax calibration tool sets wheel
   public final double ANGULAR_OFFSET;
@@ -61,8 +60,6 @@ public class SwerveModule {
     turnController = turnMotor.getClosedLoopController();
 
 
-    desiredState = new SwerveModuleState(0.0, new Rotation2d() );
-
     //Istablished the Motor configations with the new Spark Configs
     driveMotorConfig = new SparkMaxConfig();
     turnMotorConfig = new SparkMaxConfig();
@@ -73,7 +70,6 @@ public class SwerveModule {
 
     // flips the drive motor 
     driveMotorConfig.inverted(false);
-    //driveMotorConfig.encoder.inverted(true);
 
     double drivingFactor = SwerveModuleConstants.WHEEL_DIAMETER_METERS * Math.PI
             / SwerveModuleConstants.DRIVE_GEAR_REDUCTION;
@@ -123,7 +119,6 @@ public class SwerveModule {
     driveMotorConfig.apply(driveControllerConfig);
     turnMotorConfig.apply(turnControllerConfig);
     
-    desiredState.angle = new Rotation2d(turnEncoder.getPosition());
     driveEncoder.setPosition(0);
   }
 
@@ -137,43 +132,16 @@ public class SwerveModule {
      new Rotation2d(turnEncoder.getPosition() - ANGULAR_OFFSET));
   }
 
-  public double getTurnRadians(){
-    return getPosition().angle.getRadians();
-  }
-
   public void setDesiredState(SwerveModuleState desiredState){
-    
     SwerveModuleState correctedDesiredState = new SwerveModuleState();
     correctedDesiredState.speedMetersPerSecond = desiredState.speedMetersPerSecond;
     correctedDesiredState.angle = desiredState.angle.plus(Rotation2d.fromRadians(ANGULAR_OFFSET));
-
 
     //Maybe come back and fix, potentially not what we want
     correctedDesiredState.optimize(new Rotation2d(turnEncoder.getPosition()));
 
     driveController.setReference(correctedDesiredState.speedMetersPerSecond, ControlType.kVelocity);
     turnController.setReference(correctedDesiredState.angle.getRadians(), ControlType.kPosition);
-
-    this.desiredState = desiredState;
-  }
-
-
-  public void updateInputs(Rotation2d angle, double voltage) {
-    desiredState.angle = angle;
-    setDriveVoltage(voltage);
-    setTurnSetpoint(angle);
-  }
-
-  public void setDriveVoltage(double voltage) {
-    driveMotor.setVoltage(voltage);
-  }
-
-  public void setTurnVoltage(double voltage) {
-    turnMotor.setVoltage(voltage);
-  }
-
-  public void setTurnSetpoint(Rotation2d angle) {
-    turnController.setReference(angle.getRadians(), ControlType.kPosition);
   }
 
   public void resetEncoders() {
@@ -182,9 +150,8 @@ public class SwerveModule {
 
   public void updateTelemetry() {
     SmartDashboard.putNumber(NAME + " Angle Degrees", getPosition().angle.getDegrees());
-    SmartDashboard.putNumber(NAME + " Angle Radians", getTurnRadians());
+    SmartDashboard.putNumber(NAME + " Angle Radians", getPosition().angle.getRadians());
     SmartDashboard.putNumber(NAME + " Drive Position", getPosition().distanceMeters);
     SmartDashboard.putNumber(NAME + " Drive Motor Voltage", driveMotor.getBusVoltage());
   }
-
 }
