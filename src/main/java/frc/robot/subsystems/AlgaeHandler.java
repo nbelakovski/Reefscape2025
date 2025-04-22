@@ -15,7 +15,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class AlgaeHandler extends SubsystemBase {
@@ -55,22 +55,16 @@ public class AlgaeHandler extends SubsystemBase {
         return instance;
     }
 
-    public FunctionalCommand eatCommand() {
-        return new FunctionalCommand(
-            () -> this.stop(),
+    public Command eatCommand() {
+        return this.runEnd(
             () -> this.eat(),
-            (interrupted) -> this.stop(),
-            () -> false,
-            instance);
+            () -> this.stop());
     }
 
-    public FunctionalCommand spitCommand() {
-        return new FunctionalCommand(
-            () -> this.stop(),
+    public Command spitCommand() {
+        return this.runEnd(
             () -> this.spit(),
-            (interrupted) -> this.stop(),
-            () -> false,
-            instance);
+            () -> this.stop());
     }
 
     public void setCoast(){

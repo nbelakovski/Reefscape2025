@@ -154,7 +154,6 @@ public class RobotContainer {
     // Operator - X - Spit out the Algae
     Command spitCommand = AlgaeHandler.getInstance().spitCommand();
     new JoystickButton(operatorController, Button.kX.value).whileTrue(spitCommand);
-  
     new JoystickButton(operatorController, Button.kRightBumper.value).whileTrue(eatCommand);
   }
 

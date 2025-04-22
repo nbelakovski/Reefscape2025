@@ -10,7 +10,7 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.AnalogInput;
 
@@ -64,13 +64,8 @@ public class CoralIntake extends SubsystemBase {
   }
 
   // I think this one is unused
-  public FunctionalCommand eatCoralCommand() {
-    return new FunctionalCommand(
-      () -> this.stop(),
-      () -> this.eat(),
-      (interrupted) -> this.stop(),
-      () -> false,
-      instance);
+  public Command eatCoralCommand() {
+    return this.runEnd(() -> this.eat(), () -> this.stop());
   }
 
   // Checks if coral is blocking the gap between intake & coral scorer

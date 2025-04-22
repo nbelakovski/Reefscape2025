@@ -12,7 +12,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.AnalogInput;
 
@@ -44,22 +44,12 @@ public class CoralScorer extends SubsystemBase {
     return instance;
   }
 
-  public FunctionalCommand retractCommand() {
-    return new FunctionalCommand(
-      () -> this.stop(),
-      () -> this.backward(),
-      (interrupted) -> this.stop(),
-      () -> false,
-      instance);
+  public Command retractCommand() {
+    return this.runEnd(() -> this.backward(), () -> this.stop());
   }
 
-  public FunctionalCommand scoreCommand() {
-    return new FunctionalCommand(
-      () -> this.stop(),
-      () -> this.spitFast(),
-      (interrupted) -> this.stop(),
-      () -> false,
-      instance);
+  public Command scoreCommand() {
+    return this.runEnd(() -> this.spitFast(), () -> this.stop());
   }
 
   // Spits out Coral slowly

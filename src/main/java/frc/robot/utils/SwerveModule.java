@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.utils;
 
 
 import com.revrobotics.RelativeEncoder;
@@ -19,7 +19,6 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.SwerveModuleConstants;
-import frc.robot.utils.ModuleConfig;
 
 public class SwerveModule {
 
