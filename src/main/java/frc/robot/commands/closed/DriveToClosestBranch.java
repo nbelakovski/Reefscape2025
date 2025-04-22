@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.SwerveAutoConstants;
 import frc.robot.FieldConstants;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Vision;
 
 
 public class DriveToClosestBranch extends Command {
@@ -44,7 +43,7 @@ public class DriveToClosestBranch extends Command {
     drivetrain.stopDrive(); 
 
 
-    tagId = Vision.getInstance().getClosestId();
+    tagId = FieldConstants.getNearestReefTag(new Pose3d(drivetrain.getPose()));
     targetPose = FieldConstants.getRobotPoseToBranch(tagId, branchDirection);
 
     //Record starting values for X (m), Y (m), Angle (deg)

@@ -32,8 +32,6 @@ public class AprilCam {
     private PhotonPoseEstimator photonPoseEstimator;
     private List<PhotonPipelineResult> results;
 
-    private List<PhotonTrackedTarget> targets;
-    public int closestId;
 
     // Simulation
     private Matrix<N3, N1> currentSDs;
@@ -51,124 +49,7 @@ public class AprilCam {
         this.results = camera.getAllUnreadResults();
     }
 
-    // --------------------- GETTING TARGETS -------------------)------------ //
-
-    // Checks if the latest result has any targets
-    // public boolean hasTarget() {
-    //     return result.hasTargets();
-    // }
-
-    //Gets all the AprilTag targets the camera can currently see
-    public List<PhotonTrackedTarget> getTargets(){
-        return targets;
-    }
-
-    public void updateClosestVisibleId(List<PhotonTrackedTarget> help) {
-        int closestId = -1;
-        double closestDistance = 100;
-
-        for(PhotonTrackedTarget t: help) {
-            double currentDistance = Math.sqrt(Math.pow(getTargetTransform(t).getX(), 2) + Math.pow(getTargetTransform(t).getY(), 2));
-            
-            if(currentDistance < closestDistance) {
-                closestDistance = currentDistance;
-                closestId = t.fiducialId;
-            }
-        }
-        this.closestId = closestId;
-    }
-
-    // Gets the current "best" target
-    // public PhotonTrackedTarget getBestTarget(){
-    //     return result.getBestTarget();
-    // }
-
-    // Gets a target object for a specific AprilTag
-    public PhotonTrackedTarget getDesiredTarget(int desiredTargetId){
-
-        //look at each target in the arraylist of targets
-        if(getTargets() != null){
-        for (PhotonTrackedTarget t: getTargets())
-        {
-            //look for the target with the desired Id
-            if (t.getFiducialId() == desiredTargetId)
-            {
-                return t;
-            }
-        }
-    }
-        //return null if you can't find the desiredTarget
-        System.out.println("HELPPPPPPPPP");
-        return null;
-    }
-
-    // Checks if a desired AprilTag is visible
-    // public boolean hasDesiredTarget(int desiredTargetId) {
-    //     ///use the getDesiredTarget method to see if it returns null (not correct target) or not
-    //     if (getDesiredTarget(desiredTargetId)!= null)
-    //     {
-    //         return true;
-    //     }
-    //     return false;
-    // }
-
-    // --------------------- GETTING DATA FROM A TARGET ------------------------------- //
-    // https://docs.photonvision.org/en/v2025.1.1/docs/programming/photonlib/getting-target-data.html#getting-data-from-a-target
-    // double yaw = target.getYaw();
-    // double pitch = target.getPitch();
-    // double area = target.getArea();
-    // double skew = target.getSkew(); //not available for AprilTags
-    // Transform2d pose = target.getCameraToTarget();
-    // List<TargetCorner> corners = target.getCorners();
-    // int targetId = target.getfiducialId();
-    // double poseAmbiguity = target.getPoseAmbiguity();
-    // Transform3d bestCameraToTarget = target.getBestCameraToTarget();
-    // Transform3d alternateCameraToTarget = target.getAlternateCameraToTarget();
-
-    // Gets the Transform3d object of a specific AprilTag object
-    private Transform3d getTargetTransform(PhotonTrackedTarget target){
-        if(target == null) {
-            return null;
-        }
-        return target.getBestCameraToTarget();
-    }
-
-    // // Gets the X value of a desired target
-    public double getXDesired(PhotonTrackedTarget target){
-        if(target == null) { return Float.NaN; }
-        return getTargetTransform(target).getX();
-    }
-
-    // // Gets the X value of the "Best" target
-    // public double getXBest(){
-    //     return getXDesired( results.getBestTarget() );
-    // }
-    
-    // // Gets the Y value of a desired target
-    // public double getYDesired(PhotonTrackedTarget target){
-    //     if(target == null) { return Float.NaN; }
-    //     return getTargetTransform(target).getY();
-    // }
-
-    // // Gets the Y value of the "Best" target
-    // public double getYBest(){
-    //     return getYDesired( results.getBestTarget() );
-    // }
-
-    // // Gets the Z value of a desired target
-    // public double getZDesired(PhotonTrackedTarget target){
-    //     if(target == null) { return Float.NaN; }
-    //     return getTargetTransform(target).getZ();
-    // }
-
-    // // Gets the Z value of the "Best" target
-    // public double getZBest(){
-    //     return getZDesired( results.getBestTarget() );
-    // }
-
-
     // --------------------- POSE ESTIMATION ------------------------------- //
-
     // Check out this page: https://docs.photonvision.org/en/latest/docs/examples/poseest.html
     // Here is the example Vision class from PhotonVision: https://github.com/PhotonVision/photonvision/blob/main/photonlib-java-examples/poseest/src/main/java/frc/robot/Vision.java
  
@@ -187,16 +68,9 @@ public class AprilCam {
     //https://github.com/PhotonVision/photonvision/blob/main/photonlib-java-examples/poseest/src/main/java/frc/robot/Vision.java 
     public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstPose) {
         Optional<EstimatedRobotPose> visionEst = Optional.empty();
-
-        //photonPoseEstimator.setReferencePose(prevEstPose);
-
-        for (var change : this.results) {
-            visionEst = photonPoseEstimator.update(change);
-            updateEstimationSDs(visionEst, change.getTargets());
-            targets = change.getTargets();
-
-            updateClosestVisibleId(targets);
-
+        for (PhotonPipelineResult result : this.results) {
+            visionEst = photonPoseEstimator.update(result);
+            updateEstimationSDs(visionEst, result.getTargets());
         }
         return visionEst;
     }

@@ -22,29 +22,27 @@ import frc.robot.Constants.SwerveModuleConstants;
 
 public class SwerveModule {
 
-    private final SparkMax driveMotor;
-    private final SparkMax turnMotor;
+  private final SparkMax driveMotor;
+  private final SparkMax turnMotor;
 
-    private final RelativeEncoder driveEncoder;
-    private final SparkAbsoluteEncoder turnEncoder;
-    
-    private final SparkClosedLoopController driveController;
-    private final SparkClosedLoopController turnController;
+  private final RelativeEncoder driveEncoder;
+  private final SparkAbsoluteEncoder turnEncoder;
+  
+  private final SparkClosedLoopController driveController;
+  private final SparkClosedLoopController turnController;
 
-    private final SparkMaxConfig driveMotorConfig;
-    private final SparkMaxConfig turnMotorConfig;
+  private final SparkMaxConfig driveMotorConfig;
+  private final SparkMaxConfig turnMotorConfig;
 
-    private final ClosedLoopConfig driveControllerConfig;
-    private final ClosedLoopConfig turnControllerConfig;
+  private final ClosedLoopConfig driveControllerConfig;
+  private final ClosedLoopConfig turnControllerConfig;
 
-    private SwerveModuleState desiredState;
+  private SwerveModuleState desiredState;
 
-    // field for offset related to how RevSwerveMax calibration tool sets wheel
-    public final double ANGULAR_OFFSET;
-    public final String NAME;
+  // field for offset related to how RevSwerveMax calibration tool sets wheel
+  public final double ANGULAR_OFFSET;
+  public final String NAME;
 
-//     private final VelocityVoltage velocityOut = new VelocityVoltage(0);
-//     private final PositionVoltage rotationsIn = new PositionVoltage(0);
   /** Creates a new SwerveModule. */
   public SwerveModule(int drivePort, int turnPort, double angularOffset, String name) {
 
@@ -72,40 +70,8 @@ public class SwerveModule {
     driveControllerConfig = new ClosedLoopConfig();
     turnControllerConfig = new ClosedLoopConfig();
 
-    
 
-    // driveMotorConfig.encoder.positionConversionFactor(ModuleConstants.kDrivingEncoderPositionFactor);
-    // driveMotorConfig.encoder.velocityConversionFactor(ModuleConstants.kDrivingEncoderVelocityFactor);
-
-    // turnMotorConfig.encoder.positionConversionFactor(ModuleConstants.kTurningEncoderPositionFactor);
-    // turnMotorConfig.encoder.velocityConversionFactor(ModuleConstants.kTurningEncoderVelocityFactor);
-    
-    
-    // //References the established constants and and tells the Drive SparkMax what to set its PID to
-    // driveControllerConfig.p(ModuleConstants.kTurningP);
-    // driveControllerConfig.i(ModuleConstants.kTurningI);
-    // driveControllerConfig.d(ModuleConstants.kTurningD);
-    // driveControllerConfig.velocityFF(ModuleConstants.kDrivingFF);
-    // driveControllerConfig.outputRange(ModuleConstants.kDrivingMinOutput, ModuleConstants.kDrivingMaxOutput);
-
-    // //References the established constants and and tells the Turn SparkMax what to set its PID to
-    // turnControllerConfig.p(ModuleConstants.kTurningP);
-    // turnControllerConfig.i(ModuleConstants.kTurningI);
-    // turnControllerConfig.d(ModuleConstants.kTurningD);
-    // turnControllerConfig.velocityFF(ModuleConstants.kTurningFF);
-    // turnControllerConfig.outputRange(ModuleConstants.kTurningMinOutput, ModuleConstants.kTurningMaxOutput);
-
-    // driveMotorConfig.idleMode(ModuleConstants.kDrivingMotorIdleMode);
-    // turnMotorConfig.idleMode(ModuleConstants.kTurningMotorIdleMode);
-
-    // driveMotorConfig.smartCurrentLimit(ModuleConstants.kDrivingMotorCurrentLimit);
-    // turnMotorConfig.smartCurrentLimit(ModuleConstants.kTurningMotorCurrentLimit);
-
-    // driveControllerConfig.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-    // turnControllerConfig.feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
-
-
-    // //flips the drive motor 
+    // flips the drive motor 
     driveMotorConfig.inverted(false);
     //driveMotorConfig.encoder.inverted(true);
 
@@ -189,30 +155,28 @@ public class SwerveModule {
     turnController.setReference(correctedDesiredState.angle.getRadians(), ControlType.kPosition);
 
     this.desiredState = desiredState;
-     
   }
 
-  
+
   public void updateInputs(Rotation2d angle, double voltage) {
     desiredState.angle = angle;
     setDriveVoltage(voltage);
     setTurnSetpoint(angle);
   }
 
-public void setDriveVoltage(double voltage) {
-  driveMotor.setVoltage(voltage);
-}
+  public void setDriveVoltage(double voltage) {
+    driveMotor.setVoltage(voltage);
+  }
 
-public void setTurnVoltage(double voltage) {
-  turnMotor.setVoltage(voltage);
-}
+  public void setTurnVoltage(double voltage) {
+    turnMotor.setVoltage(voltage);
+  }
 
-public void setTurnSetpoint(Rotation2d angle) {
-  //turnMotor.setControl(rotationsIn.withPosition(angle.getRotations()).withSlot(0));
-  turnController.setReference(angle.getRadians(), ControlType.kPosition);
-}
+  public void setTurnSetpoint(Rotation2d angle) {
+    turnController.setReference(angle.getRadians(), ControlType.kPosition);
+  }
 
-   public void resetEncoders() {
+  public void resetEncoders() {
     driveEncoder.setPosition(0);
   }
 
@@ -220,8 +184,7 @@ public void setTurnSetpoint(Rotation2d angle) {
     SmartDashboard.putNumber(NAME + " Angle Degrees", getPosition().angle.getDegrees());
     SmartDashboard.putNumber(NAME + " Angle Radians", getTurnRadians());
     SmartDashboard.putNumber(NAME + " Drive Position", getPosition().distanceMeters);
-    SmartDashboard.putNumber(NAME + "Drive Motor Voltage", driveMotor.getBusVoltage());
+    SmartDashboard.putNumber(NAME + " Drive Motor Voltage", driveMotor.getBusVoltage());
   }
-
 
 }

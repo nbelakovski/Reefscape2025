@@ -6,7 +6,7 @@ import frc.robot.Constants;
 import frc.robot.FieldConstants;
 import frc.robot.utils.AprilCam;
 
-import org.photonvision.targeting.PhotonTrackedTarget;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -19,7 +19,6 @@ public class Vision extends SubsystemBase {
   public AprilCam cam1;
   public AprilCam cam2;
   public boolean doubleCam = false;
-  public int closestId;
   Drivetrain drivetrain = Drivetrain.getInstance();
   private final SendableChooser<Integer> tagChooser = new SendableChooser<>();
 
@@ -59,25 +58,10 @@ public class Vision extends SubsystemBase {
     }
       return instance;
   }
-
-  
-  public PhotonTrackedTarget getDesiredTarget(int target) {
-    return cam1.getDesiredTarget(target);
-  }
-
-  public double getXDesired(PhotonTrackedTarget target) {
-    return cam1.getXDesired(target);
-  }
-
-  public  Pose3d getTagPose(int tagId){
-    return FieldConstants.aprilTagFieldLayout.getTagPose(tagId).get();
-  }
   
   public int getClosestId(){
-    // return cam1.closestId;
-    closestId = FieldConstants.getNearestReefTag(new Pose3d(drivetrain.getPose()));
-    return closestId;
-  }  
+    return FieldConstants.getNearestReefTag(new Pose3d(drivetrain.getPose()));
+  }
 
 
   // This method will be called once per scheduler run
@@ -126,13 +110,8 @@ public class Vision extends SubsystemBase {
       SmartDashboard.putNumber("tag " + tagId + " angle", FieldConstants.aprilTagFieldLayout.getTagPose(tagId).get().getRotation().getAngle());
     }
 
-    SmartDashboard.putNumber("closest Id", getClosestId());
-    SmartDashboard.putNumber("closest x", getXDesired(getDesiredTarget(closestId)));
-
     SmartDashboard.putNumber("CAM1 X offset to Front", Constants.VisionConstants.CAM1_X_OFFSET_TO_FRONT);
     SmartDashboard.putNumber("CAM1 X offset to Center", Constants.VisionConstants.CAM1_X_OFFSET_TO_CENTER);
     SmartDashboard.putNumber("CAM1 Bumper to Center Dist", Constants.RobotConstants.BUMPER_TO_ROBOT_CENTER_DISTANCE);
-    
-    
   }
 }
