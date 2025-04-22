@@ -2,7 +2,7 @@ package frc.robot;
 
 
 import frc.robot.Constants.*;
-import frc.robot.utils.*;
+import frc.robot.utils.Ports;
 import frc.robot.subsystems.*;
 import frc.robot.commands.closed.*;
 import frc.robot.commands.complex.*;
@@ -81,7 +81,7 @@ public class RobotContainer {
     //---------- ELEVATOR ----------//
 
     //Driver - Y - Elevator to Intake Height
-    new JoystickButton(driverController, Button.kY.value).whileTrue(new ElevatorSetPosition(ElevatorConstants.INTAKE_HEIGHT));
+    new JoystickButton(driverController, Button.kY.value).whileTrue(Elevator.getInstance().setIntake());
 
     //Operator - RY joystick - Manually move Elevator
     Elevator.getInstance().setDefaultCommand(new SafeElevatorJoystick(
@@ -89,10 +89,10 @@ public class RobotContainer {
     ));
 
     //Operator - DPAD - Elevator to L1, L2, L3, L4 heights
-    new Trigger(() -> operatorController.getPOV() == 180).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L1));
-    new Trigger(() -> operatorController.getPOV() == 270).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L2));
-    new Trigger(() -> operatorController.getPOV() == 0).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L3));
-    new Trigger(() -> operatorController.getPOV() == 90).whileTrue(new ElevatorSetPosition(ElevatorConstants.ELEVATOR_L4));
+    new Trigger(() -> operatorController.getPOV() == 180).whileTrue(Elevator.getInstance().setL1());
+    new Trigger(() -> operatorController.getPOV() == 270).whileTrue(Elevator.getInstance().setL2());
+    new Trigger(() -> operatorController.getPOV() == 0).whileTrue(Elevator.getInstance().setL3());
+    new Trigger(() -> operatorController.getPOV() == 90).whileTrue(Elevator.getInstance().setL4());
     
     //---------- CORAL INTAKE/ SCORING ----------//
 

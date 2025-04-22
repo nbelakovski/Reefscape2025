@@ -12,8 +12,11 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
 
 
@@ -30,6 +33,7 @@ public class Elevator extends SubsystemBase {
   // I don't see us using the limit switches, are they real?
   private DigitalInput topLimitSwitch;
   private DigitalInput bottomLimitSwitch;
+  private PIDController controller = new PIDController(0.1, 0, 0);
 
 
   // Elevator Constructor
@@ -53,7 +57,7 @@ public class Elevator extends SubsystemBase {
     //leftMotorConfig.encoder.inverted();
     elevatorRightMotor.configure(rightMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     elevatorLeftMotor.configure(leftMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
+    controller.setTolerance(0.1);
   }
 
   // Elevator Singleton - ensures only 1 instance of Elevator is constructed
@@ -78,6 +82,28 @@ public class Elevator extends SubsystemBase {
     elevatorLeftMotor.set(speed);
     elevatorRightMotor.set(-speed);
   }
+
+  public Command setPosition(double desiredPosition) {
+        return new FunctionalCommand(
+            () -> {
+                this.controller.reset();
+                this.controller.setSetpoint(desiredPosition);
+            },
+            () -> {
+                double speed = this.controller.calculate(this.getPosition());
+                this.setSpeed(speed);
+            },
+            (interrupted) -> this.setSpeed(0),
+            () -> this.controller.atSetpoint(),
+            instance
+        );
+  }
+
+  public Command setIntake() { return setPosition(ElevatorConstants.INTAKE_HEIGHT); }
+  public Command setL1() { return setPosition(ElevatorConstants.ELEVATOR_L1); }
+  public Command setL2() { return setPosition(ElevatorConstants.ELEVATOR_L2); }
+  public Command setL3() { return setPosition(ElevatorConstants.ELEVATOR_L3); }
+  public Command setL4() { return setPosition(ElevatorConstants.ELEVATOR_L4); }
 
   //----------------- SENSOR METHODS -----------------//
 

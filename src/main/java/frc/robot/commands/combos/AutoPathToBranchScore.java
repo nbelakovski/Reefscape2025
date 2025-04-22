@@ -11,8 +11,8 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.MechConstants;
 import frc.robot.commands.closed.DriveToClosestBranch;
-import frc.robot.commands.closed.ElevatorSetPosition;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.CoralScorer;
 import frc.robot.subsystems.AlgaeHandler;
 
@@ -96,7 +96,7 @@ public class AutoPathToBranchScore extends SequentialCommandGroup {
       // 7. Move elevator up to desired elevator position
       new ParallelDeadlineGroup(
         new WaitCommand(3),
-        new ElevatorSetPosition(elevatorLevelHeight),
+        Elevator.getInstance().setPosition(elevatorLevelHeight),
         new DriveToClosestBranch(branchDirection)
       ),
  
@@ -104,13 +104,13 @@ public class AutoPathToBranchScore extends SequentialCommandGroup {
       new ParallelDeadlineGroup(
         new WaitCommand(2),
         CoralScorer.getInstance().scoreCommand(),
-        new ElevatorSetPosition(elevatorLevelHeight)
+        Elevator.getInstance().setPosition(elevatorLevelHeight)
       ),
 
       // 9. Bring the Elevator down
       new ParallelDeadlineGroup(
         new WaitCommand(2),
-        new ElevatorSetPosition(ElevatorConstants.INTAKE_HEIGHT)
+        Elevator.getInstance().setIntake()
       )
     );
   }

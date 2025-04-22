@@ -3,8 +3,8 @@ package frc.robot.commands.combos;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.Constants.MechConstants;
-import frc.robot.commands.closed.ElevatorSetPosition;
 import frc.robot.subsystems.AlgaeHandler;
+import frc.robot.subsystems.Elevator;
 //untested
 /** Add your docs here. */
 public class ElevatorSpitCombo extends ParallelCommandGroup {
@@ -13,7 +13,7 @@ public class ElevatorSpitCombo extends ParallelCommandGroup {
     public ElevatorSpitCombo(double position) {
 
         addCommands(
-            new ElevatorSetPosition(position),
+            Elevator.getInstance().setPosition(position),
             AlgaeHandler.getInstance().jawAngleCommand(MechConstants.JAW_INTAKE_ANGLE),
             AlgaeHandler.getInstance().spitCommand()
         );

@@ -9,10 +9,9 @@ import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.Constants.ElevatorConstants;
-import frc.robot.commands.closed.ElevatorSetPosition;
 import frc.robot.commands.complex.CoralInSafe;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Elevator;
 
 
 public class AutoPathToStation extends SequentialCommandGroup {
@@ -55,7 +54,7 @@ public class AutoPathToStation extends SequentialCommandGroup {
       // 4. Move elevator up to intake //need it to trigger the end
       new ParallelDeadlineGroup(
         new WaitCommand(3),
-        new ElevatorSetPosition(ElevatorConstants.INTAKE_HEIGHT),
+        Elevator.getInstance().setIntake(),
         new CoralInSafe()
       )
       // // 5. Bring the Elevator down
