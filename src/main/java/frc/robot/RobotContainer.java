@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -121,13 +120,15 @@ public class RobotContainer {
 
 
     // Operator - A - Rotate jaw to Intake Angle
-    new JoystickButton(operatorController, Button.kA.value).whileTrue(new SetJawAngle(MechConstants.JAW_INTAKE_ANGLE));
+    Command jawIntakeAngle = AlgaeHandler.getInstance().jawAngleCommand(MechConstants.JAW_INTAKE_ANGLE);
+    new JoystickButton(operatorController, Button.kA.value).whileTrue(jawIntakeAngle);
 
     //Operator - B - Go to L4, Algae score angle, and spit algae 
     new JoystickButton(operatorController, Button.kB.value).whileTrue(new ElevatorSpitCombo(ElevatorConstants.ELEVATOR_L4).repeatedly());
     
     // Operator - RB - Rotate jaw to bring Coral out of the way for a Supercycle
-    new JoystickButton(operatorController, Button.kLeftBumper.value).whileTrue(new SetJawAngle(MechConstants.JAW_UP_ANGLE)); //RB
+    Command jawUpAngle = AlgaeHandler.getInstance().jawAngleCommand(MechConstants.JAW_UP_ANGLE);
+    new JoystickButton(operatorController, Button.kLeftBumper.value).whileTrue(jawUpAngle); //RB
 
     // Operator - B - Rotate Jaw to Starting/Coral Stop Angle
     // new JoystickButton(operatorController, Button.kB.value).whileTrue(new SetJawAngle(MechConstants.JAW_STARTING_ANGLE).repeatedly());

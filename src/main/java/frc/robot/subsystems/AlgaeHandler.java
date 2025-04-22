@@ -14,8 +14,10 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class AlgaeHandler extends SubsystemBase {
@@ -26,6 +28,7 @@ public class AlgaeHandler extends SubsystemBase {
     private SparkMax jawMotor;
     private SparkMaxConfig jawConfig;
     private RelativeEncoder jawEncoder;
+    private PIDController controller = new PIDController(0.15, 0, 0.02);
 
     // AlgaeHandler Constructor
     private AlgaeHandler() {
@@ -45,6 +48,7 @@ public class AlgaeHandler extends SubsystemBase {
         tongueConfig = new SparkMaxConfig();
         tongueConfig.idleMode(IdleMode.kBrake);
         tongueMotor.configure(tongueConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        controller.setTolerance(2);
     }
 
     // AlgaeHandler Singleton - ensures AlgaeHandler is only constructed once
@@ -65,6 +69,22 @@ public class AlgaeHandler extends SubsystemBase {
         return this.runEnd(
             () -> this.spit(),
             () -> this.stop());
+    }
+
+    public Command jawAngleCommand(double desiredAngle) {
+        return new FunctionalCommand(
+            () -> {
+                this.controller.reset();
+                this.controller.setSetpoint(desiredAngle);
+            },
+            () -> {
+                double speed = this.controller.calculate(this.getAngle());
+                this.pivot(speed);
+            },
+            (interrupted) -> this.stopPivot(),
+            () -> this.controller.atSetpoint(),
+            instance
+        );
     }
 
     public void setCoast(){

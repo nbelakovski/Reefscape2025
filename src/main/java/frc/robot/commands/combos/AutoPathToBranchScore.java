@@ -12,9 +12,9 @@ import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.MechConstants;
 import frc.robot.commands.closed.DriveToClosestBranch;
 import frc.robot.commands.closed.ElevatorSetPosition;
-import frc.robot.commands.closed.SetJawAngle;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.CoralScorer;
+import frc.robot.subsystems.AlgaeHandler;
 
 
 public class AutoPathToBranchScore extends SequentialCommandGroup {
@@ -79,7 +79,7 @@ public class AutoPathToBranchScore extends SequentialCommandGroup {
       
         new WaitCommand(3),
         new DriveToClosestBranch(branchDirection),
-        new SetJawAngle(MechConstants.JAW_UP_ANGLE)
+        AlgaeHandler.getInstance().jawAngleCommand(MechConstants.JAW_UP_ANGLE)
       ),
 
       // 6. Bump up against the Reef Face manually

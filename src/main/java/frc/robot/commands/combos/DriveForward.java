@@ -17,7 +17,7 @@ public class DriveForward extends ParallelRaceGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new SwerveDrive( ()-> 0.5, ()-> 0.0, ()->0.0,()->false),
+      new SwerveDrive( ()-> 0.5, ()-> 0.0, ()->0.0,()->false, () -> false),
       new WaitCommand(1)
     );
   }
