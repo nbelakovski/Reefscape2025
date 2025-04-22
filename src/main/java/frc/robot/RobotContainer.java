@@ -148,7 +148,10 @@ public class RobotContainer {
 
     // Operator - Y - Eat the Algae
     Command eatCommand = AlgaeHandler.getInstance().eatCommand();
-    new JoystickButton(operatorController, Button.kY.value).whileTrue(new ElevatorJawCombo()); //11.7
+    Command elevatorJawCombo = new ParallelCommandGroup(
+      AlgaeHandler.getInstance().jawAngleCommand(MechConstants.JAW_INTAKE_ANGLE),
+      AlgaeHandler.getInstance().spitCommand());
+    new JoystickButton(operatorController, Button.kY.value).whileTrue(elevatorJawCombo); //11.7
     //new JoystickButton(operatorController, Button.kY.value).whileTrue(eatCommand);
 
     // Operator - X - Spit out the Algae
