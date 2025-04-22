@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -124,7 +125,11 @@ public class RobotContainer {
     new JoystickButton(operatorController, Button.kA.value).whileTrue(jawIntakeAngle);
 
     //Operator - B - Go to L4, Algae score angle, and spit algae 
-    new JoystickButton(operatorController, Button.kB.value).whileTrue(new ElevatorSpitCombo(ElevatorConstants.ELEVATOR_L4).repeatedly());
+    Command elevatorSpitCombo = new ParallelCommandGroup(
+      Elevator.getInstance().setL4(),
+      AlgaeHandler.getInstance().jawAngleCommand(MechConstants.JAW_INTAKE_ANGLE),
+      AlgaeHandler.getInstance().spitCommand());
+    new JoystickButton(operatorController, Button.kB.value).whileTrue(elevatorSpitCombo.repeatedly());
     
     // Operator - RB - Rotate jaw to bring Coral out of the way for a Supercycle
     Command jawUpAngle = AlgaeHandler.getInstance().jawAngleCommand(MechConstants.JAW_UP_ANGLE);
