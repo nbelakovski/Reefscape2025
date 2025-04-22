@@ -37,19 +37,23 @@ public class SwerveModule {
     private final ClosedLoopConfig driveControllerConfig;
     private final ClosedLoopConfig turnControllerConfig;
 
-    private SwerveModuleState desiredState; 
+    private SwerveModuleState desiredState;
 
-    public final ModuleConfig config;
+    // field for offset related to how RevSwerveMax calibration tool sets wheel
+    public final double ANGULAR_OFFSET;
+    public final String NAME;
 
 //     private final VelocityVoltage velocityOut = new VelocityVoltage(0);
 //     private final PositionVoltage rotationsIn = new PositionVoltage(0);
   /** Creates a new SwerveModule. */
-  public SwerveModule(ModuleConfig config) {
-    this.config = config;
+  public SwerveModule(int drivePort, int turnPort, double angularOffset, String name) {
+
+    ANGULAR_OFFSET = angularOffset;
+    NAME = name;
 
     //This intitilizes the Drive and Turn motors.
-    driveMotor = new SparkMax(config.DRIVE_PORT, MotorType.kBrushless);
-    turnMotor = new SparkMax(config.TURN_PORT, MotorType.kBrushless);
+    driveMotor = new SparkMax(drivePort, MotorType.kBrushless);
+    turnMotor = new SparkMax(turnPort, MotorType.kBrushless);
 
     driveEncoder = driveMotor.getEncoder();
     turnEncoder = turnMotor.getAbsoluteEncoder();
@@ -102,7 +106,7 @@ public class SwerveModule {
 
 
     // //flips the drive motor 
-    driveMotorConfig.inverted(config.DRIVE_INVERSION);
+    driveMotorConfig.inverted(false);
     //driveMotorConfig.encoder.inverted(true);
 
     double drivingFactor = SwerveModuleConstants.WHEEL_DIAMETER_METERS * Math.PI
@@ -159,12 +163,12 @@ public class SwerveModule {
 
   public SwerveModuleState getState(){
     return new SwerveModuleState(driveEncoder.getVelocity(),
-     new Rotation2d(turnEncoder.getPosition() - config.ANGULAR_OFFSET)); 
+     new Rotation2d(turnEncoder.getPosition() - ANGULAR_OFFSET));
   }
 
   public SwerveModulePosition getPosition(){
     return new SwerveModulePosition(driveEncoder.getPosition(),
-     new Rotation2d(turnEncoder.getPosition() - config.ANGULAR_OFFSET));
+     new Rotation2d(turnEncoder.getPosition() - ANGULAR_OFFSET));
   }
 
   public double getTurnRadians(){
@@ -175,7 +179,7 @@ public class SwerveModule {
     
     SwerveModuleState correctedDesiredState = new SwerveModuleState();
     correctedDesiredState.speedMetersPerSecond = desiredState.speedMetersPerSecond;
-    correctedDesiredState.angle = desiredState.angle.plus(Rotation2d.fromRadians(config.ANGULAR_OFFSET));
+    correctedDesiredState.angle = desiredState.angle.plus(Rotation2d.fromRadians(ANGULAR_OFFSET));
 
 
     //Maybe come back and fix, potentially not what we want
@@ -213,10 +217,10 @@ public void setTurnSetpoint(Rotation2d angle) {
   }
 
   public void updateTelemetry() {
-    SmartDashboard.putNumber(config.NAME + " Angle Degrees", getPosition().angle.getDegrees());
-    SmartDashboard.putNumber(config.NAME + " Angle Radians", getTurnRadians());
-    SmartDashboard.putNumber(config.NAME + " Drive Position", getPosition().distanceMeters);
-    SmartDashboard.putNumber(config.NAME + "Drive Motor Voltage", driveMotor.getBusVoltage());
+    SmartDashboard.putNumber(NAME + " Angle Degrees", getPosition().angle.getDegrees());
+    SmartDashboard.putNumber(NAME + " Angle Radians", getTurnRadians());
+    SmartDashboard.putNumber(NAME + " Drive Position", getPosition().distanceMeters);
+    SmartDashboard.putNumber(NAME + "Drive Motor Voltage", driveMotor.getBusVoltage());
   }
 
 

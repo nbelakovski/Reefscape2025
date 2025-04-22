@@ -35,6 +35,7 @@ import org.photonvision.EstimatedRobotPose;
 import frc.robot.Constants;
 import frc.robot.Constants.*;
 import frc.robot.FieldConstants;
+import frc.robot.utils.Ports;
 import frc.robot.utils.SwerveModule;
 
 
@@ -46,10 +47,10 @@ public class Drivetrain extends SubsystemBase {
   private final List<SwerveModule> modulesList;
   private final SwerveDriveKinematics driveKinematics;
 
-  private final SwerveModule frontL = new SwerveModule(SwerveConstants.SWERVE_FL);
-  private final SwerveModule frontR = new SwerveModule(SwerveConstants.SWERVE_FR);
-  private final SwerveModule backL = new SwerveModule(SwerveConstants.SWERVE_BL);
-  private final SwerveModule backR = new SwerveModule(SwerveConstants.SWERVE_BR);
+  private final SwerveModule frontL = new SwerveModule(Ports.SWERVE_DRIVE_FL, Ports.SWERVE_TURN_FL, SwerveConstants.FL_ANGULAR_OFFSET, "FL");
+  private final SwerveModule frontR = new SwerveModule(Ports.SWERVE_DRIVE_FR, Ports.SWERVE_TURN_FR, SwerveConstants.FR_ANGULAR_OFFSET, "FR");
+  private final SwerveModule backL = new SwerveModule(Ports.SWERVE_DRIVE_BL, Ports.SWERVE_TURN_BL, SwerveConstants.BL_ANGULAR_OFFSET, "BL");
+  private final SwerveModule backR = new SwerveModule(Ports.SWERVE_DRIVE_BR, Ports.SWERVE_TURN_BR, SwerveConstants.BR_ANGULAR_OFFSET, "BR");
 
   public AHRS navX;   // The gyro sensor
 

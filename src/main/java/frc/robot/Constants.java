@@ -1,33 +1,21 @@
 package frc.robot;
 
-
-
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
-import com.pathplanner.lib.util.*;
-import com.pathplanner.lib.config.PIDConstants;
-import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-import com.pathplanner.lib.util.*;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
+
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Mass;
 import edu.wpi.first.units.measure.MomentOfInertia;
 import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.KilogramSquareMeters;
-import frc.robot.utils.ModuleConfig;
-import frc.robot.utils.Ports;
 
 
 /**
@@ -42,29 +30,11 @@ public final class Constants {
 
   public static class SwerveConstants {
 
-    // Sensor Offsets for the radian difference between the physical sensor orientation and the calibrated swerve direction (from REV Hardware Client)
-    public static final double FL_SENSOR_OFFSET = 0.6419399;    
-    public static final double FR_SENSOR_OFFSET = 0.8829775; 
-    public static final double BR_SENSOR_OFFSET = 0.6507399; 
-    public static final double BL_SENSOR_OFFSET = 0.5267535;
-
     // Angular Offsets for the radian difference between the calibrated swerve and desired forward direction (based off REV calibration tool)
     public static final double FL_ANGULAR_OFFSET = Math.PI / 2;
     public static final double FR_ANGULAR_OFFSET = Math.PI;
-    public static final double BR_ANGULAR_OFFSET = 3* Math.PI / 2;
-    public static final double BL_ANGULAR_OFFSET = 0;
- 
-    // Determine if specific modules need to be inverted
-    public static final boolean FL_INVERSION = false;
-    public static final boolean FR_INVERSION = false;
-    public static final boolean BR_INVERSION = true;
-    public static final boolean BL_INVERSION = true;
-
-    //Constructor to hold all of the data to configure a SwerveModule
-    public static final ModuleConfig SWERVE_FL = new ModuleConfig("FL", Ports.SWERVE_DRIVE_FL, Ports.SWERVE_TURN_FL, FL_SENSOR_OFFSET, FL_ANGULAR_OFFSET, FL_INVERSION);
-    public static final ModuleConfig SWERVE_FR = new ModuleConfig("FR", Ports.SWERVE_DRIVE_FR, Ports.SWERVE_TURN_FR, FR_SENSOR_OFFSET, FR_ANGULAR_OFFSET, FR_INVERSION);
-    public static final ModuleConfig SWERVE_BL = new ModuleConfig("BL", Ports.SWERVE_DRIVE_BL, Ports.SWERVE_TURN_BL, BL_SENSOR_OFFSET, BL_ANGULAR_OFFSET, BL_INVERSION);
-    public static final ModuleConfig SWERVE_BR = new ModuleConfig("BR", Ports.SWERVE_DRIVE_BR, Ports.SWERVE_TURN_BR, BR_SENSOR_OFFSET, BR_ANGULAR_OFFSET, BR_INVERSION);
+    public static final double BR_ANGULAR_OFFSET = Math.PI / 2;
+    public static final double BL_ANGULAR_OFFSET = Math.PI;
 
 
     // public static final double FREE_SPIN_METER = 5.28; //???
