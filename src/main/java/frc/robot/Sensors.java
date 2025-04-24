@@ -6,10 +6,12 @@ import frc.robot.utils.Ports;
 public class Sensors {
     private static Sensors instance;
 
-    private AnalogInput score;
+    private AnalogInput scorer;
+    private AnalogInput gap;
 
     private Sensors() {
-        score = new AnalogInput(Ports.ANALOG_CORAL_SENSOR_PORT);
+        scorer = new AnalogInput(Ports.ANALOG_CORAL_SENSOR_PORT);
+        gap = new AnalogInput(Ports.ANALOG_GAP_SENSOR_PORT);
     }
 
     public static Sensors get() {
@@ -20,6 +22,10 @@ public class Sensors {
     }
 
     public static int scorer() {
-        return instance.score.getValue();
+        return instance.scorer.getValue();
+    }
+
+    public static int gap() {
+        return instance.gap.getValue();
     }
 }

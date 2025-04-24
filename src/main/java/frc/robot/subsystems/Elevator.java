@@ -75,7 +75,7 @@ public class Elevator extends SubsystemBase {
         getPosition() <= ElevatorConstants.ELEVATOR_MIN ) {
       speed = 0;
     }
-    if (CoralIntake.getInstance().isGapBlocked() && getPosition() < 3) {
+    if (Robot.isGapBlocked() && getPosition() < 3) {
       speed = 0;
     }
 
