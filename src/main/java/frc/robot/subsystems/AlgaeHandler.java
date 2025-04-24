@@ -4,6 +4,7 @@ package frc.robot.subsystems;
 
 
 import frc.robot.utils.Ports;
+import frc.robot.Motors;
 import frc.robot.Constants.MechConstants;
 
 import com.revrobotics.spark.SparkMax;
@@ -23,8 +24,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class AlgaeHandler extends SubsystemBase {
 
     private static AlgaeHandler instance;
-    private SparkMax tongueMotor;
-    private SparkMaxConfig tongueConfig;
     private SparkMax jawMotor;
     private SparkMaxConfig jawConfig;
     private RelativeEncoder jawEncoder;
@@ -44,10 +43,6 @@ public class AlgaeHandler extends SubsystemBase {
         // jawEncoder.setPositionConversionFactor(360); tried making it to 360 but method wont work
         jawMotor.configure(jawConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        tongueMotor = new SparkMax(Ports.ALGAE_TONGUE_MOTOR_PORT, MotorType.kBrushless);
-        tongueConfig = new SparkMaxConfig();
-        tongueConfig.idleMode(IdleMode.kBrake);
-        tongueMotor.configure(tongueConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         controller.setTolerance(2);
     }
 
@@ -59,18 +54,6 @@ public class AlgaeHandler extends SubsystemBase {
         return instance;
     }
 
-    public Command eatCommand() {
-        return this.runEnd(
-            () -> this.eat(),
-            () -> this.stop());
-    }
-
-    public Command spitCommand() {
-        return this.runEnd(
-            () -> this.spit(),
-            () -> this.stop());
-    }
-
     public Command jawAngleCommand(double desiredAngle) {
         return new FunctionalCommand(
             () -> {
@@ -79,49 +62,12 @@ public class AlgaeHandler extends SubsystemBase {
             },
             () -> {
                 double speed = this.controller.calculate(this.getAngle());
-                this.pivot(speed);
+                Motors.jawMotor(speed);
             },
-            (interrupted) -> this.stopPivot(),
+            (interrupted) -> Motors.jawMotor(0),
             () -> this.controller.atSetpoint(),
             instance
         );
-    }
-
-    public void setCoast(){
-        jawConfig.idleMode(IdleMode.kCoast);
-        //re-configures the sparkmax after changing brake/coast
-        jawMotor.configure(jawConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    }
-
-    public void setBrake(){
-        jawConfig.idleMode(IdleMode.kBrake);
-        //re-configures the sparkmax after changing brake/coast
-        jawMotor.configure(jawConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    }
-
-    
-    public void spit(){
-        tongueMotor.set(MechConstants.ALGAE_INTAKE_SPEED);
-    }
-    
-    public void eat(){
-        tongueMotor.set(-MechConstants.ALGAE_INTAKE_SPEED);
-    }
-    
-    public void stop(){
-        tongueMotor.set(0);
-    }
-    
-    public void zeroAngle() {
-        jawEncoder.setPosition(0);
-    }
-
-    public void pivot(double speed){
-        jawMotor.set(speed);
-    }
-
-    public void stopPivot(){
-        jawMotor.set(0);   
     }
 
     public double getAngle(){

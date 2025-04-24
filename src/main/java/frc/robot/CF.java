@@ -35,4 +35,18 @@ public class CF {
             }, (Subsystem)null).until(() -> Robot.isGapBlocked() && Robot.hasCoral()
         );       
     }
+
+    public static Command spitAlgaeCommand() {
+        return Commands.startEnd(
+            () -> Motors.tongueMotor(MechConstants.ALGAE_INTAKE_SPEED),
+            () -> Motors.tongueMotor(0),
+            (Subsystem)null);
+    }
+
+    public static Command eatAlgaeCommand() {
+        return Commands.startEnd(
+            () -> Motors.tongueMotor(-MechConstants.ALGAE_INTAKE_SPEED),
+            () -> Motors.tongueMotor(0),
+            (Subsystem)null);
+    }
 }

@@ -129,7 +129,7 @@ public class RobotContainer {
     //Operator - B - Go to L4, Algae score angle, and spit algae 
     Command elevatorSpitCombo = Elevator.getInstance().setL4().alongWith(
       AlgaeHandler.getInstance().jawAngleCommand(MechConstants.JAW_INTAKE_ANGLE),
-      AlgaeHandler.getInstance().spitCommand());
+      CF.spitAlgaeCommand());
     new JoystickButton(operatorController, Button.kB.value).whileTrue(elevatorSpitCombo.repeatedly());
     
     // Operator - RB - Rotate jaw to bring Coral out of the way for a Supercycle
@@ -148,17 +148,15 @@ public class RobotContainer {
     //---------- ALGAE TONGUE ----------//
 
     // Operator - Y - Eat the Algae
-    Command eatCommand = AlgaeHandler.getInstance().eatCommand();
     Command elevatorJawCombo =
       AlgaeHandler.getInstance().jawAngleCommand(MechConstants.JAW_INTAKE_ANGLE).alongWith(
-        AlgaeHandler.getInstance().spitCommand());
+        CF.spitAlgaeCommand());
     new JoystickButton(operatorController, Button.kY.value).whileTrue(elevatorJawCombo); //11.7
-    //new JoystickButton(operatorController, Button.kY.value).whileTrue(eatCommand);
+    //new JoystickButton(operatorController, Button.kY.value).whileTrue(CF.eatAlgaeCommand());
 
     // Operator - X - Spit out the Algae
-    Command spitCommand = AlgaeHandler.getInstance().spitCommand();
-    new JoystickButton(operatorController, Button.kX.value).whileTrue(spitCommand);
-    new JoystickButton(operatorController, Button.kRightBumper.value).whileTrue(eatCommand);
+    new JoystickButton(operatorController, Button.kX.value).whileTrue(CF.spitAlgaeCommand());
+    new JoystickButton(operatorController, Button.kRightBumper.value).whileTrue(CF.eatAlgaeCommand());
   }
 
 public void autoChooserInit() {
