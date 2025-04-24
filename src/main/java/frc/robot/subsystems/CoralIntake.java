@@ -4,6 +4,7 @@ package frc.robot.subsystems;
 
 
 import frc.robot.utils.Ports;
+import frc.robot.Robot;
 import frc.robot.Constants.MechConstants;
 import frc.robot.subsystems.LEDStrip.SubsystemPriority;
 import com.revrobotics.spark.SparkMax;
@@ -93,16 +94,14 @@ public class CoralIntake extends SubsystemBase {
     SmartDashboard.putNumber("coral gap distance", getDistance());
     
     // LEDs priority
-    if(coralInGap && !CoralScorer.getInstance().hasCoral()){
-       LEDStrip.request(SubsystemPriority.CORAL, LEDStrip.IN_GAP);
+    if(coralInGap && !Robot.hasCoral()){
+      LEDStrip.request(SubsystemPriority.CORAL, LEDStrip.IN_GAP);
     }
-    else if (coralInGap && CoralScorer.getInstance().hasCoral()) {
-        LEDStrip.request(SubsystemPriority.CORAL, LEDStrip.IN_GAP_SCORER);
+    else if (coralInGap && Robot.hasCoral()) {
+      LEDStrip.request(SubsystemPriority.CORAL, LEDStrip.IN_GAP_SCORER);
     }
-    else if(!coralInGap && CoralScorer.getInstance().hasCoral()){
-        LEDStrip.request(SubsystemPriority.CORAL, LEDStrip.IN_SCORER);
-      }
+    else if(!coralInGap && Robot.hasCoral()){
+      LEDStrip.request(SubsystemPriority.CORAL, LEDStrip.IN_SCORER);
     }
-
-
   }
+}

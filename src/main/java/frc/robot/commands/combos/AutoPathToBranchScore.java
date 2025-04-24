@@ -8,12 +8,12 @@ import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.CF;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.MechConstants;
 import frc.robot.commands.closed.DriveToClosestBranch;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.CoralScorer;
 import frc.robot.subsystems.AlgaeHandler;
 
 
@@ -61,7 +61,7 @@ public class AutoPathToBranchScore extends SequentialCommandGroup {
       // 2. Move coral forward a tiny bit to avoid elevator jamming
       new ParallelRaceGroup(
         //new SafeAlgaeJoystick(() -> 0.5),
-        CoralScorer.getInstance().scoreCommand(),
+        CF.scoreCommand(),
         new WaitCommand(0.1)  
       ),
 
@@ -103,7 +103,7 @@ public class AutoPathToBranchScore extends SequentialCommandGroup {
       // 8. For 2 seconds, spin the coral and maintain the elevator's position
       new ParallelDeadlineGroup(
         new WaitCommand(2),
-        CoralScorer.getInstance().scoreCommand(),
+        CF.scoreCommand(),
         Elevator.getInstance().setPosition(elevatorLevelHeight)
       ),
 

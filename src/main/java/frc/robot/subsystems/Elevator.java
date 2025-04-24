@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 
 import frc.robot.utils.Ports;
+import frc.robot.Robot;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.subsystems.LEDStrip.SubsystemPriority;
 import com.revrobotics.spark.SparkMax;
@@ -146,7 +147,7 @@ public class Elevator extends SubsystemBase {
     SmartDashboard.putBoolean("Top Limit", getTopLimit());
     SmartDashboard.putBoolean("Bottom Limit", getBotLimit());
 
-    boolean hasCoral = CoralScorer.getInstance().hasCoral();
+    boolean hasCoral = Robot.hasCoral();
     boolean nearIntake = getPosition() > 2 && getPosition() < 3.5;
     boolean nearL1 = (getPosition() > ElevatorConstants.ELEVATOR_L1 - 1 && getPosition() < ElevatorConstants.ELEVATOR_L1 + 1);
     boolean nearL2 = (getPosition() > ElevatorConstants.ELEVATOR_L2 - 1 && getPosition() < ElevatorConstants.ELEVATOR_L2 + 1);

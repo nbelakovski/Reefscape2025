@@ -106,11 +106,11 @@ public class RobotContainer {
     new Trigger(() -> (operatorController.getRawAxis(2) > 0.7)).whileTrue(new CoralInSafe());        //LT    
     
     // Operator - LB - Retract Coral if hanging too far out
-    Command retractCommand = CoralScorer.getInstance().retractCommand();
+    Command retractCommand = CF.retractCommand();
     new JoystickButton(operatorController, Button.kLeftBumper.value).whileTrue(retractCommand); //LB
     
     //Operator - RT - Score Coral
-    Command scoreCommand = CoralScorer.getInstance().scoreCommand();
+    Command scoreCommand = CF.scoreCommand();
     new Trigger(() -> (operatorController.getRawAxis(3) > 0.7)).whileTrue(scoreCommand); //RT
     
 
