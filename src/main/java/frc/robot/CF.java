@@ -22,4 +22,18 @@ public class CF {
             (Subsystem)null
         );
     }
+
+    public static Command coralInSafeCommand() {
+        return Commands.startEnd(
+            () -> {
+                MTR.coralIntake(MechConstants.CORAL_INTAKE_SPEED);
+                MTR.coralScorer.set(-MechConstants.CORAL_INTAKE_SPEED);
+            },
+            () -> {
+                MTR.coralIntake(0);
+                MTR.coralScorer.set(0);
+            },
+            (Subsystem)null
+        ).until(() -> Robot.isGapBlocked() && Robot.hasCoral());
+    }
 }

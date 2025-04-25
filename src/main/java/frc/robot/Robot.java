@@ -10,8 +10,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.AlgaeHandler;
-
-
+import frc.robot.subsystems.LEDStrip;
+import frc.robot.subsystems.LEDStrip.SubsystemPriority;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DataLogManager;
 
@@ -25,6 +25,7 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private static boolean coralInScorer = false;
+  private static boolean coralInGap = false;
 
   public static boolean hasCoral() {
     if (SNSR.scorer.getValue() > 2000) {
@@ -33,6 +34,15 @@ public class Robot extends TimedRobot {
       coralInScorer = false;
     }
     return coralInScorer;
+  }
+
+  public static boolean isGapBlocked() {
+    if (SNSR.gap.getValue() > 1000 && SNSR.gap.getValue() < 1800) {
+      coralInGap = true;
+    } else if (SNSR.gap.getValue() < 900 || SNSR.gap.getValue() > 1900) {
+      coralInGap = false;
+    }
+    return coralInGap;
   }
 
   private final RobotContainer m_robotContainer;
@@ -69,6 +79,17 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
     SmartDashboard.putBoolean("Coral in Scorer", hasCoral());
     SmartDashboard.putNumber("coral anolog distance", SNSR.scorer.getValue());
+    SmartDashboard.putBoolean("Coral in Gap", isGapBlocked());
+    SmartDashboard.putNumber("coral gap distance", SNSR.gap.getValue());
+    
+    // LEDs priority
+    if(coralInGap && !coralInScorer){
+      LEDStrip.request(SubsystemPriority.CORAL, LEDStrip.IN_GAP);
+    } else if (coralInGap && coralInScorer) {
+      LEDStrip.request(SubsystemPriority.CORAL, LEDStrip.IN_GAP_SCORER);
+    } else if(!coralInGap && coralInScorer){
+      LEDStrip.request(SubsystemPriority.CORAL, LEDStrip.IN_SCORER);
+    }
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
