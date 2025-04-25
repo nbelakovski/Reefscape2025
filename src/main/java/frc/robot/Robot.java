@@ -6,6 +6,7 @@ package frc.robot;
 
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.AlgaeHandler;
@@ -23,6 +24,17 @@ import edu.wpi.first.wpilibj.DataLogManager;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
+  private static boolean coralInScorer = false;
+
+  public static boolean hasCoral() {
+    if (SNSR.scorer.getValue() > 2000) {
+      coralInScorer = true;
+    } else if (SNSR.scorer.getValue() < 1800) {
+      coralInScorer = false;
+    }
+    return coralInScorer;
+  }
+
   private final RobotContainer m_robotContainer;
 
   /**
@@ -30,6 +42,7 @@ public class Robot extends TimedRobot {
    * initialization code.
    */
   public Robot() {
+    MTR.configureMotors();
     CameraServer.startAutomaticCapture();
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
@@ -54,6 +67,8 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    SmartDashboard.putBoolean("Coral in Scorer", hasCoral());
+    SmartDashboard.putNumber("coral anolog distance", SNSR.scorer.getValue());
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
