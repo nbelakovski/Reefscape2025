@@ -4,7 +4,7 @@ package frc.robot.commands.complex;
 import java.util.function.Supplier;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Motors;
+import frc.robot.MTR;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class SafeAlgaeJoystick extends Command {
@@ -30,13 +30,13 @@ public class SafeAlgaeJoystick extends Command {
     speedVal = MathUtil.clamp(speedVal, -0.8, 0.8);
     speedVal = MathUtil.applyDeadband(speedVal, 0.2);
     
-    Motors.jawMotor(speedVal);
+    MTR.jawMotor.set(speedVal);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    Motors.jawMotor(0);
+    MTR.jawMotor.set(0);
   }
 
   // Returns true when the command should end.

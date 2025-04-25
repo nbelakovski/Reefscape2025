@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.Motors.InnerMotors;
+import frc.robot.MTR.SNSR;
 import frc.robot.subsystems.AlgaeHandler;
 import frc.robot.subsystems.LEDStrip;
 import frc.robot.subsystems.LEDStrip.SubsystemPriority;
@@ -30,25 +30,25 @@ public class Robot extends TimedRobot {
   private static Robot instance;
 
   private final RobotContainer m_robotContainer;
-  private boolean coralInScorer = false;
-  private boolean coralInGap = false;
+  private static boolean coralInScorer = false;
+  private static boolean coralInGap = false;
 
   public static boolean hasCoral() {
-    if (Sensors.scorer() > 2000) {
-      instance.coralInScorer = true;
-    } else if (Sensors.scorer() < 1800) {
-      instance.coralInScorer = false;
+    if (SNSR.scorer.getValue() > 2000) {
+      coralInScorer = true;
+    } else if (SNSR.scorer.getValue() < 1800) {
+      coralInScorer = false;
     }
-    return instance.coralInScorer;
+    return coralInScorer;
   }
 
   public static boolean isGapBlocked() {
-    if (Sensors.gap() > 1000 && Sensors.gap() < 1800) {
-      instance.coralInGap = true;
-    } else if (Sensors.gap() < 900 || Sensors.gap() > 1900) {
-      instance.coralInGap = false;
+    if (SNSR.gap.getValue() > 1000 && SNSR.gap.getValue() < 1800) {
+      coralInGap = true;
+    } else if (SNSR.gap.getValue() < 900 || SNSR.gap.getValue() > 1900) {
+      coralInGap = false;
     }
-    return instance.coralInGap;
+    return coralInGap;
   }
 
   public static Robot get() {
@@ -63,6 +63,7 @@ public class Robot extends TimedRobot {
    * initialization code.
    */
   private Robot() {
+    MTR.configureMotors();
     CameraServer.startAutomaticCapture();
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
@@ -88,17 +89,17 @@ public class Robot extends TimedRobot {
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
     SmartDashboard.putBoolean("Coral in scorer", hasCoral());
-    SmartDashboard.putNumber("Coral analog distance", Sensors.scorer());
+    SmartDashboard.putNumber("Coral analog distance", SNSR.scorer.getValue());
     SmartDashboard.putBoolean("Coral in gap", isGapBlocked());
-    SmartDashboard.putNumber("Coral gap distance", Sensors.gap());
+    SmartDashboard.putNumber("Coral gap distance", SNSR.gap.getValue());
     // TODO: Need to move LEDStrip to Motors
-    if(coralInGap && !Robot.hasCoral()){
+    if(Robot.isGapBlocked() && !Robot.hasCoral()){
       LEDStrip.request(SubsystemPriority.CORAL, LEDStrip.IN_GAP);
     }
-    else if (coralInGap && Robot.hasCoral()) {
+    else if (Robot.isGapBlocked() && Robot.hasCoral()) {
       LEDStrip.request(SubsystemPriority.CORAL, LEDStrip.IN_GAP_SCORER);
     }
-    else if(!coralInGap && Robot.hasCoral()){
+    else if(!Robot.isGapBlocked() && Robot.hasCoral()){
       LEDStrip.request(SubsystemPriority.CORAL, LEDStrip.IN_SCORER);
     }
   }
@@ -109,8 +110,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    Motors.setJawIdleMode(IdleMode.kCoast);
-    InnerMotors.jawAngle();
+    MTR.setJawIdleMode(IdleMode.kCoast);
   }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
@@ -122,7 +122,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
-    Motors.setJawIdleMode(IdleMode.kBrake);
+    MTR.setJawIdleMode(IdleMode.kBrake);
   }
 
   /** This function is called periodically during autonomous. */

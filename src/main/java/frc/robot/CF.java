@@ -9,16 +9,16 @@ import frc.robot.Constants.MechConstants;
 public class CF {
     public static Command retractCommand() {
         return Commands.startEnd(
-            () -> Motors.coralScorer(MechConstants.CORAL_RETRACT_SPEED),
-            () -> Motors.coralScorer(0),
+            () -> MTR.coralScorer.set(MechConstants.CORAL_RETRACT_SPEED),
+            () -> MTR.coralScorer.set(0),
             (Subsystem)null
         );
     }
 
     public static Command scoreCommand() {
         return Commands.startEnd(
-            () -> Motors.coralScorer(MechConstants.CORAL_SCORE_SPEED),
-            () -> Motors.coralScorer(0),
+            () -> MTR.coralScorer.set(MechConstants.CORAL_SCORE_SPEED),
+            () -> MTR.coralScorer.set(0),
             (Subsystem)null
         );
     }
@@ -26,27 +26,27 @@ public class CF {
     public static Command coralInSafe() {
         return Commands.runEnd(
             () -> {
-                Motors.coralIntake(MechConstants.CORAL_INTAKE_SPEED);
-                Motors.coralScorer(-MechConstants.CORAL_INTAKE_SPEED);
+                MTR.coralIntake(MechConstants.CORAL_INTAKE_SPEED);
+                MTR.coralScorer.set(-MechConstants.CORAL_INTAKE_SPEED);
             },
             () -> {
-                Motors.coralIntake(0);
-                Motors.coralScorer(0);
+                MTR.coralIntake(0);
+                MTR.coralScorer.set(0);
             }, (Subsystem)null).until(() -> Robot.isGapBlocked() && Robot.hasCoral()
         );       
     }
 
     public static Command spitAlgaeCommand() {
         return Commands.startEnd(
-            () -> Motors.tongueMotor(MechConstants.ALGAE_INTAKE_SPEED),
-            () -> Motors.tongueMotor(0),
+            () -> MTR.tongueMotor(MechConstants.ALGAE_INTAKE_SPEED),
+            () -> MTR.tongueMotor(0),
             (Subsystem)null);
     }
 
     public static Command eatAlgaeCommand() {
         return Commands.startEnd(
-            () -> Motors.tongueMotor(-MechConstants.ALGAE_INTAKE_SPEED),
-            () -> Motors.tongueMotor(0),
+            () -> MTR.tongueMotor(-MechConstants.ALGAE_INTAKE_SPEED),
+            () -> MTR.tongueMotor(0),
             (Subsystem)null);
     }
 }
