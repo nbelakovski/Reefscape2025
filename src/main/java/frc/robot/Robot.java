@@ -9,9 +9,11 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.AlgaeHandler;
 import frc.robot.subsystems.LEDStrip;
 import frc.robot.subsystems.LEDStrip.SubsystemPriority;
+
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DataLogManager;
 
@@ -53,6 +55,7 @@ public class Robot extends TimedRobot {
    */
   public Robot() {
     MTR.configureMotors();
+    SNSR.configureSensors(); // Important! Run this *after* configureMotors, since some sensors are motor encoders.
     CameraServer.startAutomaticCapture();
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
@@ -81,6 +84,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("coral anolog distance", SNSR.scorer.getValue());
     SmartDashboard.putBoolean("Coral in Gap", isGapBlocked());
     SmartDashboard.putNumber("coral gap distance", SNSR.gap.getValue());
+    SmartDashboard.putNumber("Angle of Jaw", SNSR.jawEncoder.getPosition());
     
     // LEDs priority
     if(coralInGap && !coralInScorer){
@@ -98,7 +102,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    AlgaeHandler.getInstance().setCoast();
+    MTR.setJawIdleMode(IdleMode.kCoast);
   }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
@@ -110,8 +114,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
-    //AlgaeHandler.getInstance().zeroAngle();
-    AlgaeHandler.getInstance().setBrake();
+    MTR.setJawIdleMode(IdleMode.kBrake);
   }
 
   /** This function is called periodically during autonomous. */
@@ -127,7 +130,6 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    AlgaeHandler.getInstance().setBrake();
   }
 
   /** This function is called periodically during operator control. */

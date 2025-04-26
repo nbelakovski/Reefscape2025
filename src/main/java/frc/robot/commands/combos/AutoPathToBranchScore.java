@@ -14,7 +14,6 @@ import frc.robot.Constants.MechConstants;
 import frc.robot.commands.closed.DriveToClosestBranch;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.AlgaeHandler;
 
 
 public class AutoPathToBranchScore extends SequentialCommandGroup {
@@ -60,7 +59,6 @@ public class AutoPathToBranchScore extends SequentialCommandGroup {
       
       // 2. Move coral forward a tiny bit to avoid elevator jamming
       new ParallelRaceGroup(
-        //new SafeAlgaeJoystick(() -> 0.5),
         CF.scoreCommand(),
         new WaitCommand(0.1)  
       ),
@@ -79,7 +77,7 @@ public class AutoPathToBranchScore extends SequentialCommandGroup {
       
         new WaitCommand(3),
         new DriveToClosestBranch(branchDirection),
-        AlgaeHandler.getInstance().jawAngleCommand(MechConstants.JAW_UP_ANGLE)
+        CF.jawAngleCommand(MechConstants.JAW_UP_ANGLE)
       ),
 
       // 6. Bump up against the Reef Face manually

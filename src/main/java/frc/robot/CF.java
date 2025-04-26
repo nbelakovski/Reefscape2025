@@ -1,6 +1,11 @@
 package frc.robot;
 
+import java.util.function.Supplier;
+
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.Constants.MechConstants;
@@ -35,5 +40,55 @@ public class CF {
             },
             (Subsystem)null
         ).until(() -> Robot.isGapBlocked() && Robot.hasCoral());
+    }
+
+    public static Command algaeEatCommand() {
+        return Commands.startEnd(
+            () -> MTR.tongueMotor.set(-MechConstants.ALGAE_INTAKE_SPEED),
+            () -> MTR.tongueMotor.stopMotor(),
+            (Subsystem)null
+        );
+    }
+
+    public static Command algaeSpitCommand() {
+        return Commands.startEnd(
+            () -> MTR.tongueMotor.set(MechConstants.ALGAE_INTAKE_SPEED),
+            () -> MTR.tongueMotor.stopMotor(),
+            (Subsystem)null
+        );
+    }
+
+    public static Command jawAngleCommand(double desiredAngle) {
+        PIDController controller = new PIDController(0.15, 0, 0.02);
+        controller.setTolerance(2);
+        return new FunctionalCommand(
+            () -> {
+                controller.reset();
+                controller.setSetpoint(desiredAngle);
+            },
+            () -> {
+                double speed = controller.calculate(SNSR.jawEncoder.getPosition());
+                MTR.jawMotor.set(speed);
+            },
+            (interrupted) -> {
+                MTR.jawMotor.stopMotor();
+                controller.close();
+            },
+            () -> controller.atSetpoint(),
+            (Subsystem)null
+        );
+    }
+
+    public static Command safeAlgaeJoystick(Supplier<Double> speedSupplier) {
+        return Commands.runEnd(
+            () -> {
+                double speed = speedSupplier.get();
+                speed = MathUtil.clamp(speed, -0.8, 0.8);
+                speed = MathUtil.applyDeadband(speed, 0.2);
+                MTR.jawMotor.set(speed);
+            },
+            () -> MTR.jawMotor.stopMotor(),
+            (Subsystem)null
+        );
     }
 }

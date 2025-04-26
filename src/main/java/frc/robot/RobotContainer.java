@@ -15,8 +15,8 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 
@@ -115,23 +115,23 @@ public class RobotContainer {
     //---------- ALGAE JAW ----------//
     
     // Operator - LY joystick - manually move Jaw up & down
-    AlgaeHandler.getInstance().setDefaultCommand(new SafeAlgaeJoystick(
+    RobotModeTriggers.teleop().whileTrue(CF.safeAlgaeJoystick(
       () -> operatorController.getRawAxis(1)
     ));
 
 
     // Operator - A - Rotate jaw to Intake Angle
-    Command jawIntakeAngle = AlgaeHandler.getInstance().jawAngleCommand(MechConstants.JAW_INTAKE_ANGLE);
+    Command jawIntakeAngle = CF.jawAngleCommand(MechConstants.JAW_INTAKE_ANGLE);
     new JoystickButton(operatorController, Button.kA.value).whileTrue(jawIntakeAngle);
 
     //Operator - B - Go to L4, Algae score angle, and spit algae 
     Command elevatorSpitCombo = Elevator.getInstance().setL4().alongWith(
-      AlgaeHandler.getInstance().jawAngleCommand(MechConstants.JAW_INTAKE_ANGLE),
-      AlgaeHandler.getInstance().spitCommand());
+      CF.jawAngleCommand(MechConstants.JAW_INTAKE_ANGLE),
+      CF.algaeSpitCommand());
     new JoystickButton(operatorController, Button.kB.value).whileTrue(elevatorSpitCombo.repeatedly());
     
     // Operator - RB - Rotate jaw to bring Coral out of the way for a Supercycle
-    Command jawUpAngle = AlgaeHandler.getInstance().jawAngleCommand(MechConstants.JAW_UP_ANGLE);
+    Command jawUpAngle = CF.jawAngleCommand(MechConstants.JAW_UP_ANGLE);
     new JoystickButton(operatorController, Button.kLeftBumper.value).whileTrue(jawUpAngle); //RB
 
     // Operator - B - Rotate Jaw to Starting/Coral Stop Angle
@@ -146,17 +146,15 @@ public class RobotContainer {
     //---------- ALGAE TONGUE ----------//
 
     // Operator - Y - Eat the Algae
-    Command eatCommand = AlgaeHandler.getInstance().eatCommand();
     Command elevatorJawCombo =
-      AlgaeHandler.getInstance().jawAngleCommand(MechConstants.JAW_INTAKE_ANGLE).alongWith(
-        AlgaeHandler.getInstance().spitCommand());
+        CF.jawAngleCommand(MechConstants.JAW_INTAKE_ANGLE).alongWith(
+        CF.algaeSpitCommand());
     new JoystickButton(operatorController, Button.kY.value).whileTrue(elevatorJawCombo); //11.7
-    //new JoystickButton(operatorController, Button.kY.value).whileTrue(eatCommand);
+    //new JoystickButton(operatorController, Button.kY.value).whileTrue(CF.algaeEatCommand());
 
     // Operator - X - Spit out the Algae
-    Command spitCommand = AlgaeHandler.getInstance().spitCommand();
-    new JoystickButton(operatorController, Button.kX.value).whileTrue(spitCommand);
-    new JoystickButton(operatorController, Button.kRightBumper.value).whileTrue(eatCommand);
+    new JoystickButton(operatorController, Button.kX.value).whileTrue(CF.algaeSpitCommand());
+    new JoystickButton(operatorController, Button.kRightBumper.value).whileTrue(CF.algaeEatCommand());
   }
 
 public void autoChooserInit() {
