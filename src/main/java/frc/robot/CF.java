@@ -59,6 +59,11 @@ public class CF {
     }
 
     public static Command jawAngleCommand(double desiredAngle) {
+        // TODO: I believe all of this can be removed in favor of using
+        // the built-in PID controller in the SparkMax. However I don't want to make
+        // this change without testing it on the robot, and validating both that it
+        // works but also the calling set after setReference (i.e. from
+        // safeAlgaeJoystick) works.
         PIDController controller = new PIDController(0.15, 0, 0.02);
         controller.setTolerance(2);
         return new FunctionalCommand(
