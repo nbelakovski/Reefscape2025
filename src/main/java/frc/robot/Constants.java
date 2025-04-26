@@ -91,18 +91,18 @@ public final class Constants {
 
   public static class ElevatorConstants {
     
-    public static final double ELEVATOR_MIN = 0;//-3;
-    public static final double ELEVATOR_MAX = 100;
+    public static final double MIN = 0;//-3;
+    public static final double MAX = 100;
 
     public static final double INTAKE_HEIGHT = 3.2; //3.4;
-    public static final double ELEVATOR_L1 = 6;
-    public static final double ELEVATOR_L2 = 10.2;
-    public static final double ELEVATOR_L3 = 24;
-    public static final double ELEVATOR_L4 = 46;
+    public static final double L1 = 6;
+    public static final double L2 = 10.2;
+    public static final double L3 = 24;
+    public static final double L4 = 46;
  
-    public static final double ELEVATOR_PROCESSOR = 0;
-    public static final double ELEVATOR_ALGAE_L2 = 15;
-    public static final double ELEVATOR_ALGAE_L3 = 25;
+    public static final double PROCESSOR = 0;
+    public static final double ALGAE_L2 = 15;
+    public static final double ALGAE_L3 = 25;
 
     public static final boolean RIGHT_ELEVATOR_INVERTED = false;
     

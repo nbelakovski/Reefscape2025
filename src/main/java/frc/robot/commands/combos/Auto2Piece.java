@@ -5,39 +5,26 @@
 package frc.robot.commands.combos;
 
 
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Constants.ElevatorConstants;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class Auto2Piece extends SequentialCommandGroup {
+public class Auto2Piece {
   /** Creates a new Auto2Piece. */
-  public Auto2Piece(String startSide) {
-
-    Command scoreFirstCoral = null;
-    Command getSecondCoral = null;
-    Command scoreSecondCoral = null;
-
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
+  public static SequentialCommandGroup cmd(String startSide) {
     if(startSide.equals("LEFT")){
-      
-      scoreFirstCoral = new AutoPathToBranchScore( "Start-E-Auto", "RIGHT", 4);
-      getSecondCoral = new AutoPathToStation("E-to-Station-Auto");
-      scoreSecondCoral = new AutoPathToBranchScore("Station-to-F-Auto", "LEFT", 4);
-      } else if(startSide.equals("RIGHT")){
+      return
+        AutoPathToBranchScore.cmd( "Start-E-Auto", "RIGHT", ElevatorConstants.L4).andThen(
+        new AutoPathToStation("E-to-Station-Auto")).andThen(
+        AutoPathToBranchScore.cmd("Station-to-F-Auto", "LEFT", ElevatorConstants.L4));
 
-      scoreFirstCoral = new AutoPathToBranchScore("Start-to-C-Auto", "LEFT", 4);
-      getSecondCoral = new AutoPathToStation("C-to-Station-Auto");
-      scoreSecondCoral = new AutoPathToBranchScore("Station-to-B-Auto", "RIGHT", 4);
-
-      }
-    addCommands(
-      scoreFirstCoral,
-      getSecondCoral,
-      scoreSecondCoral
-
-    );
+    } else { // startSide.equals("RIGHT")
+      return
+        AutoPathToBranchScore.cmd("Start-to-C-Auto", "LEFT", ElevatorConstants.L4).andThen(
+        new AutoPathToStation("C-to-Station-Auto")).andThen(
+        AutoPathToBranchScore.cmd("Station-to-B-Auto", "RIGHT", ElevatorConstants.L4));
+    }
   }
 }

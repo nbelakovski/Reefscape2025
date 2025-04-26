@@ -28,7 +28,7 @@ public class MTR {
 
     public static void coralIntake(double speed) {
         coralIntakeMotorL.set(speed);
-        coralIntakeMotorR.set(-speed); // should we invert this one?
+        coralIntakeMotorR.set(-speed); // should we just invert the motor instead of passing -speed?
     }
 
     public static void setJawIdleMode(IdleMode idleMode) {

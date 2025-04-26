@@ -163,11 +163,11 @@ public void autoChooserInit() {
 
     //autoChooser.addOption("one meter", new PathPlannerAuto("one meter"));
 
-    autoChooser.addOption("L-onePieceAuto", new AutoPathToBranchScore("testing", "LEFT", 4));
-    autoChooser.addOption("R-onePieceAuto", new AutoPathToBranchScore("testing", "RIGHT", 4));
+    autoChooser.addOption("L-onePieceAuto", AutoPathToBranchScore.cmd("testing", "LEFT", ElevatorConstants.L4));
+    autoChooser.addOption("R-onePieceAuto", AutoPathToBranchScore.cmd("testing", "RIGHT", ElevatorConstants.L4));
 
-    autoChooser.addOption("L-twoPieceAuto", new Auto2Piece("LEFT"));
-    autoChooser.addOption("R-twoPieceAuto", new Auto2Piece("RIGHT"));
+    autoChooser.addOption("L-twoPieceAuto", Auto2Piece.cmd("LEFT"));
+    autoChooser.addOption("R-twoPieceAuto", Auto2Piece.cmd("RIGHT"));
     autoChooser.addOption("driveToBranch-Closest-LEFT", new DriveToClosestBranch("LEFT"));
     autoChooser.addOption("driveToBranch-21-LEFT", new DriveToBranchPID(21, "LEFT"));
     // autoChooser.addOption("turntoangle", new TurnToAnglePID(90));

@@ -71,8 +71,8 @@ public class Elevator extends SubsystemBase {
 
   // Primary method to move the elevator up & down
   public void setSpeed(double speed){
-    if (getPosition() >= ElevatorConstants.ELEVATOR_MAX ||
-        getPosition() <= ElevatorConstants.ELEVATOR_MIN ) {
+    if (getPosition() >= ElevatorConstants.MAX ||
+        getPosition() <= ElevatorConstants.MIN ) {
       speed = 0;
     }
     if (Robot.isGapBlocked() && getPosition() < 3) {
@@ -101,10 +101,10 @@ public class Elevator extends SubsystemBase {
   }
 
   public Command setIntake() { return setPosition(ElevatorConstants.INTAKE_HEIGHT); }
-  public Command setL1() { return setPosition(ElevatorConstants.ELEVATOR_L1); }
-  public Command setL2() { return setPosition(ElevatorConstants.ELEVATOR_L2); }
-  public Command setL3() { return setPosition(ElevatorConstants.ELEVATOR_L3); }
-  public Command setL4() { return setPosition(ElevatorConstants.ELEVATOR_L4); }
+  public Command setL1() { return setPosition(ElevatorConstants.L1); }
+  public Command setL2() { return setPosition(ElevatorConstants.L2); }
+  public Command setL3() { return setPosition(ElevatorConstants.L3); }
+  public Command setL4() { return setPosition(ElevatorConstants.L4); }
 
   //----------------- SENSOR METHODS -----------------//
 
@@ -149,10 +149,10 @@ public class Elevator extends SubsystemBase {
 
     boolean hasCoral = Robot.hasCoral();
     boolean nearIntake = getPosition() > 2 && getPosition() < 3.5;
-    boolean nearL1 = (getPosition() > ElevatorConstants.ELEVATOR_L1 - 1 && getPosition() < ElevatorConstants.ELEVATOR_L1 + 1);
-    boolean nearL2 = (getPosition() > ElevatorConstants.ELEVATOR_L2 - 1 && getPosition() < ElevatorConstants.ELEVATOR_L2 + 1);
-    boolean nearL3 = (getPosition() > ElevatorConstants.ELEVATOR_L3 - 1 && getPosition() < ElevatorConstants.ELEVATOR_L3 + 1);
-    boolean nearL4 = (getPosition() > ElevatorConstants.ELEVATOR_L4 - 1 && getPosition() < ElevatorConstants.ELEVATOR_L4 + 1);
+    boolean nearL1 = (getPosition() > ElevatorConstants.L1 - 1 && getPosition() < ElevatorConstants.L1 + 1);
+    boolean nearL2 = (getPosition() > ElevatorConstants.L2 - 1 && getPosition() < ElevatorConstants.L2 + 1);
+    boolean nearL3 = (getPosition() > ElevatorConstants.L3 - 1 && getPosition() < ElevatorConstants.L3 + 1);
+    boolean nearL4 = (getPosition() > ElevatorConstants.L4 - 1 && getPosition() < ElevatorConstants.L4 + 1);
     boolean nearSomething = nearIntake || nearL1 || nearL2 || nearL3 || nearL4;
     if (nearSomething && hasCoral) {
       LEDStrip.request(SubsystemPriority.ELCORAL, LEDStrip.SCORE_READY);
