@@ -18,13 +18,11 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -37,8 +35,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
 
-  private static final XboxController driverController = new XboxController(Ports.DRIVER_CONTROLLER);
-  private static final XboxController operatorController = new XboxController(Ports.OPERATOR_CONTROLLER);
+  private static final CommandXboxController driverController = new CommandXboxController(Ports.DRIVER_CONTROLLER);
+  private static final CommandXboxController operatorController = new CommandXboxController(Ports.OPERATOR_CONTROLLER);
 
   private SendableChooser<Command> autoChooser;
 
@@ -111,50 +109,48 @@ public class RobotContainer {
       () -> driverController.getRawAxis(1),
       () -> -driverController.getRawAxis(0),
       () -> -driverController.getRawAxis(4), //negative joystick values make a positive CCW turn
-      () -> driverController.getAButton(),
-      () -> driverController.getXButton()
+      () -> driverController.getHID().getAButton(),
+      () -> driverController.getHID().getXButton()
     ));
 
     // Driver - DPAD - Align to AprilTag Branch LEFT or RIGHT
-    new Trigger(() -> driverController.getPOV() == 270).whileTrue(new DriveToClosestBranch("LEFT"));
-    new Trigger(() -> driverController.getPOV() == 180).whileTrue(new DriveToClosestBranch("CENTER"));
-    new Trigger(() -> driverController.getPOV() == 90).whileTrue(new DriveToClosestBranch("RIGHT")); 
+    driverController.povLeft().whileTrue(new DriveToClosestBranch("LEFT"));
+    driverController.povDown().whileTrue(new DriveToClosestBranch("CENTER"));
+    driverController.povRight().whileTrue(new DriveToClosestBranch("RIGHT"));
 
-    new JoystickButton(driverController, Button.kLeftBumper.value).whileTrue(new DriveToClosestBranch("LEFT")); 
-    new JoystickButton(driverController, Button.kRightBumper.value).whileTrue(new DriveToClosestBranch("RIGHT")); 
+    driverController.leftBumper().whileTrue(new DriveToClosestBranch("LEFT"));
+    driverController.rightBumper().whileTrue(new DriveToClosestBranch("RIGHT"));
 
     //---------- ELEVATOR ----------//
 
     //Driver - Y - Elevator to Intake Height
-    new JoystickButton(driverController, Button.kY.value).whileTrue(Elevator.getInstance().setIntake());
+    driverController.y().whileTrue(Elevator.getInstance().setIntake());
 
     //Operator - RY joystick - Manually move Elevator
     Elevator.getInstance().setDefaultCommand(new SafeElevatorJoystick(
       () -> operatorController.getRawAxis(5)
     ));
-    // EventLoop m_loop;
-    // operatorController.x(m_loop).rising()
 
     //Operator - DPAD - Elevator to L1, L2, L3, L4 heights
-    new Trigger(() -> operatorController.getPOV() == 180).whileTrue(Elevator.getInstance().setL1());
-    new Trigger(() -> operatorController.getPOV() == 270).whileTrue(Elevator.getInstance().setL2());
-    new Trigger(() -> operatorController.getPOV() == 0).whileTrue(Elevator.getInstance().setL3());
-    new Trigger(() -> operatorController.getPOV() == 90).whileTrue(Elevator.getInstance().setL4());
+    operatorController.povDown().whileTrue(Elevator.getInstance().setL1());
+    operatorController.povLeft().whileTrue(Elevator.getInstance().setL2());
+    operatorController.povUp().whileTrue(Elevator.getInstance().setL3());
+    operatorController.povRight().whileTrue(Elevator.getInstance().setL4());
     
     //---------- CORAL INTAKE/ SCORING ----------//
 
     // Driver - RT - Move Elevator in position to Intake + Spin Intake wheels
     Command elevatorIntakeCombo = Elevator.getInstance().setIntake().alongWith(CF.coralInSafeCommand());
-    new Trigger(() -> (driverController.getRawAxis(3) > 0.7)).whileTrue(elevatorIntakeCombo);        //RT 
+    driverController.rightTrigger(0.7).whileTrue(elevatorIntakeCombo);
   
     // Operator - LT - Intake Coral with sensors
-    new Trigger(() -> (operatorController.getRawAxis(2) > 0.7)).whileTrue(CF.coralInSafeCommand());        //LT    
+    operatorController.leftTrigger(0.7).whileTrue(CF.coralInSafeCommand());
     
     // Operator - LB - Retract Coral if hanging too far out
-    new JoystickButton(operatorController, Button.kLeftBumper.value).whileTrue(CF.retractCommand()); //LB
+    operatorController.leftBumper().whileTrue(CF.retractCommand());
     
     //Operator - RT - Score Coral
-    new Trigger(() -> (operatorController.getRawAxis(3) > 0.7)).whileTrue(CF.scoreCommand()); //RT
+    operatorController.rightTrigger(0.7).whileTrue(CF.scoreCommand());
     
 
     //---------- ALGAE JAW ----------//
@@ -166,18 +162,17 @@ public class RobotContainer {
 
 
     // Operator - A - Rotate jaw to Intake Angle
-    Command jawIntakeAngle = CF.jawAngleCommand(MechConstants.JAW_INTAKE_ANGLE);
-    new JoystickButton(operatorController, Button.kA.value).whileTrue(jawIntakeAngle);
-
-    //Operator - B - Go to L4, Algae score angle, and spit algae 
-    Command elevatorSpitCombo = Elevator.getInstance().setL4().alongWith(
+    Command elevatorSpitCombo = Elevator.getInstance().setL4().repeatedly().alongWith(
       CF.jawAngleCommand(MechConstants.JAW_INTAKE_ANGLE),
       CF.algaeSpitCommand());
-    new JoystickButton(operatorController, Button.kB.value).whileTrue(elevatorSpitCombo.repeatedly());
+    operatorController.a().whileTrue(elevatorSpitCombo);
+    
+    //Operator - B - Go to L4, Algae score angle, and spit algae 
+    
     
     // Operator - RB - Rotate jaw to bring Coral out of the way for a Supercycle
-    Command jawUpAngle = CF.jawAngleCommand(MechConstants.JAW_UP_ANGLE);
-    new JoystickButton(operatorController, Button.kLeftBumper.value).whileTrue(jawUpAngle); //RB
+    // Command jawUpAngle = CF.jawAngleCommand(MechConstants.JAW_UP_ANGLE);
+    // operatorController.leftBumper().whileTrue(jawUpAngle);
 
     // Operator - B - Rotate Jaw to Starting/Coral Stop Angle
     // new JoystickButton(operatorController, Button.kB.value).whileTrue(new SetJawAngle(MechConstants.JAW_STARTING_ANGLE).repeatedly());
@@ -194,12 +189,12 @@ public class RobotContainer {
     Command elevatorJawCombo =
         CF.jawAngleCommand(MechConstants.JAW_INTAKE_ANGLE).alongWith(
         CF.algaeSpitCommand());
-    new JoystickButton(operatorController, Button.kY.value).whileTrue(elevatorJawCombo); //11.7
+    operatorController.y().whileTrue(elevatorJawCombo);
     //new JoystickButton(operatorController, Button.kY.value).whileTrue(CF.algaeEatCommand());
 
     // Operator - X - Spit out the Algae
-    new JoystickButton(operatorController, Button.kX.value).whileTrue(CF.algaeSpitCommand());
-    new JoystickButton(operatorController, Button.kRightBumper.value).whileTrue(CF.algaeEatCommand());
+    operatorController.x().whileTrue(CF.algaeSpitCommand());
+    operatorController.rightBumper().whileTrue(CF.algaeEatCommand());
   }
 
 public void autoChooserInit() {
