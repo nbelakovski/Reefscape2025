@@ -8,14 +8,15 @@ import frc.robot.utils.AprilCam;
 
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
-public class PoseEstimator extends SubsystemBase {
+public class ETechPoseEstimator extends SubsystemBase {
 
-  private static PoseEstimator instance;
+  private static ETechPoseEstimator instance;
   public AprilCam cam1;
   public AprilCam cam2;
   public boolean doubleCam = false;
@@ -23,7 +24,7 @@ public class PoseEstimator extends SubsystemBase {
   private final Field2d field2d = new Field2d();
 
   // Vision Constructor
-  private PoseEstimator() {
+  private ETechPoseEstimator() {
     
     // Construct each AprilCam
     this.cam1 = new AprilCam(
@@ -44,11 +45,15 @@ public class PoseEstimator extends SubsystemBase {
   }
 
   // Camera Singleton - ensures only one Camera instance is constructed
-  public static PoseEstimator getInstance(){
+  public static ETechPoseEstimator getInstance(){
     if(instance == null){
-      instance = new PoseEstimator();
+      instance = new ETechPoseEstimator();
     }
     return instance;
+  }
+
+  public Pose2d getPose() {
+    return drivetrain.getPose();
   }
 
   // This method will be called once per scheduler run
@@ -57,7 +62,7 @@ public class PoseEstimator extends SubsystemBase {
     drivetrain.updatePoseFromOdometry();
 
     // Correct pose estimate with vision measurements
-    var visionEst1 = cam1.getEstimatedGlobalPose(drivetrain.getPose());
+    var visionEst1 = cam1.getEstimatedGlobalPose(getPose());
     visionEst1.ifPresent(
       est -> {
         // Change our trust in the measurement based on the tags we can see
@@ -73,7 +78,7 @@ public class PoseEstimator extends SubsystemBase {
     }
 
     if(doubleCam){
-      var visionEst2 = cam2.getEstimatedGlobalPose(drivetrain.getPose());
+      var visionEst2 = cam2.getEstimatedGlobalPose(getPose());
       visionEst2.ifPresent(
         est -> {
           var estimatedSDs = cam2.getEstimationSDs();
@@ -87,7 +92,7 @@ public class PoseEstimator extends SubsystemBase {
       }
     }
 
-    int tagId = FieldConstants.getNearestReefTag(new Pose3d(drivetrain.getPose()));
+    int tagId = FieldConstants.getNearestReefTag(new Pose3d(getPose()));
 
     if(tagId > 0) {
       SmartDashboard.putNumber("tag " + tagId + " pose x", FieldConstants.aprilTagFieldLayout.getTagPose(tagId).get().getX());
@@ -102,11 +107,11 @@ public class PoseEstimator extends SubsystemBase {
     SmartDashboard.putNumber("Robot Angle Degrees", drivetrain.getRobotHeading().getDegrees());
     SmartDashboard.putNumber("Robot Angle Radians", drivetrain.getRobotHeading().getRadians());
 
-    SmartDashboard.putNumber("PoseX", drivetrain.getPose().getX());
-    SmartDashboard.putNumber("PoseY", drivetrain.getPose().getY());
-    SmartDashboard.putNumber("PoseAngle Degrees", drivetrain.getPose().getRotation().getDegrees());
-    SmartDashboard.putNumber("PoseAngle Radians", drivetrain.getPose().getRotation().getRadians());
-    field2d.setRobotPose(drivetrain.getPose());
+    SmartDashboard.putNumber("PoseX", getPose().getX());
+    SmartDashboard.putNumber("PoseY", getPose().getY());
+    SmartDashboard.putNumber("PoseAngle Degrees", getPose().getRotation().getDegrees());
+    SmartDashboard.putNumber("PoseAngle Radians", getPose().getRotation().getRadians());
+    field2d.setRobotPose(getPose());
     SmartDashboard.putData("PoseEstimator Field", field2d);
   }
 }

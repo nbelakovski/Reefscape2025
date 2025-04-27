@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.SwerveAutoConstants;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.ETechPoseEstimator;
 
 
 public class TurnToAnglePID extends Command {
@@ -43,7 +44,7 @@ public class TurnToAnglePID extends Command {
   public void execute() {
 
     //measure current angle
-    double measurement = drivetrain.getPose().getRotation().getDegrees();
+    double measurement = ETechPoseEstimator.getInstance().getPose().getRotation().getDegrees();
     
     //calculate new speed needed to turn to correct angle
     double newRotSpeed = controllerTurn.calculate(measurement);
