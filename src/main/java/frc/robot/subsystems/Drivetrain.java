@@ -54,7 +54,7 @@ public class Drivetrain extends SubsystemBase {
 
   public AHRS navX;   // The gyro sensor
 
-  private final SwerveDrivePoseEstimator poseEstimator;
+  public final SwerveDrivePoseEstimator poseEstimator;
 
   /** Drivetrain Constructor */
   private Drivetrain() {
@@ -159,18 +159,6 @@ public class Drivetrain extends SubsystemBase {
     return driveKinematics.toChassisSpeeds(getModuleStates());
   }
 
-  /**
-   * Sets the swerve ModuleStates.
-   *
-   * @param desiredStates The desired SwerveModule states.
-   */
-  public void setModuleStates(SwerveModuleState[] desiredStates) {
-    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, SwerveConstants.TOP_SPEED);
-    for(int i = 0; i < modules.length; i++) {
-      modules[i].setDesiredState(desiredStates[i]);
-    }
-  }
-
   // method to return all the positions of the 4 modules
   public SwerveModulePosition[] getSwerveModulePos() {  
     SwerveModulePosition[] modulePosition = new SwerveModulePosition[4];
@@ -188,8 +176,6 @@ public class Drivetrain extends SubsystemBase {
     }
     return states;
   }
-
-  
   
   //---------------NAVX METHODS --------------//
 
@@ -214,20 +200,7 @@ public class Drivetrain extends SubsystemBase {
     navX.reset();
   }
 
-    //---------------POSE ESTIMATION METHODS --------------//
-   /**
-   * Resets the poseEstimator to the specified pose.
-   * @param pose The pose to which to set the poseEstimator
-   */
-  public void resetPose(Pose2d newPose) {
-    poseEstimator.resetPosition(getRobotHeading(), getSwerveModulePos(), newPose);
-  }
-
-  public void updatePoseFromOdometry() {
-    poseEstimator.update(getRobotHeading(), getSwerveModulePos());
-  }
-
-
+  //---------------POSE ESTIMATION METHODS --------------//
   /**
    * Returns the currently-estimated pose of the robot relative to the FIELD
    * @return The pose.

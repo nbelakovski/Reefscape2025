@@ -53,13 +53,17 @@ public class ETechPoseEstimator extends SubsystemBase {
   }
 
   public Pose2d getPose() {
-    return drivetrain.getPose();
+    return drivetrain.poseEstimator.getEstimatedPosition();
+  }
+
+  public void resetPose(Pose2d newPose) {
+    drivetrain.poseEstimator.resetPosition(drivetrain.getRobotHeading(), drivetrain.getSwerveModulePos(), newPose);
   }
 
   // This method will be called once per scheduler run
   @Override
   public void periodic() {
-    drivetrain.updatePoseFromOdometry();
+    drivetrain.poseEstimator.update(drivetrain.getRobotHeading(), drivetrain.getSwerveModulePos());
 
     // Correct pose estimate with vision measurements
     var visionEst1 = cam1.getEstimatedGlobalPose(getPose());
