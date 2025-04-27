@@ -13,7 +13,6 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -27,11 +26,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.photonvision.EstimatedRobotPose;
 
 import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.SwerveAutoConstants;
@@ -73,7 +67,6 @@ public class Drivetrain extends SubsystemBase {
   private static Drivetrain instance;
 
   private final SwerveModule[] modules;
-  private final List<SwerveModule> modulesList;
   private final SwerveDriveKinematics driveKinematics;
 
   private final SwerveModule frontL = new SwerveModule(Ports.SWERVE_DRIVE_FL, Ports.SWERVE_TURN_FL, SwerveConstants.FL_ANGULAR_OFFSET, "FL");
@@ -96,12 +89,6 @@ public class Drivetrain extends SubsystemBase {
     modules[1] = frontR;
     modules[2] = backL;
     modules[3] = backR;
-
-    modulesList = new ArrayList<SwerveModule>();
-    modulesList.add(frontL);
-    modulesList.add(frontR);
-    modulesList.add(backL);
-    modulesList.add(backR);
     
     this.navX = new AHRS(NavXComType.kMXP_SPI);
 
@@ -119,52 +106,8 @@ public class Drivetrain extends SubsystemBase {
       FieldConstants.getRobotPoseInitialFMS().toPose2d(), // Starting pose based on FMS Alliance + Driver Station
       stateStdDevs,
       visionStdDevs);
-
-    autoConfig();
   }
 
-  //PathPlanner Drive Controller
-  public final PPHolonomicDriveController pathFollowerConfig = new PPHolonomicDriveController(
-    new PIDConstants(1, 0, 0), // Translation constants
-    new PIDConstants(SwerveAutoConstants.TURN_P, SwerveAutoConstants.TURN_I, SwerveAutoConstants.TURN_D) // Rotation constants 
-  );
-
-  // Configure AutoBuilder for PathPlanner
-  private void autoConfig(){
-
-    AutoBuilder.configure(
-      this::getPose,
-      this::resetPose,
-      this::getSpeeds, 
-      this::driveRobotRelative,
-      pathFollowerConfig,
-      new RobotConfig(
-        RobotConstants.MASS,
-        RobotConstants.MOI,
-        new ModuleConfig(
-          SwerveModuleConstants.WHEEL_DIAMETER_METERS/2,
-          SwerveConstants.TOP_SPEED,
-          SwerveModuleConstants.WHEEL_COEFFICIENT_OF_FRICTION,
-          DCMotor.getNEO(1).withReduction(SwerveModuleConstants.DRIVE_GEAR_REDUCTION),
-          SwerveModuleConstants.kDrivingMotorCurrentLimit,
-          1),
-        SwerveConstants.DRIVE_KINEMATICS.getModules()
-      ),
-      () -> {
-          // Boolean supplier that controls when the path will be mirrored for the red alliance
-          // This will flip the path being followed to the red side of the field.
-          // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-
-          var alliance = DriverStation.getAlliance();
-          if (alliance.isPresent()) {
-              return alliance.get() == DriverStation.Alliance.Red;
-          }
-          return false;
-      },
-      this
-    );
-   
-  }
 
   // Drivetrain Singleton - ensures only 1 instance of Drivetrain is constructed
   public static Drivetrain getInstance() {
@@ -317,14 +260,6 @@ public class Drivetrain extends SubsystemBase {
     navX.reset();
   }
 
-  public float getPitch() {
-    return navX.getPitch();
-  }
-
-  public float getRoll() {
-    return navX.getRoll();
-  }
-
 
 
     //---------------POSE ESTIMATION METHODS --------------//
@@ -376,34 +311,6 @@ public class Drivetrain extends SubsystemBase {
     for(int i = 0; i < modules.length; i++) {
       modules[i].updateTelemetry();
     }
-  }
-
-
-
-   // Updates pose estimate based on 2 cameras (used by Vision class)
-  public void updateEstimates(EstimatedRobotPose estimatedPose1, Matrix<N3, N1> standardDev1, EstimatedRobotPose estimatedPose2, Matrix<N3, N1> standardDev2) {
-    
-    Pose3d estimate1 = new Pose3d();
-    Pose3d estimate2 = new Pose3d();
-    
-    estimate1 = estimatedPose1.estimatedPose;
-    estimate2 = estimatedPose2.estimatedPose;
-
-    poseEstimator.addVisionMeasurement(
-      estimate1.toPose2d(),
-      estimatedPose1.timestampSeconds,
-      standardDev1
-    );
-
-    poseEstimator.addVisionMeasurement(
-      estimate2.toPose2d(),
-      estimatedPose2.timestampSeconds,
-      standardDev2
-    );
-
-    field.getObject("Cam 1 Est Pose").setPose(estimate1.toPose2d());
-    field.getObject("Cam 2 Est Pose").setPose(estimate2.toPose2d());
-
   }
 
 

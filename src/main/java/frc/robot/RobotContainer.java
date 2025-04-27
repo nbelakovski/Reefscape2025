@@ -4,17 +4,26 @@ package frc.robot;
 import frc.robot.Constants.*;
 import frc.robot.utils.Ports;
 import frc.robot.subsystems.*;
+import frc.robot.subsystems.Drivetrain.SwerveConstants;
 import frc.robot.commands.closed.*;
 import frc.robot.commands.complex.*;
 import frc.robot.commands.combos.*;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.config.ModuleConfig;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -37,6 +46,42 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     configureBindings();
+
+    // Configure AutoBuilder for PathPlanner
+    AutoBuilder.configure(
+      () -> Drivetrain.getInstance().getPose(),
+      (Pose2d newPose) -> Drivetrain.getInstance().resetPose(newPose),
+      () -> Drivetrain.getInstance().getSpeeds(),
+      (ChassisSpeeds speeds) -> Drivetrain.getInstance().driveRobotRelative(speeds),
+      new PPHolonomicDriveController(
+        new PIDConstants(1, 0, 0), // Translation constants
+        new PIDConstants(SwerveAutoConstants.TURN_P, SwerveAutoConstants.TURN_I, SwerveAutoConstants.TURN_D) // Rotation constants
+      ),
+      new RobotConfig(
+        RobotConstants.MASS,
+        RobotConstants.MOI,
+        new ModuleConfig(
+          SwerveModuleConstants.WHEEL_DIAMETER_METERS/2,
+          SwerveConstants.TOP_SPEED,
+          SwerveModuleConstants.WHEEL_COEFFICIENT_OF_FRICTION,
+          DCMotor.getNEO(1).withReduction(SwerveModuleConstants.DRIVE_GEAR_REDUCTION),
+          SwerveModuleConstants.kDrivingMotorCurrentLimit,
+          1),
+        SwerveConstants.DRIVE_KINEMATICS.getModules()
+      ),
+      () -> {
+          // Boolean supplier that controls when the path will be mirrored for the red alliance
+          // This will flip the path being followed to the red side of the field.
+          // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+          var alliance = DriverStation.getAlliance();
+          if (alliance.isPresent()) {
+              return alliance.get() == DriverStation.Alliance.Red;
+          }
+          return false;
+      },
+      Drivetrain.getInstance()
+    );
 
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("AutoChooser", autoChooser);

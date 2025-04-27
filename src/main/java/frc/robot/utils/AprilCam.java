@@ -30,7 +30,6 @@ public class AprilCam {
     private PhotonCamera camera;
     private Transform3d camOffset;
     private PhotonPoseEstimator photonPoseEstimator;
-    private List<PhotonPipelineResult> results;
 
 
     // Simulation
@@ -43,11 +42,6 @@ public class AprilCam {
         this.camOffset = new Transform3d(pos, angle);
         this.photonPoseEstimator = new PhotonPoseEstimator(FieldConstants.aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, camOffset);
      }
-
-
-    public void update() {
-        this.results = camera.getAllUnreadResults();
-    }
 
     // --------------------- POSE ESTIMATION ------------------------------- //
     // Check out this page: https://docs.photonvision.org/en/latest/docs/examples/poseest.html
@@ -68,7 +62,7 @@ public class AprilCam {
     //https://github.com/PhotonVision/photonvision/blob/main/photonlib-java-examples/poseest/src/main/java/frc/robot/Vision.java 
     public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstPose) {
         Optional<EstimatedRobotPose> visionEst = Optional.empty();
-        for (PhotonPipelineResult result : this.results) {
+        for (PhotonPipelineResult result : camera.getAllUnreadResults()) {
             visionEst = photonPoseEstimator.update(result);
             updateEstimationSDs(visionEst, result.getTargets());
         }

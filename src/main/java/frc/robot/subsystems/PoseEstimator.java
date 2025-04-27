@@ -9,21 +9,19 @@ import frc.robot.utils.AprilCam;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
-public class Vision extends SubsystemBase {
+public class PoseEstimator extends SubsystemBase {
 
-  private static Vision instance;
+  private static PoseEstimator instance;
   public AprilCam cam1;
   public AprilCam cam2;
   public boolean doubleCam = false;
   Drivetrain drivetrain = Drivetrain.getInstance();
-  private final SendableChooser<Integer> tagChooser = new SendableChooser<>();
 
   // Vision Constructor
-  private Vision() {
+  private PoseEstimator() {
     
     // Construct each AprilCam
     this.cam1 = new AprilCam(
@@ -32,9 +30,6 @@ public class Vision extends SubsystemBase {
       VisionConstants.CAM1_ANGLE_OFFSET
     );
     
-    // Update the cameras
-    cam1.update();
-    
     // Option to add 2nd camera
     if(doubleCam){
       this.cam2 = new AprilCam(
@@ -42,33 +37,22 @@ public class Vision extends SubsystemBase {
         VisionConstants.CAM2_POSITION_OFFSET, 
         VisionConstants.CAM2_ANGLE_OFFSET
       );
-      cam2.update();  
     }
 
-    for(int i=1; i<=22; i++){
-      tagChooser.addOption("AT "+i, i);
-    }
-    
   }
 
   // Camera Singleton - ensures only one Camera instance is constructed
-  public static Vision getInstance(){
+  public static PoseEstimator getInstance(){
     if(instance == null){
-      instance = new Vision();
+      instance = new PoseEstimator();
     }
-      return instance;
+    return instance;
   }
-  
-  public int getClosestId(){
-    return FieldConstants.getNearestReefTag(new Pose3d(drivetrain.getPose()));
-  }
-
 
   // This method will be called once per scheduler run
   @Override
   public void periodic() {
 
-    cam1.update();
     // Correct pose estimate with vision measurements
     var visionEst1 = cam1.getEstimatedGlobalPose(drivetrain.getPose());
     visionEst1.ifPresent(
@@ -86,7 +70,6 @@ public class Vision extends SubsystemBase {
     }
 
     if(doubleCam){
-      cam2.update();
       var visionEst2 = cam2.getEstimatedGlobalPose(drivetrain.getPose());
       visionEst2.ifPresent(
         est -> {
@@ -101,8 +84,7 @@ public class Vision extends SubsystemBase {
       }
     }
 
-    // int tagId = tagChooser.getSelected();
-    int tagId = getClosestId();
+    int tagId = FieldConstants.getNearestReefTag(new Pose3d(drivetrain.getPose()));
 
     if(tagId > 0) {
       SmartDashboard.putNumber("tag " + tagId + " pose x", FieldConstants.aprilTagFieldLayout.getTagPose(tagId).get().getX());
