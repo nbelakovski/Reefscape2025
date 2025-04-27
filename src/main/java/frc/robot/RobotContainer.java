@@ -67,7 +67,7 @@ public class RobotContainer {
           DCMotor.getNEO(1).withReduction(SwerveModuleConstants.DRIVE_GEAR_REDUCTION),
           SwerveModuleConstants.kDrivingMotorCurrentLimit,
           1),
-        SwerveConstants.DRIVE_KINEMATICS.getModules()
+        Drivetrain.getInstance().driveKinematics.getModules()
       ),
       () -> {
           // Boolean supplier that controls when the path will be mirrored for the red alliance

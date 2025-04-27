@@ -33,14 +33,6 @@ public class Drivetrain extends SubsystemBase {
     public static final double BR_ANGULAR_OFFSET = Math.PI / 2;
     public static final double BL_ANGULAR_OFFSET = Math.PI;
 
-    // Distance between front and back wheels on robot
-    public static final SwerveDriveKinematics DRIVE_KINEMATICS = new SwerveDriveKinematics(
-        new Translation2d(RobotConstants.WHEEL_BASE / 2, RobotConstants.TRACK_WIDTH / 2),
-        new Translation2d(RobotConstants.WHEEL_BASE / 2, -RobotConstants.TRACK_WIDTH / 2),
-        new Translation2d(-RobotConstants.WHEEL_BASE / 2, RobotConstants.TRACK_WIDTH / 2),
-        new Translation2d(-RobotConstants.WHEEL_BASE / 2, -RobotConstants.TRACK_WIDTH / 2)
-    );
-
     public static final double TOP_SPEED = 4.0; //9.6
     public static final double TOP_ANGULAR_SPEED = 2 * Math.PI;
   };
@@ -48,7 +40,12 @@ public class Drivetrain extends SubsystemBase {
   private static Drivetrain instance;
 
   private final SwerveModule[] modules;
-  private final SwerveDriveKinematics driveKinematics;
+  public final SwerveDriveKinematics driveKinematics = new SwerveDriveKinematics(
+      new Translation2d(RobotConstants.WHEEL_BASE / 2, RobotConstants.TRACK_WIDTH / 2),
+      new Translation2d(RobotConstants.WHEEL_BASE / 2, -RobotConstants.TRACK_WIDTH / 2),
+      new Translation2d(-RobotConstants.WHEEL_BASE / 2, RobotConstants.TRACK_WIDTH / 2),
+      new Translation2d(-RobotConstants.WHEEL_BASE / 2, -RobotConstants.TRACK_WIDTH / 2)
+  );
 
   private final SwerveModule frontL = new SwerveModule(Ports.SWERVE_DRIVE_FL, Ports.SWERVE_TURN_FL, SwerveConstants.FL_ANGULAR_OFFSET, "FL");
   private final SwerveModule frontR = new SwerveModule(Ports.SWERVE_DRIVE_FR, Ports.SWERVE_TURN_FR, SwerveConstants.FR_ANGULAR_OFFSET, "FR");
@@ -69,14 +66,12 @@ public class Drivetrain extends SubsystemBase {
     modules[3] = backR;
     
     this.navX = new AHRS(NavXComType.kMXP_SPI);
-
-    this.driveKinematics = SwerveConstants.DRIVE_KINEMATICS;
     
     var stateStdDevs = VecBuilder.fill(0.1, 0.1, 0.1);
     var visionStdDevs = VecBuilder.fill(1, 1, 1);
 
     this.poseEstimator =  new SwerveDrivePoseEstimator(
-      SwerveConstants.DRIVE_KINEMATICS,
+      driveKinematics,
       getRobotHeading(),
       getSwerveModulePos(),
       FieldConstants.getRobotPoseInitialFMS().toPose2d(), // Starting pose based on FMS Alliance + Driver Station
