@@ -9,12 +9,14 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Constants.MechConstants;
 import frc.robot.subsystems.LEDStrip;
 import frc.robot.subsystems.LEDStrip.SubsystemPriority;
 
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DataLogManager;
 
 
@@ -135,7 +137,24 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    if (RobotContainer.operatorController.getHID().getLeftBumperButton()) {
+      MTR.coralScorer.set(MechConstants.CORAL_RETRACT_SPEED);
+    } else {
+      MTR.coralScorer.set(0);
+    }
+
+    if (RobotContainer.operatorController.getHID().getRightBumperButton()) {
+      MTR.tongueMotor.set(-MechConstants.ALGAE_INTAKE_SPEED);
+    } else {
+      MTR.tongueMotor.set(0);
+    }
+
+    double jawSpeed = RobotContainer.operatorController.getRawAxis(1);
+    jawSpeed = MathUtil.clamp(jawSpeed, -0.8, 0.8);
+    jawSpeed = MathUtil.applyDeadband(jawSpeed, 0.2);
+    MTR.jawMotor.set(jawSpeed);
+  }
 
   @Override
   public void testInit() {

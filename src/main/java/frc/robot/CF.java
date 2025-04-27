@@ -12,14 +12,6 @@ import frc.robot.Constants.MechConstants;
 
 // CommandFactory
 public class CF {
-    public static Command retractCommand() {
-        return Commands.startEnd(
-            () -> MTR.coralScorer.set(MechConstants.CORAL_RETRACT_SPEED),
-            () -> MTR.coralScorer.set(0),
-            (Subsystem)null
-        );
-    }
-
     public static Command scoreCommand() {
         return Commands.startEnd(
             () -> MTR.coralScorer.set(MechConstants.CORAL_SCORE_SPEED),
@@ -40,14 +32,6 @@ public class CF {
             },
             (Subsystem)null
         ).until(() -> Robot.isGapBlocked() && Robot.hasCoral());
-    }
-
-    public static Command algaeEatCommand() {
-        return Commands.startEnd(
-            () -> MTR.tongueMotor.set(-MechConstants.ALGAE_INTAKE_SPEED),
-            () -> MTR.tongueMotor.stopMotor(),
-            (Subsystem)null
-        );
     }
 
     public static Command algaeSpitCommand() {
@@ -79,19 +63,6 @@ public class CF {
                 MTR.jawMotor.stopMotor();
             },
             () -> jawAngleController.atSetpoint(),
-            (Subsystem)null
-        );
-    }
-
-    public static Command safeAlgaeJoystick(Supplier<Double> speedSupplier) {
-        return Commands.runEnd(
-            () -> {
-                double speed = speedSupplier.get();
-                speed = MathUtil.clamp(speed, -0.8, 0.8);
-                speed = MathUtil.applyDeadband(speed, 0.2);
-                MTR.jawMotor.set(speed);
-            },
-            () -> MTR.jawMotor.stopMotor(),
             (Subsystem)null
         );
     }

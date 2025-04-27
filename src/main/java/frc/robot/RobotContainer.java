@@ -35,8 +35,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
 
-  private static final CommandXboxController driverController = new CommandXboxController(Ports.DRIVER_CONTROLLER);
-  private static final CommandXboxController operatorController = new CommandXboxController(Ports.OPERATOR_CONTROLLER);
+  public static final CommandXboxController driverController = new CommandXboxController(Ports.DRIVER_CONTROLLER);
+  public static final CommandXboxController operatorController = new CommandXboxController(Ports.OPERATOR_CONTROLLER);
 
   private SendableChooser<Command> autoChooser;
 
@@ -128,7 +128,7 @@ public class RobotContainer {
 
     //Operator - RY joystick - Manually move Elevator
     Elevator.getInstance().setDefaultCommand(new SafeElevatorJoystick(
-      () -> operatorController.getRawAxis(5)
+      () -> operatorController.getRightY()
     ));
 
     //Operator - DPAD - Elevator to L1, L2, L3, L4 heights
@@ -147,7 +147,7 @@ public class RobotContainer {
     operatorController.leftTrigger(0.7).whileTrue(CF.coralInSafeCommand());
     
     // Operator - LB - Retract Coral if hanging too far out
-    operatorController.leftBumper().whileTrue(CF.retractCommand());
+    // operatorController.leftBumper().whileTrue(CF.retractCommand());  // See robot TeleopPeriodic
     
     //Operator - RT - Score Coral
     operatorController.rightTrigger(0.7).whileTrue(CF.scoreCommand());
@@ -156,9 +156,9 @@ public class RobotContainer {
     //---------- ALGAE JAW ----------//
     
     // Operator - LY joystick - manually move Jaw up & down
-    RobotModeTriggers.teleop().whileTrue(CF.safeAlgaeJoystick(
-      () -> operatorController.getRawAxis(1)
-    ));
+    // RobotModeTriggers.teleop().whileTrue(CF.safeAlgaeJoystick(
+    //   () -> operatorController.getRawAxis(1)
+    // )); // see Robot::teleopPeriodic
 
 
     // Operator - A - Rotate jaw to Intake Angle
@@ -190,11 +190,10 @@ public class RobotContainer {
         CF.jawAngleCommand(MechConstants.JAW_INTAKE_ANGLE).alongWith(
         CF.algaeSpitCommand());
     operatorController.y().whileTrue(elevatorJawCombo);
-    //new JoystickButton(operatorController, Button.kY.value).whileTrue(CF.algaeEatCommand());
 
     // Operator - X - Spit out the Algae
     operatorController.x().whileTrue(CF.algaeSpitCommand());
-    operatorController.rightBumper().whileTrue(CF.algaeEatCommand());
+    // operatorController.rightBumper().whileTrue(CF.algaeEatCommand()); // See Robot::teleopPeriodic
   }
 
 public void autoChooserInit() {
