@@ -1,8 +1,5 @@
 package frc.robot.subsystems;
 
-import com.studica.frc.AHRS;
-import com.studica.frc.AHRS.NavXComType;
-
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -21,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants.RobotConstants;
 import frc.robot.FieldConstants;
+import frc.robot.SNSR;
 import frc.robot.utils.Ports;
 import frc.robot.utils.SwerveModule;
 
@@ -51,21 +49,17 @@ public class Drivetrain extends SubsystemBase {
   private final SwerveModule backL = new SwerveModule(Ports.SWERVE_DRIVE_BL, Ports.SWERVE_TURN_BL, SwerveConstants.BL_ANGULAR_OFFSET, "BL");
   private final SwerveModule backR = new SwerveModule(Ports.SWERVE_DRIVE_BR, Ports.SWERVE_TURN_BR, SwerveConstants.BR_ANGULAR_OFFSET, "BR");
   private final SwerveModule[] modules = {frontL, frontR, backL, backR};
-
-  public AHRS navX;   // The gyro sensor
-
   public final SwerveDrivePoseEstimator poseEstimator;
 
   /** Drivetrain Constructor */
   private Drivetrain() {
-    this.navX = new AHRS(NavXComType.kMXP_SPI);
     
     var stateStdDevs = VecBuilder.fill(0.1, 0.1, 0.1);
     var visionStdDevs = VecBuilder.fill(1, 1, 1);
 
     this.poseEstimator =  new SwerveDrivePoseEstimator(
       driveKinematics,
-      getRobotHeading(),
+      SNSR.navX.getRotation2d(),
       getSwerveModulePos(),
       FieldConstants.getRobotPoseInitialFMS().toPose2d(), // Starting pose based on FMS Alliance + Driver Station
       stateStdDevs,
@@ -177,27 +171,11 @@ public class Drivetrain extends SubsystemBase {
     return states;
   }
   
-  //---------------NAVX METHODS --------------//
-
-  /**
-   * Returns the heading of the robot.
-   *
-   * @return the robot's heading in degrees, from -180 to 180
-   */
-  public Rotation2d getRobotHeading() {
-    return navX.getRotation2d();
-  }
-
   // Resets the drive encoders to currently read a position of 0.
   public void resetEncoders() {
     for(int i = 0; i < modules.length; i++) {
       modules[i].resetEncoders();
     }
-  }
-
-  // Zeroes the heading of the robot, previously called resetIMU()
-  public void zeroRobotHeading() {
-    navX.reset();
   }
 
   //---------------POSE ESTIMATION METHODS --------------//
@@ -221,13 +199,10 @@ public class Drivetrain extends SubsystemBase {
     }
   }
 
-
   // This method will be called once per scheduler run
   @Override
   public void periodic() {
     updateModuleTelemetry();
-    
-    SmartDashboard.putNumber("NavX Compass Heading", navX.getCompassHeading());
     SmartDashboard.putNumber("FL distanceMeters", frontL.getPosition().distanceMeters);
   }
 }

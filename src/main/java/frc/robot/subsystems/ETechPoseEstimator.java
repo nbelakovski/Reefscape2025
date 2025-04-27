@@ -4,6 +4,7 @@ package frc.robot.subsystems;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.Constants;
 import frc.robot.FieldConstants;
+import frc.robot.SNSR;
 import frc.robot.utils.AprilCam;
 
 
@@ -57,13 +58,13 @@ public class ETechPoseEstimator extends SubsystemBase {
   }
 
   public void resetPose(Pose2d newPose) {
-    drivetrain.poseEstimator.resetPosition(drivetrain.getRobotHeading(), drivetrain.getSwerveModulePos(), newPose);
+    drivetrain.poseEstimator.resetPosition(SNSR.navX.getRotation2d(), drivetrain.getSwerveModulePos(), newPose);
   }
 
   // This method will be called once per scheduler run
   @Override
   public void periodic() {
-    drivetrain.poseEstimator.update(drivetrain.getRobotHeading(), drivetrain.getSwerveModulePos());
+    drivetrain.poseEstimator.update(SNSR.navX.getRotation2d(), drivetrain.getSwerveModulePos());
 
     // Correct pose estimate with vision measurements
     var visionEst1 = cam1.getEstimatedGlobalPose(getPose());
@@ -108,8 +109,8 @@ public class ETechPoseEstimator extends SubsystemBase {
     SmartDashboard.putNumber("CAM1 X offset to Center", Constants.VisionConstants.CAM1_X_OFFSET_TO_CENTER);
     SmartDashboard.putNumber("CAM1 Bumper to Center Dist", Constants.RobotConstants.BUMPER_TO_ROBOT_CENTER_DISTANCE);
 
-    SmartDashboard.putNumber("Robot Angle Degrees", drivetrain.getRobotHeading().getDegrees());
-    SmartDashboard.putNumber("Robot Angle Radians", drivetrain.getRobotHeading().getRadians());
+    SmartDashboard.putNumber("Robot Angle Degrees", SNSR.navX.getRotation2d().getDegrees());
+    SmartDashboard.putNumber("Robot Angle Radians", SNSR.navX.getRotation2d().getRadians());
 
     SmartDashboard.putNumber("PoseX", getPose().getX());
     SmartDashboard.putNumber("PoseY", getPose().getY());

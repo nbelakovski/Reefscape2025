@@ -3,6 +3,7 @@ package frc.robot.commands.complex;
 import java.util.function.Supplier;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.SNSR;
 import frc.robot.subsystems.Drivetrain;
 
 
@@ -57,7 +58,7 @@ public class SwerveDrive extends Command {
     drivetrain.move(xSpeedScaled, ySpeedScaled, rotSpeedScaled, fieldCentric, true);
     
     if(fieldResetSupplier.get()) {
-      drivetrain.zeroRobotHeading();
+      SNSR.navX.reset();;
     }
     if(toggleFieldCentricSupplier.get()) {
       fieldCentric = !fieldCentric;

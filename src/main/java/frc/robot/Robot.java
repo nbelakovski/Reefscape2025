@@ -85,6 +85,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean("Coral in Gap", isGapBlocked());
     SmartDashboard.putNumber("coral gap distance", SNSR.gap.getValue());
     SmartDashboard.putNumber("Angle of Jaw", SNSR.jawEncoder.getPosition());
+    SmartDashboard.putNumber("NavX Compass Heading", SNSR.navX.getCompassHeading());
     
     // LEDs priority
     if(coralInGap && !coralInScorer){
