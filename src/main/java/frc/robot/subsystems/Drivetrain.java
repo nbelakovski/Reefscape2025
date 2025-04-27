@@ -235,17 +235,7 @@ public class Drivetrain extends SubsystemBase {
    * @return the robot's heading in degrees, from -180 to 180
    */
   public Rotation2d getRobotHeading() {
-    //return Rotation2d.fromDegrees(navX.getAngle());
     return navX.getRotation2d();
-    //return Rotation2d.fromDegrees(m_gyro.getAngle(IMUAxis.kZ)).getDegrees();
-  }
-
-  public double getRobotAngleDegrees() {
-    return getRobotHeading().getDegrees();
-  }
-
- public double getRobotAngleRadians() {
-    return getRobotHeading().getRadians();
   }
 
   // Resets the drive encoders to currently read a position of 0.
@@ -317,14 +307,10 @@ public class Drivetrain extends SubsystemBase {
   // This method will be called once per scheduler run
   @Override
   public void periodic() {
-
-    updatePoseFromOdometry();
     updateModuleTelemetry();
     
     SmartDashboard.putNumber("NavX Compass Heading", navX.getCompassHeading());
 
-    SmartDashboard.putNumber("Robot Angle Degrees", getRobotAngleDegrees());
-    SmartDashboard.putNumber("Robot Angle Radians", getRobotAngleRadians());
     SmartDashboard.putNumber("Field Angle Degrees", getFieldAngleDegrees());
     SmartDashboard.putNumber("Field Angle Radians", getFieldAngleRadians());
     

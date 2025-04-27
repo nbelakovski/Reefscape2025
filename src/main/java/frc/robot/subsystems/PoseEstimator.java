@@ -52,6 +52,7 @@ public class PoseEstimator extends SubsystemBase {
   // This method will be called once per scheduler run
   @Override
   public void periodic() {
+    drivetrain.updatePoseFromOdometry();
 
     // Correct pose estimate with vision measurements
     var visionEst1 = cam1.getEstimatedGlobalPose(drivetrain.getPose());
@@ -95,5 +96,8 @@ public class PoseEstimator extends SubsystemBase {
     SmartDashboard.putNumber("CAM1 X offset to Front", Constants.VisionConstants.CAM1_X_OFFSET_TO_FRONT);
     SmartDashboard.putNumber("CAM1 X offset to Center", Constants.VisionConstants.CAM1_X_OFFSET_TO_CENTER);
     SmartDashboard.putNumber("CAM1 Bumper to Center Dist", Constants.RobotConstants.BUMPER_TO_ROBOT_CENTER_DISTANCE);
+
+    SmartDashboard.putNumber("Robot Angle Degrees", drivetrain.getRobotHeading().getDegrees());
+    SmartDashboard.putNumber("Robot Angle Radians", drivetrain.getRobotHeading().getRadians());
   }
 }
