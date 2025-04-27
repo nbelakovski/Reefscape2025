@@ -1,10 +1,14 @@
 package frc.robot.commands.complex;
 
+import static edu.wpi.first.units.Units.Rotation;
+
 import java.util.function.Supplier;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.SNSR;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.ETechPoseEstimator;
 
 
 public class SwerveDrive extends Command {
@@ -55,7 +59,8 @@ public class SwerveDrive extends Command {
     double rotSpeedDeadbanded = MathUtil.applyDeadband(rotSpeed, 0.1);
     double rotSpeedScaled = rotSpeedDeadbanded * Drivetrain.SwerveConstants.TOP_ANGULAR_SPEED;
 
-    drivetrain.move(xSpeedScaled, ySpeedScaled, rotSpeedScaled, fieldCentric, true);
+    Rotation2d rotation = ETechPoseEstimator.getInstance().getPose().getRotation();
+    drivetrain.move(xSpeedScaled, ySpeedScaled, rotSpeedScaled, fieldCentric, true, rotation);
     
     if(fieldResetSupplier.get()) {
       SNSR.navX.reset();;

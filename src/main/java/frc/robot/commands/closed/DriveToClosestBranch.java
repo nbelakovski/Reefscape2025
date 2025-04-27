@@ -3,6 +3,7 @@ package frc.robot.commands.closed;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.SwerveAutoConstants;
@@ -101,7 +102,8 @@ public class DriveToClosestBranch extends Command {
       controllerX.setP(SwerveAutoConstants.X_P * 2);
       controllerY.setP(SwerveAutoConstants.Y_P * 2);
     }
-    drivetrain.move(xSpeed, ySpeed, turnSpeed, true, false);
+    Rotation2d rotation = ETechPoseEstimator.getInstance().getPose().getRotation();
+    drivetrain.move(xSpeed, ySpeed, turnSpeed, true, false, rotation);
 
     //SD stuff
     SmartDashboard.putNumber("DTB xSpeed", xSpeed);

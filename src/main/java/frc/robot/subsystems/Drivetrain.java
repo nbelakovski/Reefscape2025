@@ -76,7 +76,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void stopDrive() {
-    move(0.0, 0.0, 0.0, false, false);
+    move(0.0, 0.0, 0.0, false, false, Rotation2d.kZero);
   }
 
   /**
@@ -88,11 +88,11 @@ public class Drivetrain extends SubsystemBase {
    * @param fieldcentric Whether the provided x and y speeds are relative to the field.
    * @param rateLimit     Whether to enable rate limiting for smoother control.
    */
-  public void move(double xSpeed, double ySpeed, double rot, boolean fieldCentric, boolean allianceCentric) {
+  public void move(double xSpeed, double ySpeed, double rotSpeed, boolean fieldCentric, boolean allianceCentric, Rotation2d rotation) {
 
     double xSpeedCommanded = -xSpeed;
     double ySpeedCommanded = ySpeed;
-    double rotSpeedCommanded = rot;
+    double rotSpeedCommanded = rotSpeed;
 
     SmartDashboard.putNumber("xspeed", xSpeedCommanded);
     SmartDashboard.putNumber("yspeed", ySpeedCommanded);
@@ -103,15 +103,13 @@ public class Drivetrain extends SubsystemBase {
     ChassisSpeeds speeds = new ChassisSpeeds(xSpeedCommanded, ySpeedCommanded, rotSpeedCommanded);
 
     if (fieldCentric) {
-      var rotation = getPose().getRotation();
-      
       if(allianceCentric) {
-      var allianceOptional = DriverStation.getAlliance();
-      if (allianceOptional.isPresent() && allianceOptional.get() == DriverStation.Alliance.Red) {
-        // Flip the rotation if our driverstation is red alliance so that driving is "driver centric"
-        rotation = rotation.rotateBy(Rotation2d.fromDegrees(180));
+        var allianceOptional = DriverStation.getAlliance();
+        if (allianceOptional.isPresent() && allianceOptional.get() == DriverStation.Alliance.Red) {
+          // Flip the rotation if our driverstation is red alliance so that driving is "driver centric"
+          rotation = rotation.rotateBy(Rotation2d.fromDegrees(180));
+        }
       }
-    }
       speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedCommanded, ySpeedCommanded, rotSpeedCommanded, rotation);
     }
 
@@ -143,7 +141,7 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putNumber("PP Yspeeds", robotRelativeSpeeds.vyMetersPerSecond);
 
     ChassisSpeeds speeds = ChassisSpeeds.discretize(robotRelativeSpeeds, 0.02);
-    this.move(-speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond, false, false);
+    this.move(-speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond, false, false, Rotation2d.kZero);
   }
 
     
@@ -176,15 +174,6 @@ public class Drivetrain extends SubsystemBase {
     for(int i = 0; i < modules.length; i++) {
       modules[i].resetEncoders();
     }
-  }
-
-  //---------------POSE ESTIMATION METHODS --------------//
-  /**
-   * Returns the currently-estimated pose of the robot relative to the FIELD
-   * @return The pose.
-   */
-  public Pose2d getPose() {
-    return poseEstimator.getEstimatedPosition();
   }
 
   /* See {@link SwerveDrivePoseEstimator#addVisionMeasurement(Pose2d, double, Matrix)}. */
