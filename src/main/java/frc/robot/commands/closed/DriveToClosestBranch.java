@@ -83,7 +83,7 @@ public class DriveToClosestBranch extends Command {
     //measure current X (m), Y (m), Angle (deg)
     double currentX = drivetrain.getPose().getX();
     double currentY = drivetrain.getPose().getY();
-    double currentAngle = drivetrain.getFieldAngleDegrees();
+    double currentAngle = drivetrain.getPose().getRotation().getDegrees();
     
     //calculating the X, Y, TURN speeds needed to strafe (field-centrically)
     double xSpeed = -controllerX.calculate(currentX);

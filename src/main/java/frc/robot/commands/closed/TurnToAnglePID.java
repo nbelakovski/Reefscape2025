@@ -43,7 +43,7 @@ public class TurnToAnglePID extends Command {
   public void execute() {
 
     //measure current angle
-    double measurement = drivetrain.getFieldAngleDegrees();
+    double measurement = drivetrain.getPose().getRotation().getDegrees();
     
     //calculate new speed needed to turn to correct angle
     double newRotSpeed = controllerTurn.calculate(measurement);

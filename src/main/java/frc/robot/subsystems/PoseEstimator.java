@@ -99,5 +99,10 @@ public class PoseEstimator extends SubsystemBase {
 
     SmartDashboard.putNumber("Robot Angle Degrees", drivetrain.getRobotHeading().getDegrees());
     SmartDashboard.putNumber("Robot Angle Radians", drivetrain.getRobotHeading().getRadians());
+
+    SmartDashboard.putNumber("PoseX", drivetrain.getPose().getX());
+    SmartDashboard.putNumber("PoseY", drivetrain.getPose().getY());
+    SmartDashboard.putNumber("PoseAngle Degrees", drivetrain.getPose().getRotation().getDegrees());
+    SmartDashboard.putNumber("PoseAngle Radians", drivetrain.getPose().getRotation().getRadians());
   }
 }

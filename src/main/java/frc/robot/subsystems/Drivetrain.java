@@ -1,11 +1,5 @@
 package frc.robot.subsystems;
 
-
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.config.ModuleConfig;
-import com.pathplanner.lib.config.PIDConstants;
-import com.pathplanner.lib.config.RobotConfig;
-import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 
@@ -21,15 +15,12 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants.RobotConstants;
-import frc.robot.Constants.SwerveAutoConstants;
-import frc.robot.Constants.SwerveModuleConstants;
 import frc.robot.FieldConstants;
 import frc.robot.utils.Ports;
 import frc.robot.utils.SwerveModule;
@@ -43,9 +34,6 @@ public class Drivetrain extends SubsystemBase {
     public static final double BR_ANGULAR_OFFSET = Math.PI / 2;
     public static final double BL_ANGULAR_OFFSET = Math.PI;
 
-
-    // public static final double FREE_SPIN_METER = 5.28; //???
-
     // Distance between front and back wheels on robot
     public static final SwerveDriveKinematics DRIVE_KINEMATICS = new SwerveDriveKinematics(
         new Translation2d(RobotConstants.WHEEL_BASE / 2, RobotConstants.TRACK_WIDTH / 2),
@@ -56,12 +44,6 @@ public class Drivetrain extends SubsystemBase {
 
     public static final double TOP_SPEED = 4.0; //9.6
     public static final double TOP_ANGULAR_SPEED = 2 * Math.PI;
-
-    // //Slew stuff from Rev
-    // public static final double kDirectionSlewRate = 1; // radians per second
-    // public static final double kMagnitudeSlewRate = 1.4; // percent per second (1 = 100%)
-    // public static final double kRotationalSlewRate = 1; // percent per second (1 = 100%)
-
   };
 
   private static Drivetrain instance;
@@ -250,8 +232,6 @@ public class Drivetrain extends SubsystemBase {
     navX.reset();
   }
 
-
-
     //---------------POSE ESTIMATION METHODS --------------//
    /**
    * Resets the poseEstimator to the specified pose.
@@ -265,9 +245,6 @@ public class Drivetrain extends SubsystemBase {
     poseEstimator.update(getRobotHeading(), getSwerveModulePos());
   }
 
-  public SwerveDriveKinematics getKinematics() {
-    return driveKinematics;
-  }
 
   /**
    * Returns the currently-estimated pose of the robot relative to the FIELD
@@ -276,20 +253,6 @@ public class Drivetrain extends SubsystemBase {
   public Pose2d getPose() {
     return poseEstimator.getEstimatedPosition();
   }
-
-  public double getFieldAngleDegrees(){
-    return getPose().getRotation().getDegrees();
-  }
-
-  public double getFieldAngleRadians(){
-    return getPose().getRotation().getRadians();
-  }
-
-  
-  // /* See {@link SwerveDrivePoseEstimator#addVisionMeasurement(Pose2d, double)}. */
-  // public void addVisionMeasurement(Pose2d visionMeasurement, double timestampSeconds) {
-  //   poseEstimator.addVisionMeasurement(visionMeasurement, timestampSeconds);
-  // }
 
   /* See {@link SwerveDrivePoseEstimator#addVisionMeasurement(Pose2d, double, Matrix)}. */
   public void addVisionMeasurement(
@@ -310,14 +273,6 @@ public class Drivetrain extends SubsystemBase {
     updateModuleTelemetry();
     
     SmartDashboard.putNumber("NavX Compass Heading", navX.getCompassHeading());
-
-    SmartDashboard.putNumber("Field Angle Degrees", getFieldAngleDegrees());
-    SmartDashboard.putNumber("Field Angle Radians", getFieldAngleRadians());
-    
-
-    SmartDashboard.putNumber("PoseX", getPose().getX());
-    SmartDashboard.putNumber("PoseY", getPose().getY());
-    SmartDashboard.putNumber("PoseAngle", getPose().getRotation().getDegrees());
 
     field.setRobotPose(getPose());
     SmartDashboard.putData("PoseEstimator Field", field);
