@@ -58,28 +58,27 @@ public class CF {
         );
     }
 
+    private static PIDController jawAngleController = new PIDController(0.15, 0, 0.02);
     public static Command jawAngleCommand(double desiredAngle) {
         // TODO: I believe all of this can be removed in favor of using
         // the built-in PID controller in the SparkMax. However I don't want to make
         // this change without testing it on the robot, and validating both that it
         // works but also the calling set after setReference (i.e. from
         // safeAlgaeJoystick) works.
-        PIDController controller = new PIDController(0.15, 0, 0.02);
-        controller.setTolerance(2);
+        jawAngleController.setTolerance(2);
         return new FunctionalCommand(
             () -> {
-                controller.reset();
-                controller.setSetpoint(desiredAngle);
+                jawAngleController.reset();
+                jawAngleController.setSetpoint(desiredAngle);
             },
             () -> {
-                double speed = controller.calculate(SNSR.jawEncoder.getPosition());
+                double speed = jawAngleController.calculate(SNSR.jawEncoder.getPosition());
                 MTR.jawMotor.set(speed);
             },
             (interrupted) -> {
                 MTR.jawMotor.stopMotor();
-                controller.close();
             },
-            () -> controller.atSetpoint(),
+            () -> jawAngleController.atSetpoint(),
             (Subsystem)null
         );
     }

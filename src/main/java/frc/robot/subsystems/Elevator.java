@@ -18,7 +18,6 @@ import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.DigitalInput;
 
 
 public class Elevator extends SubsystemBase {
@@ -29,11 +28,6 @@ public class Elevator extends SubsystemBase {
   private SparkMax elevatorRightMotor;
   private RelativeEncoder leftEncoder;
   private RelativeEncoder rightEncoder;
-  private SparkMaxConfig leftMotorConfig;
-  private SparkMaxConfig rightMotorConfig;
-  // I don't see us using the limit switches, are they real?
-  private DigitalInput topLimitSwitch;
-  private DigitalInput bottomLimitSwitch;
   private PIDController controller = new PIDController(0.1, 0, 0);
 
 
@@ -42,23 +36,16 @@ public class Elevator extends SubsystemBase {
 
     elevatorLeftMotor = new SparkMax(Ports.ELEVATOR_LEFT_MOTOR_PORT, MotorType.kBrushless);
     elevatorRightMotor = new SparkMax(Ports.ELEVATOR_RIGHT_MOTOR_PORT, MotorType.kBrushless);
-    leftMotorConfig = new SparkMaxConfig();
-    rightMotorConfig = new SparkMaxConfig();
+    
+    var leftConfig = new SparkMaxConfig().idleMode(IdleMode.kBrake);
+    elevatorLeftMotor.configure(leftConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    var rightConfig = new SparkMaxConfig().idleMode(IdleMode.kBrake).inverted(ElevatorConstants.RIGHT_ELEVATOR_INVERTED);
+    elevatorRightMotor.configure(rightConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
     leftEncoder = elevatorLeftMotor.getEncoder();
     rightEncoder = elevatorRightMotor.getEncoder();
     rightEncoder.setPosition(0);
     leftEncoder.setPosition(0);
-    topLimitSwitch = new DigitalInput(Ports.DIGITAL_TOP_LIMIT_PORT);
-    bottomLimitSwitch = new DigitalInput(Ports.DIGITAL_BOTTOM_LIMIT_PORT);
-    
-    rightMotorConfig.inverted(ElevatorConstants.RIGHT_ELEVATOR_INVERTED);
-  
-    rightMotorConfig.idleMode(IdleMode.kBrake);
-    leftMotorConfig.idleMode(IdleMode.kBrake);
-    //leftMotorConfig.encoder.inverted();
-    elevatorRightMotor.configure(rightMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    elevatorLeftMotor.configure(leftMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    controller.setTolerance(0.1);
   }
 
   // Elevator Singleton - ensures only 1 instance of Elevator is constructed
@@ -85,6 +72,7 @@ public class Elevator extends SubsystemBase {
   }
 
   public Command setPosition(double desiredPosition) {
+        controller.setTolerance(0.1);
         return new FunctionalCommand(
             () -> {
                 this.controller.reset();
@@ -113,29 +101,6 @@ public class Elevator extends SubsystemBase {
     double avg = (leftEncoder.getPosition() + -rightEncoder.getPosition()) / 2;
     return avg;
   }
-  
-  // Gets the value of the top limit switch
-  public boolean getTopLimit() {
-    return !topLimitSwitch.get();
-  }
-
-  // Gets the value of the bottom limit switch
-  public boolean getBotLimit() {
-    return !bottomLimitSwitch.get();
-  }
-
-  // Resets the values of both encoders
-  public void resetPosition(double pos){
-    leftEncoder.setPosition(pos);
-    rightEncoder.setPosition(pos);
-  }
-
-  // Resets the values of both encoders to zero
-  public void zeroPosition(){
-    leftEncoder.setPosition(0);
-    rightEncoder.setPosition(0);
-  }
-
 
 
   @Override
@@ -144,8 +109,6 @@ public class Elevator extends SubsystemBase {
     SmartDashboard.putNumber("elevator position", getPosition());
     SmartDashboard.putNumber("left elevator position", leftEncoder.getPosition());
     SmartDashboard.putNumber("right elevator position", -rightEncoder.getPosition());
-    SmartDashboard.putBoolean("Top Limit", getTopLimit());
-    SmartDashboard.putBoolean("Bottom Limit", getBotLimit());
 
     boolean hasCoral = Robot.hasCoral();
     boolean nearIntake = getPosition() > 2 && getPosition() < 3.5;
