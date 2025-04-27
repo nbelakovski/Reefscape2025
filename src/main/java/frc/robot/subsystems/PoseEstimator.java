@@ -9,6 +9,7 @@ import frc.robot.utils.AprilCam;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
@@ -19,6 +20,7 @@ public class PoseEstimator extends SubsystemBase {
   public AprilCam cam2;
   public boolean doubleCam = false;
   Drivetrain drivetrain = Drivetrain.getInstance();
+  private final Field2d field2d = new Field2d();
 
   // Vision Constructor
   private PoseEstimator() {
@@ -104,5 +106,7 @@ public class PoseEstimator extends SubsystemBase {
     SmartDashboard.putNumber("PoseY", drivetrain.getPose().getY());
     SmartDashboard.putNumber("PoseAngle Degrees", drivetrain.getPose().getRotation().getDegrees());
     SmartDashboard.putNumber("PoseAngle Radians", drivetrain.getPose().getRotation().getRadians());
+    field2d.setRobotPose(drivetrain.getPose());
+    SmartDashboard.putData("PoseEstimator Field", field2d);
   }
 }

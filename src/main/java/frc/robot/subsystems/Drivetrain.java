@@ -16,7 +16,6 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -60,9 +59,6 @@ public class Drivetrain extends SubsystemBase {
 
   private final SwerveDrivePoseEstimator poseEstimator;
 
-  private final Field2d field;
-
-
   /** Drivetrain Constructor */
   private Drivetrain() {
 
@@ -75,8 +71,6 @@ public class Drivetrain extends SubsystemBase {
     this.navX = new AHRS(NavXComType.kMXP_SPI);
 
     this.driveKinematics = SwerveConstants.DRIVE_KINEMATICS;
-
-    this.field = new Field2d();
     
     var stateStdDevs = VecBuilder.fill(0.1, 0.1, 0.1);
     var visionStdDevs = VecBuilder.fill(1, 1, 1);
@@ -273,9 +267,6 @@ public class Drivetrain extends SubsystemBase {
     updateModuleTelemetry();
     
     SmartDashboard.putNumber("NavX Compass Heading", navX.getCompassHeading());
-
-    field.setRobotPose(getPose());
-    SmartDashboard.putData("PoseEstimator Field", field);
     SmartDashboard.putNumber("FL distanceMeters", frontL.getPosition().distanceMeters);
   }
 }
