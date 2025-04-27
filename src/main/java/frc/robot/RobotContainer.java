@@ -49,7 +49,7 @@ public class RobotContainer {
 
     // Configure AutoBuilder for PathPlanner
     AutoBuilder.configure(
-      () -> Drivetrain.getInstance().getPose(),
+      () -> ETechPoseEstimator.getInstance().getPose(),
       (Pose2d newPose) -> Drivetrain.getInstance().resetPose(newPose),
       () -> Drivetrain.getInstance().getSpeeds(),
       (ChassisSpeeds speeds) -> Drivetrain.getInstance().driveRobotRelative(speeds),

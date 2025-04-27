@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.SwerveAutoConstants;
 import frc.robot.FieldConstants;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.ETechPoseEstimator;
 
 
 public class DriveToBranchPID extends Command {
@@ -42,9 +43,9 @@ public class DriveToBranchPID extends Command {
     drivetrain = Drivetrain.getInstance();
 
     //Record starting values for X (m), Y (m), Angle (deg)
-    startX = drivetrain.getPose().getX();
-    startY = drivetrain.getPose().getY();
-    startAngle = drivetrain.getPose().getRotation().getDegrees();
+    startX = ETechPoseEstimator.getInstance().getPose().getX();
+    startY = ETechPoseEstimator.getInstance().getPose().getY();
+    startAngle = ETechPoseEstimator.getInstance().getPose().getRotation().getDegrees();
 
     // Record the setpoints for X (m), Y (m), Angle (deg)
     setpointX = targetPose.getX();
@@ -82,9 +83,9 @@ public class DriveToBranchPID extends Command {
   public void execute() {
 
     //measure current X (m), Y (m), Angle (deg)
-    double currentX = drivetrain.getPose().getX();
-    double currentY = drivetrain.getPose().getY();
-    double currentAngle = drivetrain.getPose().getRotation().getDegrees();
+    double currentX = ETechPoseEstimator.getInstance().getPose().getX();
+    double currentY = ETechPoseEstimator.getInstance().getPose().getY();
+    double currentAngle = ETechPoseEstimator.getInstance().getPose().getRotation().getDegrees();
     
     //calculating the X, Y, TURN speeds needed to strafe (field-centrically)
     double xSpeed = -controllerX.calculate(currentX);
