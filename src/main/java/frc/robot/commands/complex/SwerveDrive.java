@@ -1,7 +1,5 @@
 package frc.robot.commands.complex;
 
-import static edu.wpi.first.units.Units.Rotation;
-
 import java.util.function.Supplier;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
