@@ -1,24 +1,16 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants.RobotConstants;
-import frc.robot.FieldConstants;
-import frc.robot.SNSR;
 import frc.robot.utils.Ports;
 import frc.robot.utils.SwerveModule;
 
@@ -49,22 +41,9 @@ public class Drivetrain extends SubsystemBase {
   private final SwerveModule backL = new SwerveModule(Ports.SWERVE_DRIVE_BL, Ports.SWERVE_TURN_BL, SwerveConstants.BL_ANGULAR_OFFSET, "BL");
   private final SwerveModule backR = new SwerveModule(Ports.SWERVE_DRIVE_BR, Ports.SWERVE_TURN_BR, SwerveConstants.BR_ANGULAR_OFFSET, "BR");
   private final SwerveModule[] modules = {frontL, frontR, backL, backR};
-  public final SwerveDrivePoseEstimator poseEstimator;
 
   /** Drivetrain Constructor */
-  private Drivetrain() {
-    
-    var stateStdDevs = VecBuilder.fill(0.1, 0.1, 0.1);
-    var visionStdDevs = VecBuilder.fill(1, 1, 1);
-
-    this.poseEstimator =  new SwerveDrivePoseEstimator(
-      driveKinematics,
-      SNSR.navX.getRotation2d(),
-      getSwerveModulePos(),
-      FieldConstants.getRobotPoseInitialFMS().toPose2d(), // Starting pose based on FMS Alliance + Driver Station
-      stateStdDevs,
-      visionStdDevs);
-  }
+  private Drivetrain() { }
 
 
   // Drivetrain Singleton - ensures only 1 instance of Drivetrain is constructed
@@ -174,12 +153,6 @@ public class Drivetrain extends SubsystemBase {
     for(int i = 0; i < modules.length; i++) {
       modules[i].resetEncoders();
     }
-  }
-
-  /* See {@link SwerveDrivePoseEstimator#addVisionMeasurement(Pose2d, double, Matrix)}. */
-  public void addVisionMeasurement(
-    Pose2d visionMeasurement, double timestampSeconds, Matrix<N3, N1> stdDevs) {
-    poseEstimator.addVisionMeasurement(visionMeasurement, timestampSeconds, stdDevs);
   }
 
   public void updateModuleTelemetry() {

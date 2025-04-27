@@ -9,6 +9,8 @@ import frc.robot.utils.AprilCam;
 
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -23,6 +25,7 @@ public class ETechPoseEstimator extends SubsystemBase {
   public boolean doubleCam = false;
   Drivetrain drivetrain = Drivetrain.getInstance();
   private final Field2d field2d = new Field2d();
+  private final SwerveDrivePoseEstimator poseEstimator;
 
   // Vision Constructor
   private ETechPoseEstimator() {
@@ -43,6 +46,17 @@ public class ETechPoseEstimator extends SubsystemBase {
       );
     }
 
+    var stateStdDevs = VecBuilder.fill(0.1, 0.1, 0.1);
+    var visionStdDevs = VecBuilder.fill(1, 1, 1);
+
+    this.poseEstimator =  new SwerveDrivePoseEstimator(
+      drivetrain.driveKinematics,
+      SNSR.navX.getRotation2d(),
+      drivetrain.getSwerveModulePos(),
+      FieldConstants.getRobotPoseInitialFMS().toPose2d(), // Starting pose based on FMS Alliance + Driver Station
+      stateStdDevs,
+      visionStdDevs);
+
   }
 
   // Camera Singleton - ensures only one Camera instance is constructed
@@ -54,17 +68,17 @@ public class ETechPoseEstimator extends SubsystemBase {
   }
 
   public Pose2d getPose() {
-    return drivetrain.poseEstimator.getEstimatedPosition();
+    return poseEstimator.getEstimatedPosition();
   }
 
   public void resetPose(Pose2d newPose) {
-    drivetrain.poseEstimator.resetPosition(SNSR.navX.getRotation2d(), drivetrain.getSwerveModulePos(), newPose);
+    poseEstimator.resetPosition(SNSR.navX.getRotation2d(), drivetrain.getSwerveModulePos(), newPose);
   }
 
   // This method will be called once per scheduler run
   @Override
   public void periodic() {
-    drivetrain.poseEstimator.update(SNSR.navX.getRotation2d(), drivetrain.getSwerveModulePos());
+    poseEstimator.update(SNSR.navX.getRotation2d(), drivetrain.getSwerveModulePos());
 
     // Correct pose estimate with vision measurements
     var visionEst1 = cam1.getEstimatedGlobalPose(getPose());
@@ -73,7 +87,7 @@ public class ETechPoseEstimator extends SubsystemBase {
         // Change our trust in the measurement based on the tags we can see
         var estimatedSDs = cam1.getEstimationSDs();
 
-        drivetrain.addVisionMeasurement(est.estimatedPose.toPose2d(), est.timestampSeconds, estimatedSDs);
+        poseEstimator.addVisionMeasurement(est.estimatedPose.toPose2d(), est.timestampSeconds, estimatedSDs);
       }
     );
     if(visionEst1.isPresent()) {
@@ -87,7 +101,7 @@ public class ETechPoseEstimator extends SubsystemBase {
       visionEst2.ifPresent(
         est -> {
           var estimatedSDs = cam2.getEstimationSDs();
-          drivetrain.addVisionMeasurement(est.estimatedPose.toPose2d(), est.timestampSeconds, estimatedSDs);
+          poseEstimator.addVisionMeasurement(est.estimatedPose.toPose2d(), est.timestampSeconds, estimatedSDs);
         }
       );
       if(visionEst2.isPresent()) {
