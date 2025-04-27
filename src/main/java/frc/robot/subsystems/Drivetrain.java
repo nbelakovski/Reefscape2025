@@ -39,7 +39,6 @@ public class Drivetrain extends SubsystemBase {
 
   private static Drivetrain instance;
 
-  private final SwerveModule[] modules;
   public final SwerveDriveKinematics driveKinematics = new SwerveDriveKinematics(
       new Translation2d(RobotConstants.WHEEL_BASE / 2, RobotConstants.TRACK_WIDTH / 2),
       new Translation2d(RobotConstants.WHEEL_BASE / 2, -RobotConstants.TRACK_WIDTH / 2),
@@ -51,6 +50,7 @@ public class Drivetrain extends SubsystemBase {
   private final SwerveModule frontR = new SwerveModule(Ports.SWERVE_DRIVE_FR, Ports.SWERVE_TURN_FR, SwerveConstants.FR_ANGULAR_OFFSET, "FR");
   private final SwerveModule backL = new SwerveModule(Ports.SWERVE_DRIVE_BL, Ports.SWERVE_TURN_BL, SwerveConstants.BL_ANGULAR_OFFSET, "BL");
   private final SwerveModule backR = new SwerveModule(Ports.SWERVE_DRIVE_BR, Ports.SWERVE_TURN_BR, SwerveConstants.BR_ANGULAR_OFFSET, "BR");
+  private final SwerveModule[] modules = {frontL, frontR, backL, backR};
 
   public AHRS navX;   // The gyro sensor
 
@@ -58,13 +58,6 @@ public class Drivetrain extends SubsystemBase {
 
   /** Drivetrain Constructor */
   private Drivetrain() {
-
-    this.modules = new SwerveModule[4];
-    modules[0] = frontL;
-    modules[1] = frontR;
-    modules[2] = backL;
-    modules[3] = backR;
-    
     this.navX = new AHRS(NavXComType.kMXP_SPI);
     
     var stateStdDevs = VecBuilder.fill(0.1, 0.1, 0.1);
