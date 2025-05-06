@@ -57,12 +57,12 @@
     "edu.wpi.first.math.**.proto.*",
     "edu.wpi.first.math.**.struct.*",
   ],
-  "filewatcher.commands": [
-  {
-    "match": "\\.java",
-    "isAsync": true,
-    "cmd": "npx prettier --config /Users/nickolai/develop/Reefscape2025/.prettierrc --write ${file}",
-    "event": "onFileChange",
-  },
-]
+  // "filewatcher.commands": [
+  // {
+  //   "match": "\\.java",
+  //   "isAsync": true,
+  //   "cmd": "npx prettier --config /Users/nickolai/develop/Reefscape2025/.prettierrc --write ${file}",
+  //   "event": "onFileChange",
+  // },
+// ]
 }
